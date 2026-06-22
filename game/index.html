@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOUSDLE — Diagnose or Die Trying</title>
+  <style>
+    :root {
+      --bg: #07090f;
+      --surface: #0f1623;
+      --surface2: #1a2133;
+      --border: #2a3a55;
+      --border-dim: #1d2b40;
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.15);
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.15);
+      --yellow: #f59e0b;
+      --yellow-glow: rgba(245, 158, 11, 0.12);
+      --blue: #60a5fa;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --house: #fbbf24;
+      --house-bg: rgba(251, 191, 36, 0.06);
+      --house-border: rgba(251, 191, 36, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 1.25rem 1rem 1rem;
+      border-bottom: 1px solid var(--border-dim);
+      background: linear-gradient(180deg, #0c1220 0%, var(--bg) 100%);
+      flex-shrink: 0;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      letter-spacing: 0.35em;
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .title-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .stat { color: var(--text-muted); }
+    .stat span { color: var(--green); font-weight: bold; }
+
+    /* ── LAYOUT ── */
+    .game-container {
+      display: grid;
+      grid-template-columns: 340px 1fr 320px;
+      gap: 1rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ── PATIENT FILE ── */
+    .patient-file {
+      background: var(--surface2);
+      border: 1px solid var(--border-dim);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.75rem;
+    }
+
+    .patient-file-header {
+      color: var(--text-muted);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .patient-fields {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pf { color: var(--text-muted); }
+    .pf span { color: var(--text-dim); }
+
+    /* ── SYMPTOMS ── */
+    .symptoms-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .symptoms-list::-webkit-scrollbar { width: 3px; }
+    .symptoms-list::-webkit-scrollbar-track { background: transparent; }
+    .symptoms-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .symptom-card {
+      background: var(--surface2);
+      border: 1px solid var(--border-dim);
+      border-radius: 7px;
+      padding: 0.8rem;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      animation: fadeSlideIn 0.5s ease forwards;
+    }
+
+    .symptom-card.fresh {
+      border-color: var(--yellow);
+      box-shadow: 0 0 16px var(--yellow-glow), inset 0 0 0 0 var(--yellow);
+    }
+
+    .obs-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden-symptoms {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .locked-slot {
+      background: var(--surface2);
+      border: 1px dashed var(--border-dim);
+      border-radius: 7px;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.45;
+    }
+
+    /* ── GUESS PANEL ── */
+    .dots-row {
+      display: flex;
+      gap: 7px;
+      justify-content: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      transition: all 0.3s;
+    }
+
+    .dot.used { background: var(--red); border-color: var(--red); box-shadow: 0 0 6px var(--red-glow); }
+    .dot.win  { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px var(--green-glow); }
+
+    .attempts-remaining {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+
+    .attempt-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      overflow-y: auto;
+      padding-right: 2px;
+      margin-bottom: 0.9rem;
+    }
+
+    .attempt-log::-webkit-scrollbar { width: 3px; }
+    .attempt-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .attempt-row {
+      background: var(--surface2);
+      border: 1px solid var(--border-dim);
+      border-radius: 6px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.82rem;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      transition: border-color 0.3s;
+    }
+
+    .attempt-row.empty { border-style: dashed; color: var(--text-muted); font-size: 0.72rem; opacity: 0.5; }
+    .attempt-row.wrong { border-color: var(--red); color: var(--red); }
+    .attempt-row.wrong::before { content: '✗  '; }
+    .attempt-row.correct { border-color: var(--green); color: var(--green); font-weight: bold; }
+    .attempt-row.correct::before { content: '✓  '; }
+
+    .house-snark {
+      background: var(--house-bg);
+      border-left: 2px solid var(--house);
+      border-radius: 0 5px 5px 0;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.78rem;
+      color: var(--house);
+      font-style: italic;
+      animation: fadeSlideIn 0.35s ease;
+      line-height: 1.45;
+    }
+
+    /* ── INPUT ── */
+    .input-area { flex-shrink: 0; }
+
+    .autocomplete-wrapper { position: relative; margin-bottom: 0.5rem; }
+
+    .autocomplete-drop {
+      position: absolute;
+      bottom: 100%;
+      left: 0; right: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      margin-bottom: 4px;
+      max-height: 210px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+    }
+
+    .autocomplete-drop.open { display: block; }
+
+    .ac-item {
+      padding: 0.55rem 1rem;
+      cursor: pointer;
+      font-size: 0.83rem;
+      transition: background 0.1s;
+    }
+
+    .ac-item:hover, .ac-item.active { background: var(--surface); color: var(--green); }
+
+    #guessInput {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #guessInput:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-glow);
+    }
+
+    #guessInput:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.7rem;
+      background: var(--green);
+      color: #000;
+      border: none;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    .submit-btn:hover { background: #059669; box-shadow: 0 0 16px var(--green-glow); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
+
+    /* ── HOUSE PANEL ── */
+    .chat-log {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 0.9rem;
+      padding-right: 2px;
+    }
+
+    .chat-log::-webkit-scrollbar { width: 3px; }
+    .chat-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .chat-msg {
+      padding: 0.7rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .chat-msg.user {
+      background: var(--surface2);
+      border: 1px solid var(--border-dim);
+      color: var(--text-dim);
+    }
+
+    .chat-msg.user::before {
+      content: 'YOU  ';
+      color: var(--blue);
+      font-weight: bold;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .chat-msg.house {
+      background: var(--house-bg);
+      border: 1px solid var(--house-border);
+      color: var(--house);
+    }
+
+    .chat-msg.house::before {
+      content: 'HOUSE';
+      font-weight: bold;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      display: block;
+      margin-bottom: 0.25rem;
+      opacity: 0.6;
+    }
+
+    .chat-msg.house.praise {
+      border-color: var(--green);
+      background: rgba(16, 185, 129, 0.06);
+      color: #a7f3d0;
+    }
+
+    .chat-msg.house.praise::before { color: var(--green); }
+
+    .typing {
+      display: none;
+      gap: 4px;
+      padding: 0.5rem 0.85rem;
+      align-items: center;
+    }
+
+    .typing.visible { display: flex; }
+
+    .typing-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--house);
+      animation: typeBounce 1s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typeBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .chat-input-zone { flex-shrink: 0; }
+
+    .chat-hint {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    #testInput {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.65rem 0.85rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.82rem;
+      resize: none;
+      outline: none;
+      min-height: 72px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 0.4rem;
+    }
+
+    #testInput:focus {
+      border-color: var(--house);
+      box-shadow: 0 0 0 3px var(--yellow-glow);
+    }
+
+    .test-btn {
+      width: 100%;
+      padding: 0.6rem;
+      background: transparent;
+      border: 1px solid var(--house-border);
+      border-radius: 7px;
+      color: var(--house);
+      font-family: inherit;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .test-btn:hover {
+      background: var(--house-bg);
+      border-color: var(--house);
+    }
+
+    /* ── OVERLAY ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay.visible { display: flex; }
+
+    .end-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      animation: fadeSlideIn 0.4s ease;
+    }
+
+    .end-card.win  { border-color: var(--green); box-shadow: 0 0 50px rgba(16, 185, 129, 0.18); }
+    .end-card.lose { border-color: var(--red);   box-shadow: 0 0 50px rgba(239, 68, 68, 0.18); }
+
+    .end-verdict {
+      font-size: 1.3rem;
+      letter-spacing: 0.25em;
+      margin-bottom: 0.4rem;
+    }
+
+    .win  .end-verdict { color: var(--green); }
+    .lose .end-verdict { color: var(--red); }
+
+    .end-disease {
+      font-size: 1.05rem;
+      margin: 0.9rem 0 0.3rem;
+    }
+
+    .end-disease strong { color: var(--house); }
+
+    .end-attempts { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+    .end-quote {
+      background: var(--house-bg);
+      border-left: 3px solid var(--house);
+      padding: 0.85rem 1rem;
+      font-style: italic;
+      color: var(--house);
+      font-size: 0.85rem;
+      text-align: left;
+      border-radius: 0 7px 7px 0;
+      line-height: 1.55;
+      margin: 0.75rem 0;
+    }
+
+    .end-stats { font-size: 0.73rem; color: var(--text-muted); margin-bottom: 1.1rem; }
+
+    .play-again {
+      padding: 0.7rem 2rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .play-again:hover { background: var(--border); color: var(--text); }
+
+    /* ── SHAKE ── */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-7px); }
+      40%, 80% { transform: translateX(7px); }
+    }
+
+    .shake { animation: shake 0.3s ease; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .game-container { grid-template-columns: 1fr; }
+      .panel { min-height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="title-row">
+    <h1>HOUSDLE</h1>
+    <div class="title-badge">Princeton-Plainsboro</div>
+  </div>
+  <div class="subtitle">Diagnose the patient. House will judge you regardless.</div>
+  <div class="stats-bar">
+    <div class="stat">Solved <span id="statW">0</span></div>
+    <div class="stat">Failed <span id="statL">0</span></div>
+    <div class="stat">Streak <span id="statS">0</span></div>
+  </div>
+</header>
+
+<div class="game-container">
+
+  <!-- SYMPTOMS PANEL -->
+  <div class="panel">
+    <div class="panel-title">📋 Patient Presentation</div>
+    <div class="patient-file">
+      <div class="patient-file-header">Admission Record</div>
+      <div class="patient-fields">
+        <div class="pf">Patient: <span id="pName">—</span></div>
+        <div class="pf">Age: <span id="pAge">—</span></div>
+        <div class="pf">Ward: <span>Diagnostics</span></div>
+      </div>
+    </div>
+    <div class="symptoms-list" id="symptomsList"></div>
+    <div class="hidden-symptoms" id="hiddenSlots"></div>
+  </div>
+
+  <!-- GUESS PANEL -->
+  <div class="panel">
+    <div class="panel-title">🔬 Differential Diagnosis</div>
+    <div class="dots-row" id="dotsRow"></div>
+    <div class="attempts-remaining" id="attemptsLeft">6 attempts remaining</div>
+    <div class="attempt-log" id="attemptLog"></div>
+    <div class="input-area">
+      <div class="autocomplete-wrapper">
+        <div class="autocomplete-drop" id="acDrop"></div>
+        <input
+          type="text"
+          id="guessInput"
+          placeholder="Type a diagnosis and select..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitGuess()">SUBMIT DIAGNOSIS</button>
+    </div>
+  </div>
+
+  <!-- HOUSE CHATBOX -->
+  <div class="panel">
+    <div class="panel-title">🩺 Consult Dr. House</div>
+    <div class="chat-log" id="chatLog">
+      <div class="chat-msg house">Interesting case. Well — marginally. Someone has to look at it. What test are you thinking? And please: aim higher than your instincts.</div>
+    </div>
+    <div class="typing" id="typingIndicator">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+    <div class="chat-input-zone">
+      <div class="chat-hint">Order a test or ask about the patient (Enter to send)</div>
+      <textarea id="testInput" placeholder="e.g. 'Run an MRI' or 'Check for prion disease'..."></textarea>
+      <button class="test-btn" onclick="runTest()">RUN TEST ↵</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- END SCREEN -->
+<div class="overlay" id="overlay">
+  <div class="end-card" id="endCard">
+    <div class="end-verdict" id="endVerdict"></div>
+    <div class="end-disease" id="endDisease"></div>
+    <div class="end-attempts" id="endAttempts"></div>
+    <div class="end-quote" id="endQuote"></div>
+    <div class="end-stats" id="endStats"></div>
+    <button class="play-again" onclick="initGame()">NEXT PATIENT</button>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+// DISEASE DATA
+// ────────────────────────────────────────────────
+const DISEASES = [
+  {
+    name: "Auto-Brewery Syndrome",
+    symptoms: [
+      "Patient feels perpetually 'off' for reasons they cannot describe.",
+      "Intermittent episodes of dizziness and inexplicable euphoria with no apparent trigger.",
+      "Family has accused the patient of secret drinking. Patient insists, tearfully, that they are sober.",
+      "Blood alcohol level is elevated. Patient has consumed no alcohol in 72 hours. Lab has rerun it twice.",
+      "The patient's gastrointestinal flora is fermenting carbohydrates into ethanol. Internally.",
+      "The patient is, clinically speaking, a brewery. An artisanal, self-contained, involuntary brewery."
+    ],
+    houseComments: [
+      "Perpetually 'off.' That's broad. Narrow it down. Or don't, and we'll be here a week.",
+      "Euphoria and dizziness. Could be cardiovascular, could be neurological, could be something we'll all be embarrassed we missed.",
+      "The family's convinced they're a secret alcoholic. They might be. Or they might not be. Both are interesting.",
+      "Blood alcohol elevated, no alcohol consumed. Either the test is wrong — it isn't — or biology has gone completely off-script.",
+      "Gut flora has diversified its portfolio. Into ethanol production."
+    ],
+    winQuote: "The patient's own intestinal bacteria decided to pivot to craft brewing. Without asking. Their blood alcohol was measurably elevated and they'd had nothing to drink. The diagnosis is equal parts fascinating and humiliating for everyone who missed it.",
+    loseQuote: "Their GUT WAS FERMENTING ALCOHOL. They were drunk on their own biology. You had a blood alcohol result and no explanation for it. And you still couldn't get there. I'll be in my office."
+  },
+  {
+    name: "Alien Hand Syndrome",
+    symptoms: [
+      "Patient seems distressed about their body in a way that is difficult to articulate.",
+      "Reports that one hand is 'not listening.'",
+      "Left hand has been observed undoing things the right hand just did.",
+      "The non-dominant hand threw an object across the room. Patient claims they did not do this. They are correct.",
+      "One hand acts with apparent autonomy — picking things up, pushing things away — without patient consent.",
+      "The patient's left hand has, functionally, gone rogue. The patient is furious about it and helpless."
+    ],
+    houseComments: [
+      "Something is wrong with their body and they can't articulate it. That's either neurological or they're bad at words.",
+      "One hand not listening. Explore that. What does 'not listening' mean to a hand.",
+      "A hand undoing what the other hand does. That's corpus callosum. Or the most passive-aggressive marriage I've ever heard of.",
+      "It threw something. The hand threw something. The patient didn't decide to throw it. That's a specific kind of spectacular."
+    ],
+    winQuote: "Following damage to the corpus callosum, one hemisphere lost supervisory control over the contralateral hand. The hand still functions — it just no longer consults the patient about what to do. The patient has described it as 'living with a saboteur.' They are not wrong.",
+    loseQuote: "The patient's hand was operating INDEPENDENTLY. It had its own agenda. It threw things. Unprompted. And you were out here running blood panels while a HAND was IN OPEN REVOLT."
+  },
+  {
+    name: "Aquagenic Urticaria",
+    symptoms: [
+      "Skin reactions that appear and disappear without an obvious pattern.",
+      "The patient has become reluctant to discuss bathing habits.",
+      "Hives appear after contact with something the patient cannot identify.",
+      "Showers have become, according to the patient, 'a problem.'",
+      "Urticarial response occurs specifically upon skin contact with water — any water.",
+      "The patient is allergic to water. H₂O. The thing they are made of."
+    ],
+    houseComments: [
+      "Hives with unclear trigger. Start logging everything that precedes an episode. Everything.",
+      "Reluctant about bathing. Either embarrassed or their skin is punishing them for cleanliness.",
+      "Showers are 'a problem.' That sentence is doing a lot of work. Define the problem.",
+      "Water. We're testing water. I want to be there when you tell them."
+    ],
+    winQuote: "The immune system generates histamine in response to water contact. Water. The universal solvent. The substance that makes up most of what they are. The body, in its infinite wisdom, decided that was the enemy. No cure. Antihistamines help. Slightly.",
+    loseQuote: "WATER. They were allergic to WATER. Tap water, rain water, their own sweat. The most abundant substance on the planet. I genuinely don't know what else I can say."
+  },
+  {
+    name: "Cotard's Delusion",
+    symptoms: [
+      "Patient presents with unusual certainty about their own condition.",
+      "Has refused food and water for 48 hours. States there is 'no point.'",
+      "Insists something fundamental has changed about their physical existence.",
+      "Claims several internal organs are absent. Imaging confirms they are all present.",
+      "Is completely convinced, unshakeably, that they are dead.",
+      "The patient believes they are a corpse that hasn't stopped moving yet. They are annoyed we won't acknowledge this."
+    ],
+    houseComments: [
+      "Unusual certainty. Patients who are absolutely sure of something irrational are always interesting.",
+      "Won't eat because there's 'no point.' That's either severe depression or something phenomenologically fascinating.",
+      "Claims their organs are gone. They're there. All of them. The patient disagrees with the scan.",
+      "They believe they're dead. They're not. This is going to be a very specific kind of difficult conversation."
+    ],
+    winQuote: "The brain's self-modeling failed catastrophically. The patient's interoceptive system — the sense of being alive and embodied — went offline. They genuinely could not feel themselves existing. So they concluded they weren't. The logic is, in a tragic way, coherent.",
+    loseQuote: "The patient thought they were DEAD. ACTIVELY DEAD. They refused food because corpses don't eat, which is technically correct, and they are 100% not a corpse. That's a memorable delusion. You should have caught it."
+  },
+  {
+    name: "Exploding Head Syndrome",
+    symptoms: [
+      "The patient is not sleeping well. Specifics are vague.",
+      "Reports being jolted awake repeatedly, but cannot identify what woke them.",
+      "Describes hearing things at night that no one else hears.",
+      "Reports an extremely loud sound — inside their head — that occurs as they fall asleep.",
+      "The sound is described variously as an explosion, a gunshot, or a cymbal crash. It originates inside the skull.",
+      "The patient's brain is manufacturing large explosions at bedtime. This is benign. It doesn't feel benign."
+    ],
+    houseComments: [
+      "Non-restorative sleep. The cause matters more than the outcome. Ask better questions.",
+      "Jolted awake with no stimulus. Either hypnic jerk or something more interesting.",
+      "Hearing things only they hear. Auditory, unilateral or bilateral, at what point in the sleep cycle.",
+      "Loud internal noise at sleep onset. Now we're somewhere. Keep pulling on that thread."
+    ],
+    winQuote: "A misfiring of the auditory cortex during the sleep-wake transition produces what the patient experiences as a massive internal explosion. No structural damage. No danger. Just the brain, briefly and catastrophically, miscommunicating with itself at the worst possible moment. Harmless. Deeply unpleasant.",
+    loseQuote: "Their brain was staging EXPLOSIONS. At BEDTIME. Every night. The patient reported hearing a gunshot inside their own skull and you filed it under 'anxiety.' Bold classification."
+  },
+  {
+    name: "Foreign Accent Syndrome",
+    symptoms: [
+      "Something is subtly different about how the patient communicates.",
+      "Speech has changed since an incident approximately six weeks ago.",
+      "Close contacts report the patient 'sounds different' and cannot explain it further.",
+      "The patient speaks fluently but with a pronounced accent they did not previously have.",
+      "The accent is specifically from a country the patient has never visited and does not speak the language of.",
+      "The patient is from Ohio. They now sound convincingly Norwegian. Neurology did this."
+    ],
+    houseComments: [
+      "Communication changes post-incident. Anything neurological gets my attention.",
+      "Sounds different, still fluent. Not aphasia. This is prosody — the music of speech. Something hit the wrong notes.",
+      "An accent from a place they've never been. Their brain had to store the motor patterns somewhere. It got creative."
+    ],
+    winQuote: "Neurological damage reorganized the speech motor patterns that control prosody — rhythm, intonation, vowel placement. The result sounds like a foreign accent even though the underlying language is identical. The patient didn't acquire the accent. Their brain invented it.",
+    loseQuote: "The patient sounded FOREIGN. They were NOT foreign. Their own BRAIN invented an accent for them. A Norwegian one. From Ohio. And you ran a thyroid panel."
+  },
+  {
+    name: "Trimethylaminuria",
+    symptoms: [
+      "Significant social withdrawal over the past several months.",
+      "Patient reports hygiene has become an increasing preoccupation.",
+      "Interpersonal relationships have deteriorated. The patient cannot explain why.",
+      "Multiple coworkers have filed complaints about an unidentified smell. Patient is mortified.",
+      "Body odor is fishy, persistent, and completely unresponsive to any amount of washing.",
+      "The patient's metabolic system cannot break down trimethylamine. It exits through every available pore. They smell like a harbor."
+    ],
+    houseComments: [
+      "Social withdrawal plus hygiene obsession. Something physical is socially isolating them. Start there.",
+      "Complaints about an odor that the patient can't eliminate. That's not hygiene — that's metabolism.",
+      "Fishy. Persistent. Showers don't help. FMO3 enzyme. Check it."
+    ],
+    winQuote: "A mutation in the FMO3 gene prevents the breakdown of trimethylamine produced during digestion. The compound accumulates and outgasses through sweat, breath, and urine. Smells like fish. Is not fish. No cure — dietary management only.",
+    loseQuote: "The patient smelled like low tide and they couldn't stop it no matter what they did. The smell was the diagnosis. The diagnosis was in your NOSE. Multiple noses, in fact."
+  },
+  {
+    name: "Porphyria",
+    symptoms: [
+      "A constellation of physical and psychiatric symptoms that resist a clean explanation.",
+      "Marked sensitivity to sunlight that seems disproportionate.",
+      "Abdominal pain alongside psychiatric episodes. The combination is conspicuous.",
+      "Urine, upon examination, is a reddish-purple. This was not mentioned until now.",
+      "Neurological symptoms have joined the presentation. The picture is widening.",
+      "Heme biosynthesis is disrupted. Porphyrins are accumulating. In the 14th century, this patient would have been the subject of very serious village gossip."
+    ],
+    houseComments: [
+      "Physical plus psychiatric together means systemic. Don't let anyone silo those symptoms.",
+      "Sunlight sensitivity that severe isn't cosmetic — it's metabolic or immunological.",
+      "Someone checked the urine, yes? Tell me someone checked the urine.",
+      "Purple urine. Right. THAT would have been useful to mention at the beginning."
+    ],
+    winQuote: "Porphyria. Defective heme synthesis. Porphyrins accumulate and cause photosensitivity, neurological symptoms, abdominal crisis, and psychiatric episodes. Medical historians believe this disease is the most likely biological basis for European vampire and werewolf mythology. The patient would have had a difficult medieval experience.",
+    loseQuote: "THE URINE WAS PURPLE. Their URINE. PURPLE. They had PHOTOSENSITIVITY and PSYCHIATRIC EPISODES and PURPLE URINE and you — what. Ordered a CT. A CT was your move."
+  },
+  {
+    name: "Jumping Frenchmen of Maine",
+    symptoms: [
+      "Everyone who knows the patient describes them as 'extremely jumpy.'",
+      "Startle response to unexpected stimuli is dramatically out of proportion.",
+      "After a sudden noise, the patient remains in a prolonged agitated state.",
+      "Patient has been observed involuntarily repeating words that were shouted near them.",
+      "When commands are shouted at the patient, they obey them before processing whether to do so.",
+      "Extreme startle reflex, echolalia, and involuntary command compliance. The patient's nervous system has removed the editorial step."
+    ],
+    houseComments: [
+      "Extremely jumpy. Medically that's hyperekplexia spectrum. Figure out what kind.",
+      "Prolonged agitation post-startle. The nervous system isn't resetting. Something's stuck.",
+      "Echolalia triggered by startle. That's specific enough to be interesting."
+    ],
+    winQuote: "First documented in a 19th-century Maine logging community among French-Canadian workers. Extreme startle reflex, echolalia, and automatic obedience to shouted commands — before the brain has consciously agreed to comply. The condition is real. The reason it's associated with that specific population is still not fully understood.",
+    loseQuote: "You could have SHOUTED a command at the patient and their BODY WOULD HAVE OBEYED before their BRAIN CAUGHT UP. That's a documented medical phenomenon. One of you should have known that."
+  },
+  {
+    name: "Stiff Person Syndrome",
+    symptoms: [
+      "Muscle issues that come and go in a pattern no one has mapped yet.",
+      "Several unexplained falls over the past three months.",
+      "Muscles become rigid in sudden episodes without apparent cause.",
+      "Loud sounds and emotional distress appear to reliably trigger episodes.",
+      "During acute episodes, the patient becomes completely rigid and cannot move.",
+      "The inhibitory neurons that signal muscles to relax are under immunological attack. The muscles never receive permission to stop."
+    ],
+    houseComments: [
+      "Unexplained falls with intermittent muscle involvement. The pattern is everything. Document every episode.",
+      "Triggered by stress and noise. That's not random — the nervous system is hypersensitized somewhere specific.",
+      "Board-rigid. Not stiff — rigid. The muscles are refusing release. That's autoimmune against the inhibitory pathway."
+    ],
+    winQuote: "Anti-GAD antibodies. The immune system targets the GABAergic interneurons that tell muscles to relax. With those neurons compromised, muscles stay contracted. External stimuli — sound, stress, touch — trigger uncontrolled full-body rigidity. The patient's body has forgotten how to let go.",
+    loseQuote: "The patient COULD NOT PHYSICALLY RELAX. Neurologically. The signal to relax was being immunologically blocked. And the solution you landed on was — what, tell them to breathe? Incredible."
+  },
+  {
+    name: "Fibrodysplasia Ossificans Progressiva",
+    symptoms: [
+      "Steadily progressive loss of mobility that no single injury explains.",
+      "Pain and swelling in soft tissue following even minor trauma.",
+      "Physical examination reveals unusual firmness in areas that should be soft.",
+      "Imaging shows calcification forming in muscle and connective tissue.",
+      "Skeletal muscle and connective tissue are actively being replaced by bone.",
+      "The patient's body is building new skeleton. In places where skeleton was never planned."
+    ],
+    houseComments: [
+      "Progressive mobility loss without a clear structural lesion. The etiology is somewhere upstream of the joints.",
+      "Soft tissue calcification. Either dystrophic or the body has made a misguided executive decision.",
+      "The bone is appearing in muscle. That's not myositis ossificans — it's too systemic. Something's wrong at the signaling level."
+    ],
+    winQuote: "A mutation in the ACVR1 gene causes the body's repair machinery to interpret muscle damage as a trigger for bone formation. The skeleton grows. Into soft tissue. Into muscle. Into tendon. The process is irreversible. Any attempt to surgically remove the new bone causes more bone to form. It is one of the crueler diseases on record.",
+    loseQuote: "Their MUSCLES were being converted to BONE. Their BODY WAS BUILDING SKELETON in places that were NEVER MEANT TO HAVE SKELETON. And nobody in this room thought that was worth pursuing? Outstanding restraint."
+  },
+  {
+    name: "Morgellons Disease",
+    symptoms: [
+      "Skin sensations the patient describes with an unusual degree of specificity.",
+      "Reports crawling or biting sensations under the skin.",
+      "Has been evaluated for parasitic infection multiple times. No parasites identified.",
+      "Patient insists they can see fibers or filaments emerging from open skin lesions.",
+      "Unidentified filamentous material is, in fact, present at wound sites on examination.",
+      "The skin is producing something. The origin and nature of the filaments remain genuinely contested."
+    ],
+    houseComments: [
+      "Crawling sensations plus lesions. Either delusional parasitosis or something we don't have a tidy name for.",
+      "Claims to see fibers. Three possibilities: they're embedding them, it's delusional, or there are actually fibers. All three deserve investigation.",
+      "The CDC ran an investigation. They were not satisfied with their own conclusions. That makes it interesting."
+    ],
+    winQuote: "Morgellons. The filaments are real — identified as primarily cellulose-based in independent analyses. The mechanistic explanation remains officially inconclusive. The CDC investigation was thorough, and its findings were quietly ambiguous. It is the kind of disease that makes certain researchers very uncomfortable.",
+    loseQuote: "The patient's SKIN was producing UNIDENTIFIED FIBERS. The CDC looked into this and DIDN'T CLOSE THE CASE CLEANLY. And your diagnosis was 'probably anxiety.' Courageous."
+  },
+  {
+    name: "Alice in Wonderland Syndrome",
+    symptoms: [
+      "Perceptual complaints that the patient finds difficult to articulate.",
+      "Reports that things around them 'look wrong' in a way they cannot specify.",
+      "Objects in the environment appear to be the incorrect size.",
+      "The patient's perception of their own body size is episodically distorted.",
+      "Periods during which the surrounding world warps dramatically in perceived scale, lasting minutes to hours.",
+      "Size perception is broken. Micropsia, macropsia, and dysmetropsia, alternating. Lewis Carroll had this and wrote a book about it."
+    ],
+    houseComments: [
+      "Things 'look wrong.' That's cortical — the processing end, not the input end.",
+      "Size perception specifically. Micropsia and macropsia are distinct from generalized visual disturbance.",
+      "Their own body looks wrong-sized to them. That's the parietal cortex misfiring. Or migraine aura. Both are possible."
+    ],
+    winQuote: "A neurological condition — most commonly migraine-related — causing distortions in perceived size. Lewis Carroll almost certainly experienced it and documented it in meticulous fictional detail instead of seeking treatment. The book has sold considerably better than most medical case reports.",
+    loseQuote: "Lewis Carroll wrote ALICE IN WONDERLAND about a condition named after that book. The condition involves perceiving the wrong SIZE. The clue was in the NAME. I don't know how to make it clearer without diagnosing them myself, which is apparently what I'm going to do."
+  },
+  {
+    name: "Kuru",
+    symptoms: [
+      "Progressive neurological deterioration with no identified cause.",
+      "Tremors that have been slowly worsening over several weeks.",
+      "Inappropriate and unpredictable laughing that the patient cannot control.",
+      "The patient recently returned from an extended trip to a remote region.",
+      "The patient attended a traditional funeral ceremony in the Fore highlands of Papua New Guinea.",
+      "The patient consumed neural tissue at the funeral. They have a prion disease. This is both rare and completely specific."
+    ],
+    houseComments: [
+      "Progressive neuro decline plus tremors. Prion, autoimmune, or infectious — start ruling.",
+      "Laughing at inappropriate times alongside tremors. That's a very specific profile. Very.",
+      "They just got back from where. SAY THE REGION."
+    ],
+    winQuote: "Kuru is a prion disease transmitted through ritual consumption of human neural tissue, practiced historically among the Fore people of Papua New Guinea as part of funeral rites. The infectious agent is a misfolded protein. It is incurable. The patient attended the wrong ceremony.",
+    loseQuote: "The patient went to Papua New Guinea. Attended a ritual feast. Has a progressive laughing tremor disorder. There are two diagnoses that fit that sentence. You found zero of them. Staggering."
+  },
+  {
+    name: "Paris Syndrome",
+    symptoms: [
+      "Acute psychological deterioration following a long international journey.",
+      "No prior psychiatric history. The onset was rapid.",
+      "Patient describes a profound and destabilizing gap between expectation and reality.",
+      "The shattering experience involved a place they had anticipated their entire adult life.",
+      "The patient visited Paris for the first time.",
+      "Paris was not as imagined. The psyche has not processed this and may not."
+    ],
+    houseComments: [
+      "Acute psychiatric break, no prior history, post-travel. Something environmental triggered it. What and where.",
+      "Reality failed to match a cherished expectation badly enough to cause clinical collapse. That's a very specific trauma vector.",
+      "Paris. They went to Paris. I've always assumed it smells like philosophy and cigarettes and disappointment. Apparently for a subset of people, that's medically significant."
+    ],
+    winQuote: "Paris Syndrome predominantly affects tourists — historically Japanese visitors — who arrive with a deeply idealized image of Paris and encounter, instead, an actual city. The gap between the mythologized Paris and the real one is, for some people, neurologically destabilizing. The French have not issued a formal apology.",
+    loseQuote: "The patient's entire mental architecture COLLAPSED because Paris was just PARIS. You ordered an MRI of someone who had a SPIRITUAL COLLISION with a CITY. The Eiffel Tower is not on the scan. Nothing diagnostic is on that scan."
+  },
+  {
+    name: "Autoimmune Encephalitis",
+    symptoms: [
+      "Personality has shifted noticeably over the past several months.",
+      "Episodes of confusion that appear and resolve without apparent cause.",
+      "Psychiatric symptoms have emerged in a person with no prior history.",
+      "New-onset seizures in a previously healthy individual.",
+      "Cerebrospinal fluid analysis shows inflammatory markers without a clear infectious source.",
+      "The patient's immune system has produced antibodies against their own brain receptors and has been dismantling cognition piece by piece."
+    ],
+    houseComments: [
+      "Personality change plus confusion means the brain. Finding which part and why is the actual problem.",
+      "Psychiatric symptoms, first episode, no history. This is not a psychiatric problem. Work it as neurology.",
+      "Seizures plus CSF inflammation plus psych plus confusion. You are circling something. Get closer to it."
+    ],
+    winQuote: "Anti-NMDA receptor encephalitis. The immune system generates antibodies against NMDA receptors — the receptors responsible for memory, cognition, and behavior. What looks like psychosis is actually inflammation. The patient wasn't having a breakdown. They were being quietly dismantled by their own immune cells.",
+    loseQuote: "The patient's immune system was TARGETING THEIR OWN BRAIN RECEPTORS. Turning off thought. One receptor at a time. You chased the psychiatric presentation while the neurology ate them. Classic."
+  },
+  {
+    name: "Hypertrichosis",
+    symptoms: [
+      "Dermatology has referred the patient after an unusual presentation.",
+      "Unusual hair growth that the patient finds distressing.",
+      "Family members have commented on a dramatic change in the patient's appearance over recent months.",
+      "Hair is growing from locations on the face and body where it is not typically present.",
+      "Extensive hair growth now covers the patient's face and torso beyond any expected variation.",
+      "The patient has what the medical literature — with a rare moment of unsubtle nomenclature — refers to as Werewolf Syndrome."
+    ],
+    houseComments: [
+      "Unusual hair growth. Androgen excess is the obvious guess. What's the distribution?",
+      "Atypical follicular activation. Something's telling those follicles to wake up that shouldn't be.",
+      "Face and torso, extensive, symmetrical. That's not hormonal. That's genetic. Go rarer."
+    ],
+    winQuote: "Hypertrichosis. A genetic mutation reactivates dormant follicles across the body and face. The condition was historically interpreted as lycanthropy. It is, in fact, one of the few diseases to have its own folkloric tradition. The patient is not a werewolf. They have a very expressive genome.",
+    loseQuote: "The patient had a condition that medical textbooks call WEREWOLF SYNDROME. With that label. In the textbook. And the differential you landed on was — alopecia? That's the wrong direction. By a lot."
+  },
+  {
+    name: "Hutchinson-Gilford Progeria",
+    symptoms: [
+      "The patient presents with features inconsistent with their stated age.",
+      "Multiple biological markers suggest an age significantly greater than the patient's actual years.",
+      "Bone density, skin integrity, and cardiovascular indicators are all advanced beyond their chronological age.",
+      "Several organ systems are exhibiting age-related deterioration at a rate that is difficult to account for.",
+      "Biological aging is accelerating across all systems simultaneously.",
+      "The patient is eleven years old with the cardiovascular system of a seventy-year-old. LMNA mutation. The clock is running very fast."
+    ],
+    houseComments: [
+      "Biology and biography aren't matching. That's either falsified records or a genetic error in the aging mechanism.",
+      "Multiple systems aging simultaneously and prematurely. This isn't one failing organ. This is a global timer running wrong.",
+      "Cardiovascular age, skin, bone density — all advanced. Lamin A. Look at the nuclear lamina."
+    ],
+    winQuote: "A point mutation in the LMNA gene produces a truncated lamin A protein called progerin. Progerin disrupts nuclear membrane stability, causing accelerated cellular aging across every tissue. These children develop heart disease, stroke, and atherosclerosis in their first decade. We know exactly what causes it. We treat it anyway.",
+    loseQuote: "A CHILD was aging at EIGHT TIMES the normal rate. Their heart was seven decades old. Their body was eating their years. And you needed more time to think. The disease wasn't waiting."
+  },
+  {
+    name: "Electromagnetic Hypersensitivity",
+    symptoms: [
+      "A wide and shifting range of symptoms with no consistent underlying pathology.",
+      "Symptoms appear to correlate with the patient's physical location in ways they have begun tracking obsessively.",
+      "Patient has begun avoiding certain buildings, rooms, and technologies.",
+      "The patient believes wireless electromagnetic fields are causing their symptoms and has documentation.",
+      "Has relocated to a rural area described as having minimal wireless coverage.",
+      "The patient's symptoms are real. Their mechanism is almost certainly not electromagnetic fields. This distinction is important and difficult."
+    ],
+    houseComments: [
+      "Symptoms that vary with location. That's either environmental trigger, anxiety, or both. Start mapping it properly.",
+      "They've formed a theory. Patients with theories make the best and worst patients simultaneously.",
+      "They've self-diagnosed as electromagnetically sensitive. Controlled studies don't support it. Their suffering is real. The cause is our problem now."
+    ],
+    winQuote: "Electromagnetic hypersensitivity. In every double-blind study, subjects cannot reliably detect the presence of electromagnetic fields. Their symptoms are genuine. The cause they believe in is not supported by evidence. Something is wrong with this patient. It is likely not the WiFi. Finding what it actually is will be more work than any of this.",
+    loseQuote: "The patient thought WiFi was attacking them. You thought 'maybe it is.' Neither of you are helping. One of you has a medical degree."
+  }
+];
+
+// ────────────────────────────────────────────────
+// HOUSE RESPONSE DATA
+// ────────────────────────────────────────────────
+const MUNDANE = [
+  'blood test','blood work','bloodwork','cbc','complete blood count','blood panel',
+  'mri','magnetic resonance',
+  'ct scan','cat scan','computed tomography',
+  'x-ray','xray','x ray','chest x',
+  'urine test','urinalysis','urine analysis',
+  'ecg','ekg','electrocardiogram',
+  'echocardiogram','echo',
+  'ultrasound','sonogram',
+  'biopsy',
+  'temperature','fever check',
+  'blood pressure','bp check',
+  'pulse','heart rate',
+  'oxygen level','pulse ox','spo2',
+  'cholesterol','lipid panel',
+  'glucose','blood sugar',
+  'colonoscopy',
+  'allergy test','allergy panel',
+  'physical exam','physical examination',
+  'thyroid panel','tsh',
+  'liver function','liver panel',
+  'kidney function','renal panel','bmp',
+  'stool sample','stool test',
+  'pregnancy test',
+  'complete metabolic','cmp',
+  'vitamin d','vitamin b',
+  'iron level','ferritin',
+  'sleep study','polysomnogram',
+  'lung function','spirometry',
+  'nerve test','emg'
+];
+
+const MUNDANE_RESPONSES = [
+  t => `${t}. Brilliant. Hippocrates invented that one. 400 BC. Would you like to try something from after the Renaissance?`,
+  t => `A ${t}. Let me guess — you also want to confirm the patient has a skeleton. Standard stuff.`,
+  t => `${t}. The diagnostic equivalent of checking if the car is low on gas by asking the driver if they've been driving. Fine. Order it. Then do some actual thinking.`,
+  t => `Oh, a ${t}. How completely, utterly, soul-eroding expected. We'll get results that are exactly as useful as you deserve.`,
+  t => `I would call that good thinking, but I'd be lying, and we'd both know it. Run the ${t}. Then come back with something that required brain activity.`,
+  t => `${t}. Yes. The thing we check in every case, for every patient, for every symptom since time began. I'm sure this one will be the breakthrough.`,
+  t => `Fine. ${t}. But when it comes back normal — and it will — I expect you to have a Plan B that involves actually thinking.`,
+  t => `The ${t}. Classic. Conservative. Deeply, profoundly uninspired. Go ahead. I'll be here, wondering where medicine went.`,
+  t => `Sure, order the ${t}. And while we wait for results that tell us nothing, maybe consider what we'd do if the patient were interesting.`,
+  t => `A ${t}. You know what — yes. Run it. I'll use the time to think about something useful, since one of us should.`
+];
+
+const PRAISE_KEYWORDS = [
+  'prion','creutzfeldt','kuru','funeral feast','ritual consumption',
+  'auto.?brew','gut ferment','gut.*alcohol','intestinal ferment','endogenous alcohol','brew.*gut',
+  'aquagen','water allerg',
+  'cotard','walking corpse','believes.*dead','dead.*patient',
+  'alien hand','hand.*autonomo','autonomous.*hand',
+  'foreign accent','involuntary accent',
+  'trimethyl','fish odor','fish smell',
+  'exploding head','head.*explod',
+  'alice.*wonderland','size.*perception.*broken','micropsia','macropsia',
+  'jumping french','hyperekplexia.*echolalia',
+  'stiff person',
+  'morgellons','skin.*fiber','fiber.*skin',
+  'fibrodysplasia','muscle.*bone','ossif.*progres',
+  'porphyria','purple urine',
+  'paris syndrome',
+  'autoimmune encephalit','nmda.*receptor','anti.?gad',
+  'werewolf syndrome','hypertrichosis',
+  'progeria','hutchinson.*gilford','lmna',
+  'papau','papua.*guinea','fore.*tribe','fore.*people','cannib',
+  'electromagnetic.*hypersensit',
+  'medieval.*disease','ancient.*pathogen',
+  'rare.*genetic.*disorder',
+  'endogenous.*ethanol',
+  'gut.*yeast','gut.*candida',
+  'heavy metal.*thallium','thallium poisoning',
+  'arsenic.*chronic','chronic.*arsenic',
+  'parasit.*exotic','exotic.*parasit',
+  'prion.*protein','misfolded.*protein',
+  'fmo3','enzyme deficiency.*smell'
+];
+
+const PRAISE_RESPONSES = [
+  t => `That is — and I want to be measured here — the first thing anyone has suggested today that required actual cognition. Order it.`,
+  t => `Most people here would have ordered another ${['blood test','MRI','CT scan'][Math.floor(Math.random()*3)]}. You suggested THAT. I may need to recalibrate my expectations of this department.`,
+  t => `Oh. Oh, that's interesting. That's GENUINELY interesting. I haven't been genuinely interested in three weeks. Order it immediately.`,
+  t => `If that comes back positive, I will personally carry you through this corridor. Metaphorically. I don't touch people. But emotionally: shoulder carry.`,
+  t => `That's the kind of lateral thinking that separates doctors from clipboard-holders. The instinct is correct. Follow it all the way.`,
+  t => `I was absolutely prepared to be disappointed by everyone in this building today. You have complicated that plan. Well done.`,
+  t => `You're thinking at the correct altitude. Most people here think at ankle height. This is at least waist height. We're making progress.`,
+  t => `Outstanding. Most diagnosticians would have walked past that. You stopped, looked at it, and saw something. That's actually what we're supposed to do.`,
+  t => `If you're right about this, I will tell you you're right. Once. Savour it. I won't repeat it.`,
+  t => `That's a test I haven't ordered in years. Because nobody else ever thinks to order it. Until apparently today.`
+];
+
+const MEDIUM_KEYWORDS = [
+  'genetic','gene panel','dna','mutation','sequencing',
+  'autoimmune','immune panel','immunology',
+  'lumbar puncture','spinal tap','csf analysis',
+  'toxicology','tox screen','poison screen',
+  'hormone panel','cortisol','adrenal',
+  'neurological exam','cranial nerves','cerebellar',
+  'eeg','brain activity',
+  'nerve conduction','ncs',
+  'enzyme assay','enzyme panel',
+  'travel history',
+  'psychiatric evaluation',
+  'rare disease panel',
+  'metabolic panel','metabolic disorder',
+  'skin culture','skin swab',
+  'heavy metal screen',
+  'infectious disease consult',
+  'neurology consult',
+  'spect','pet scan'
+];
+
+const MEDIUM_RESPONSES = [
+  t => `Warmer. The instinct to go deeper is correct. Now go deeper than that.`,
+  t => `That's an interesting pivot. Not interesting enough to fully satisfy me, but interesting. Adjust by about 20 degrees and try again.`,
+  t => `You're circling something. I can feel you circling it. Stop circling and go in.`,
+  t => `Reasonable. Intelligent, even. This case is neither reasonable nor intelligent. Think more unusually.`,
+  t => `Not bad. Not what I'd order first. But not the catastrophic waste of resources the last suggestion was. Progress.`,
+  t => `${t}. That shows you're actually trying. Try about 40% harder and we might get somewhere.`
+];
+
+const DEFAULT_RESPONSES = [
+  t => `Interesting request. Vague, but interesting. Elaborate.`,
+  t => `That tells me you're thinking about it, at least. What specifically do you expect to find?`,
+  t => `Run it. And while we wait for results, think about what a positive finding would actually mean for the diagnosis.`,
+  t => `Fine. I'll add it to the list. Manage your expectations accordingly.`,
+  t => `You want to run that. The 'why' is more interesting than the test. What's the logic chain?`,
+  t => `I've seen worse test orders. This isn't among the best. Order it anyway.`,
+  t => `That's not nothing. It's not much, but it's not nothing. Proceed with appropriate humility.`
+];
+
+// ────────────────────────────────────────────────
+// GAME STATE
+// ────────────────────────────────────────────────
+const MAX_GUESSES = 6;
+
+const NAMES = ["John D.","Sarah M.","Robert T.","Emily K.","Michael B.","Lisa C.","David W.","Karen H.","James P.","Maria S."];
+const AGES  = ["34","52","41","67","28","45","73","39","55","22"];
+
+const WRONG_COMMENTS = [
+  "Wrong. Spectacularly, confidently wrong. Regroup.",
+  "No. But points for the conviction with which you were wrong.",
+  "Incorrect. The patient would like a second opinion. So would I.",
+  "Still no. I'm starting to think you're doing this on purpose.",
+  "Not that either. I hope you have a plan that doesn't involve guessing alphabetically.",
+  "Wrong again. We're running out of time and you're running out of ideas. Think."
+];
+
+let state = {
+  disease: null,
+  guesses: [],
+  symptomsShown: 1,
+  gameOver: false,
+  won: false,
+  wins:   +localStorage.getItem('h_w') || 0,
+  losses: +localStorage.getItem('h_l') || 0,
+  streak: +localStorage.getItem('h_s') || 0,
+};
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+function initGame() {
+  state.disease = DISEASES[Math.floor(Math.random() * DISEASES.length)];
+  state.guesses = [];
+  state.symptomsShown = 1;
+  state.gameOver = false;
+  state.won = false;
+
+  const pi = Math.floor(Math.random() * NAMES.length);
+  document.getElementById('pName').textContent = NAMES[pi];
+  document.getElementById('pAge').textContent  = AGES[pi];
+
+  document.getElementById('guessInput').value = '';
+  document.getElementById('guessInput').disabled = false;
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('testInput').value = '';
+
+  document.getElementById('chatLog').innerHTML =
+    '<div class="chat-msg house">Interesting case. Well — marginally. Someone has to look at it. What test are you thinking? And please: aim higher than your instincts.</div>';
+
+  document.getElementById('overlay').classList.remove('visible');
+
+  renderAll();
+}
+
+// ────────────────────────────────────────────────
+// RENDER
+// ────────────────────────────────────────────────
+function renderAll() {
+  renderSymptoms();
+  renderAttempts();
+  renderDots();
+  renderStats();
+  document.getElementById('attemptsLeft').textContent =
+    `${MAX_GUESSES - state.guesses.length} attempt${MAX_GUESSES - state.guesses.length !== 1 ? 's' : ''} remaining`;
+}
+
+function renderSymptoms() {
+  const list = document.getElementById('symptomsList');
+  const lock = document.getElementById('hiddenSlots');
+  list.innerHTML = '';
+
+  for (let i = 0; i < state.symptomsShown; i++) {
+    const card = document.createElement('div');
+    card.className = 'symptom-card' + (i === state.symptomsShown - 1 && state.symptomsShown > 1 ? ' fresh' : '');
+    card.innerHTML = `<div class="obs-label">Observation ${i + 1}</div>${state.disease.symptoms[i]}`;
+    list.appendChild(card);
+    if (i === state.symptomsShown - 1) setTimeout(() => card.classList.remove('fresh'), 1800);
+  }
+
+  lock.innerHTML = '';
+  const remaining = state.disease.symptoms.length - state.symptomsShown;
+  for (let i = 0; i < Math.min(remaining, MAX_GUESSES - state.guesses.length - 1); i++) {
+    const slot = document.createElement('div');
+    slot.className = 'locked-slot';
+    slot.textContent = `[ Observation ${state.symptomsShown + i + 1} — unlock with next wrong guess ]`;
+    lock.appendChild(slot);
+  }
+}
+
+function renderAttempts() {
+  const log = document.getElementById('attemptLog');
+  log.innerHTML = '';
+
+  state.guesses.forEach((g, i) => {
+    const row = document.createElement('div');
+    row.className = 'attempt-row ' + (g.correct ? 'correct' : 'wrong');
+    row.textContent = g.text;
+    log.appendChild(row);
+
+    if (!g.correct && g.comment) {
+      const snark = document.createElement('div');
+      snark.className = 'house-snark';
+      snark.textContent = `"${g.comment}"`;
+      log.appendChild(snark);
+    }
+  });
+
+  const remaining = MAX_GUESSES - state.guesses.length;
+  if (!state.gameOver) {
+    for (let i = 0; i < remaining; i++) {
+      const row = document.createElement('div');
+      row.className = 'attempt-row empty';
+      row.textContent = i === 0 ? 'Awaiting your diagnosis...' : '';
+      log.appendChild(row);
+    }
+  }
+}
+
+function renderDots() {
+  const row = document.getElementById('dotsRow');
+  row.innerHTML = '';
+  for (let i = 0; i < MAX_GUESSES; i++) {
+    const d = document.createElement('div');
+    if (i < state.guesses.length) {
+      d.className = 'dot ' + (state.guesses[i].correct ? 'win' : 'used');
+    } else {
+      d.className = 'dot';
+    }
+    row.appendChild(d);
+  }
+}
+
+function renderStats() {
+  document.getElementById('statW').textContent = state.wins;
+  document.getElementById('statL').textContent = state.losses;
+  document.getElementById('statS').textContent = state.streak;
+}
+
+// ────────────────────────────────────────────────
+// GUESS LOGIC
+// ────────────────────────────────────────────────
+function submitGuess() {
+  if (state.gameOver) return;
+  const input = document.getElementById('guessInput');
+  const raw = input.value.trim();
+  if (!raw) { shake(input); return; }
+
+  const match = DISEASES.find(d => d.name.toLowerCase() === raw.toLowerCase());
+
+  if (!match) {
+    addHouseChat(`"${raw}" is not a recognized diagnosis. Try spelling it in a way that appears in any medical reference ever written.`);
+    shake(input);
+    return;
+  }
+
+  if (state.guesses.find(g => g.text.toLowerCase() === raw.toLowerCase())) {
+    addHouseChat("You already guessed that. The patient still doesn't have it. Try a different wrong answer.");
+    return;
+  }
+
+  const correct = match.name === state.disease.name;
+  const guessIdx = state.guesses.length;
+
+  state.guesses.push({
+    text: match.name,
+    correct,
+    comment: correct ? null : (state.disease.houseComments?.[guessIdx] ?? WRONG_COMMENTS[Math.min(guessIdx, WRONG_COMMENTS.length - 1)])
+  });
+
+  input.value = '';
+  document.getElementById('acDrop').classList.remove('open');
+
+  if (correct) {
+    state.won = true;
+    state.gameOver = true;
+    state.wins++;
+    state.streak++;
+    localStorage.setItem('h_w', state.wins);
+    localStorage.setItem('h_s', state.streak);
+  } else {
+    if (state.symptomsShown < state.disease.symptoms.length) state.symptomsShown++;
+    if (state.guesses.length >= MAX_GUESSES) {
+      state.gameOver = true;
+      state.losses++;
+      state.streak = 0;
+      localStorage.setItem('h_l', state.losses);
+      localStorage.setItem('h_s', '0');
+      document.getElementById('guessInput').disabled = true;
+      document.getElementById('submitBtn').disabled = true;
+    }
+  }
+
+  renderAll();
+  if (state.gameOver) setTimeout(() => showEnd(), correct ? 700 : 1000);
+}
+
+function showEnd() {
+  const win = state.won;
+  const card = document.getElementById('endCard');
+  card.className = 'end-card ' + (win ? 'win' : 'lose');
+  document.getElementById('endVerdict').textContent = win ? 'CORRECT DIAGNOSIS' : 'PATIENT UNDIAGNOSED';
+  document.getElementById('endDisease').innerHTML = `The answer was: <strong>${state.disease.name}</strong>`;
+  document.getElementById('endAttempts').textContent = win
+    ? `Diagnosed in ${state.guesses.length} attempt${state.guesses.length !== 1 ? 's' : ''}`
+    : `You exhausted all 6 attempts.`;
+  document.getElementById('endQuote').textContent = win ? state.disease.winQuote : state.disease.loseQuote;
+  document.getElementById('endStats').textContent = `Session: ${state.wins}W / ${state.losses}L  —  Streak: ${state.streak}`;
+  document.getElementById('overlay').classList.add('visible');
+}
+
+// ────────────────────────────────────────────────
+// HOUSE CHATBOX
+// ────────────────────────────────────────────────
+function runTest() {
+  const el = document.getElementById('testInput');
+  const text = el.value.trim();
+  if (!text) return;
+
+  addUserChat(text);
+  el.value = '';
+
+  const typing = document.getElementById('typingIndicator');
+  typing.classList.add('visible');
+
+  setTimeout(() => {
+    typing.classList.remove('visible');
+    const { response, isPraise } = getHouseResponse(text);
+    addHouseChat(response, isPraise);
+  }, 700 + Math.random() * 700);
+}
+
+function getHouseResponse(text) {
+  const low = text.toLowerCase();
+
+  // Check praise keywords (regex-based)
+  for (const kw of PRAISE_KEYWORDS) {
+    if (new RegExp(kw, 'i').test(low)) {
+      const fn = PRAISE_RESPONSES[Math.floor(Math.random() * PRAISE_RESPONSES.length)];
+      return { response: fn(text), isPraise: true };
+    }
+  }
+
+  // Check mundane keywords
+  for (const kw of MUNDANE) {
+    if (low.includes(kw)) {
+      const label = kw.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const fn = MUNDANE_RESPONSES[Math.floor(Math.random() * MUNDANE_RESPONSES.length)];
+      return { response: fn(label), isPraise: false };
+    }
+  }
+
+  // Check medium keywords
+  for (const kw of MEDIUM_KEYWORDS) {
+    if (low.includes(kw)) {
+      const fn = MEDIUM_RESPONSES[Math.floor(Math.random() * MEDIUM_RESPONSES.length)];
+      return { response: fn(text), isPraise: false };
+    }
+  }
+
+  // Default
+  const fn = DEFAULT_RESPONSES[Math.floor(Math.random() * DEFAULT_RESPONSES.length)];
+  return { response: fn(text), isPraise: false };
+}
+
+function addUserChat(msg) {
+  const log = document.getElementById('chatLog');
+  const el = document.createElement('div');
+  el.className = 'chat-msg user';
+  el.textContent = msg;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+function addHouseChat(msg, praise = false) {
+  const log = document.getElementById('chatLog');
+  const el = document.createElement('div');
+  el.className = 'chat-msg house' + (praise ? ' praise' : '');
+  el.textContent = msg;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ────────────────────────────────────────────────
+// AUTOCOMPLETE
+// ────────────────────────────────────────────────
+let acIdx = -1;
+
+document.getElementById('guessInput').addEventListener('input', function () {
+  const val = this.value.trim().toLowerCase();
+  const drop = document.getElementById('acDrop');
+  acIdx = -1;
+
+  if (val.length < 2) { drop.classList.remove('open'); return; }
+
+  const hits = DISEASES
+    .map(d => d.name)
+    .filter(n => !state.guesses.find(g => g.text === n) && n.toLowerCase().includes(val));
+
+  if (!hits.length) { drop.classList.remove('open'); return; }
+
+  drop.innerHTML = '';
+  hits.forEach((name, i) => {
+    const item = document.createElement('div');
+    item.className = 'ac-item';
+    item.textContent = name;
+    item.addEventListener('mousedown', e => {
+      e.preventDefault();
+      document.getElementById('guessInput').value = name;
+      drop.classList.remove('open');
+    });
+    drop.appendChild(item);
+  });
+  drop.classList.add('open');
+});
+
+document.getElementById('guessInput').addEventListener('keydown', function (e) {
+  const drop = document.getElementById('acDrop');
+  const items = drop.querySelectorAll('.ac-item');
+  if (!drop.classList.contains('open')) {
+    if (e.key === 'Enter') submitGuess();
+    return;
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    acIdx = Math.min(acIdx + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIdx));
+    if (acIdx >= 0) this.value = items[acIdx].textContent;
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    acIdx = Math.max(acIdx - 1, -1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIdx));
+    if (acIdx >= 0) this.value = items[acIdx].textContent;
+  } else if (e.key === 'Enter') {
+    if (acIdx >= 0) { this.value = items[acIdx].textContent; drop.classList.remove('open'); }
+    else { drop.classList.remove('open'); submitGuess(); }
+  } else if (e.key === 'Escape') {
+    drop.classList.remove('open');
+  }
+});
+
+document.getElementById('guessInput').addEventListener('blur', () => {
+  setTimeout(() => document.getElementById('acDrop').classList.remove('open'), 200);
+});
+
+document.getElementById('testInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runTest(); }
+});
+
+// ────────────────────────────────────────────────
+// UTILS
+// ────────────────────────────────────────────────
+function shake(el) {
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+  setTimeout(() => el.classList.remove('shake'), 400);
+}
+
+// ── START ──
+initGame();
+</script>
+</body>
+</html>
