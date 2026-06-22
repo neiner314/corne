@@ -6,585 +6,200 @@
   <title>HOUSDLE — Diagnose or Die Trying</title>
   <style>
     :root {
-      --bg: #07090f;
-      --surface: #0f1623;
-      --surface2: #1a2133;
-      --border: #2a3a55;
-      --border-dim: #1d2b40;
-      --green: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.15);
-      --red: #ef4444;
-      --red-glow: rgba(239, 68, 68, 0.15);
-      --yellow: #f59e0b;
-      --yellow-glow: rgba(245, 158, 11, 0.12);
-      --blue: #60a5fa;
-      --text: #e2e8f0;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --house: #fbbf24;
-      --house-bg: rgba(251, 191, 36, 0.06);
-      --house-border: rgba(251, 191, 36, 0.2);
+      --bg: #07090f; --surface: #0f1623; --surface2: #1a2133;
+      --border: #2a3a55; --border-dim: #1d2b40;
+      --green: #10b981; --green-glow: rgba(16,185,129,.15);
+      --red: #ef4444; --red-glow: rgba(239,68,68,.15);
+      --yellow: #f59e0b; --yellow-glow: rgba(245,158,11,.12);
+      --blue: #60a5fa; --text: #e2e8f0; --text-muted: #64748b; --text-dim: #94a3b8;
+      --house: #fbbf24; --house-bg: rgba(251,191,36,.06); --house-border: rgba(251,191,36,.2);
     }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    html, body { height: 100%; overflow: hidden; }
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: 'Courier New', monospace;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
     }
 
-    /* ── HEADER ── */
     header {
-      text-align: center;
-      padding: 1.25rem 1rem 1rem;
-      border-bottom: 1px solid var(--border-dim);
-      background: linear-gradient(180deg, #0c1220 0%, var(--bg) 100%);
       flex-shrink: 0;
+      text-align: center; padding: 1rem;
+      border-bottom: 1px solid var(--border-dim);
+      background: linear-gradient(180deg,#0c1220 0%,var(--bg) 100%);
     }
+    .title-row { display:flex; align-items:center; justify-content:center; gap:.75rem; margin-bottom:.2rem; }
+    h1 { font-size:2.2rem; letter-spacing:.35em; color:var(--green); text-shadow:0 0 30px rgba(16,185,129,.4); }
+    .title-badge { font-size:.6rem; letter-spacing:.15em; color:var(--red); border:1px solid var(--red); padding:2px 6px; border-radius:3px; margin-bottom:6px; }
+    .subtitle { color:var(--text-muted); font-size:.7rem; letter-spacing:.12em; }
+    .stats-bar { display:flex; justify-content:center; gap:2rem; margin-top:.6rem; font-size:.72rem; }
+    .stat { color:var(--text-muted); } .stat span { color:var(--green); font-weight:bold; }
 
-    .title-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 0.25rem;
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      letter-spacing: 0.35em;
-      color: var(--green);
-      text-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
-    }
-
-    .title-badge {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      color: var(--red);
-      border: 1px solid var(--red);
-      padding: 2px 6px;
-      border-radius: 3px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      margin-top: 0.75rem;
-      font-size: 0.75rem;
-    }
-
-    .stat { color: var(--text-muted); }
-    .stat span { color: var(--green); font-weight: bold; }
-
-    /* ── LAYOUT ── */
     .game-container {
-      display: grid;
-      grid-template-columns: 340px 1fr 320px;
-      gap: 1rem;
-      max-width: 1280px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 1rem;
-      flex: 1;
-      min-height: 0;
-    }
-
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border-dim);
-      border-radius: 10px;
-      padding: 1.1rem;
-      display: flex;
-      flex-direction: column;
+      flex: 1; min-height: 0;
+      display: grid; grid-template-columns: 320px 1fr 300px;
+      gap: .85rem; padding: .85rem;
       overflow: hidden;
     }
 
+    .panel {
+      background:var(--surface); border:1px solid var(--border-dim); border-radius:10px;
+      padding:1rem; display:flex; flex-direction:column; min-height:0; overflow:hidden;
+    }
     .panel-title {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.9rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 1px solid var(--border-dim);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-size:.62rem; letter-spacing:.25em; color:var(--text-muted); text-transform:uppercase;
+      margin-bottom:.8rem; padding-bottom:.5rem; border-bottom:1px solid var(--border-dim);
+      flex-shrink:0;
     }
 
-    /* ── PATIENT FILE ── */
+    /* Patient file */
     .patient-file {
-      background: var(--surface2);
-      border: 1px solid var(--border-dim);
-      border-radius: 6px;
-      padding: 0.7rem 0.9rem;
-      margin-bottom: 0.9rem;
-      font-size: 0.75rem;
+      background:var(--surface2); border:1px solid var(--border-dim); border-radius:6px;
+      padding:.6rem .85rem; margin-bottom:.8rem; font-size:.72rem; flex-shrink:0;
     }
+    .pf-header { color:var(--text-muted); font-size:.58rem; letter-spacing:.15em; text-transform:uppercase; margin-bottom:.3rem; }
+    .pf-row { display:flex; gap:1.2rem; flex-wrap:wrap; }
+    .pf { color:var(--text-muted); } .pf span { color:var(--text-dim); }
 
-    .patient-file-header {
-      color: var(--text-muted);
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .patient-fields {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .pf { color: var(--text-muted); }
-    .pf span { color: var(--text-dim); }
-
-    /* ── SYMPTOMS ── */
-    .symptoms-list {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-
-    .symptoms-list::-webkit-scrollbar { width: 3px; }
-    .symptoms-list::-webkit-scrollbar-track { background: transparent; }
-    .symptoms-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
+    /* Symptoms */
+    .symptoms-list { flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:.55rem; padding-right:2px; }
+    .symptoms-list::-webkit-scrollbar { width:3px; }
+    .symptoms-list::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
     .symptom-card {
-      background: var(--surface2);
-      border: 1px solid var(--border-dim);
-      border-radius: 7px;
-      padding: 0.8rem;
-      font-size: 0.85rem;
-      line-height: 1.55;
-      animation: fadeSlideIn 0.5s ease forwards;
+      background:var(--surface2); border:1px solid var(--border-dim); border-radius:7px;
+      padding:.75rem; font-size:.83rem; line-height:1.55;
+      animation:fadeIn .45s ease; flex-shrink:0;
     }
+    .symptom-card.fresh { border-color:var(--yellow); box-shadow:0 0 14px var(--yellow-glow); }
+    .obs-label { font-size:.58rem; letter-spacing:.18em; color:var(--text-muted); text-transform:uppercase; margin-bottom:.25rem; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
 
-    .symptom-card.fresh {
-      border-color: var(--yellow);
-      box-shadow: 0 0 16px var(--yellow-glow), inset 0 0 0 0 var(--yellow);
+    /* Guess panel */
+    .dots-row { display:flex; gap:7px; justify-content:center; margin-bottom:.5rem; flex-shrink:0; }
+    .dot { width:10px;height:10px;border-radius:50%;border:1px solid var(--border);background:transparent;transition:all .3s; }
+    .dot.used { background:var(--red);border-color:var(--red);box-shadow:0 0 6px var(--red-glow); }
+    .dot.win  { background:var(--green);border-color:var(--green);box-shadow:0 0 6px var(--green-glow); }
+    .att-remain { font-size:.68rem;color:var(--text-muted);text-align:center;margin-bottom:.7rem;letter-spacing:.1em;flex-shrink:0; }
+
+    .attempt-log { flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:.35rem; margin-bottom:.8rem; padding-right:2px; }
+    .attempt-log::-webkit-scrollbar { width:3px; }
+    .attempt-log::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+    .att-row {
+      background:var(--surface2); border:1px solid var(--border-dim); border-radius:6px;
+      padding:.55rem .8rem; font-size:.8rem; min-height:40px; display:flex; align-items:center; flex-shrink:0;
     }
-
-    .obs-label {
-      font-size: 0.58rem;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .hidden-symptoms {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 0.25rem;
-    }
-
-    .locked-slot {
-      background: var(--surface2);
-      border: 1px dashed var(--border-dim);
-      border-radius: 7px;
-      padding: 0.65rem 0.8rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      opacity: 0.45;
-    }
-
-    /* ── GUESS PANEL ── */
-    .dots-row {
-      display: flex;
-      gap: 7px;
-      justify-content: center;
-      margin-bottom: 0.6rem;
-    }
-
-    .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: transparent;
-      transition: all 0.3s;
-    }
-
-    .dot.used { background: var(--red); border-color: var(--red); box-shadow: 0 0 6px var(--red-glow); }
-    .dot.win  { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px var(--green-glow); }
-
-    .attempts-remaining {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 0.9rem;
-      letter-spacing: 0.1em;
-    }
-
-    .attempt-log {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      overflow-y: auto;
-      padding-right: 2px;
-      margin-bottom: 0.9rem;
-    }
-
-    .attempt-log::-webkit-scrollbar { width: 3px; }
-    .attempt-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-    .attempt-row {
-      background: var(--surface2);
-      border: 1px solid var(--border-dim);
-      border-radius: 6px;
-      padding: 0.6rem 0.85rem;
-      font-size: 0.82rem;
-      min-height: 42px;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.3s;
-    }
-
-    .attempt-row.empty { border-style: dashed; color: var(--text-muted); font-size: 0.72rem; opacity: 0.5; }
-    .attempt-row.wrong { border-color: var(--red); color: var(--red); }
-    .attempt-row.wrong::before { content: '✗  '; }
-    .attempt-row.correct { border-color: var(--green); color: var(--green); font-weight: bold; }
-    .attempt-row.correct::before { content: '✓  '; }
-
+    .att-row.empty { border-style:dashed; color:var(--text-muted); font-size:.7rem; opacity:.45; }
+    .att-row.wrong { border-color:var(--red); color:var(--red); }
+    .att-row.wrong::before { content:'✗  '; }
+    .att-row.correct { border-color:var(--green); color:var(--green); font-weight:bold; }
+    .att-row.correct::before { content:'✓  '; }
     .house-snark {
-      background: var(--house-bg);
-      border-left: 2px solid var(--house);
-      border-radius: 0 5px 5px 0;
-      padding: 0.55rem 0.75rem;
-      font-size: 0.78rem;
-      color: var(--house);
-      font-style: italic;
-      animation: fadeSlideIn 0.35s ease;
-      line-height: 1.45;
+      background:var(--house-bg); border-left:2px solid var(--house); border-radius:0 5px 5px 0;
+      padding:.5rem .7rem; font-size:.76rem; color:var(--house); font-style:italic;
+      animation:fadeIn .3s ease; line-height:1.45; flex-shrink:0;
     }
 
-    /* ── INPUT ── */
-    .input-area { flex-shrink: 0; }
-
-    .autocomplete-wrapper { position: relative; margin-bottom: 0.5rem; }
-
-    .autocomplete-drop {
-      position: absolute;
-      bottom: 100%;
-      left: 0; right: 0;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      margin-bottom: 4px;
-      max-height: 210px;
-      overflow-y: auto;
-      z-index: 50;
-      display: none;
+    /* Input area */
+    .input-area { flex-shrink:0; }
+    .ac-wrap { position:relative; margin-bottom:.45rem; }
+    .ac-drop {
+      position:absolute; bottom:100%; left:0; right:0;
+      background:var(--surface2); border:1px solid var(--border); border-radius:7px;
+      margin-bottom:4px; max-height:200px; overflow-y:auto; z-index:50; display:none;
     }
-
-    .autocomplete-drop.open { display: block; }
-
-    .ac-item {
-      padding: 0.55rem 1rem;
-      cursor: pointer;
-      font-size: 0.83rem;
-      transition: background 0.1s;
-    }
-
-    .ac-item:hover, .ac-item.active { background: var(--surface); color: var(--green); }
-
+    .ac-drop.open { display:block; }
+    .ac-item { padding:.5rem .9rem; cursor:pointer; font-size:.8rem; transition:background .1s; }
+    .ac-item:hover,.ac-item.active { background:var(--surface); color:var(--green); }
     #guessInput {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 0.7rem 1rem;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.88rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px;
+      padding:.65rem .9rem; color:var(--text); font-family:inherit; font-size:.85rem;
+      outline:none; transition:border-color .2s,box-shadow .2s;
     }
-
-    #guessInput:focus {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px var(--green-glow);
-    }
-
-    #guessInput:disabled { opacity: 0.4; cursor: not-allowed; }
-
+    #guessInput:focus { border-color:var(--green); box-shadow:0 0 0 3px var(--green-glow); }
+    #guessInput:disabled { opacity:.4; cursor:not-allowed; }
     .submit-btn {
-      width: 100%;
-      padding: 0.7rem;
-      background: var(--green);
-      color: #000;
-      border: none;
-      border-radius: 7px;
-      font-family: inherit;
-      font-size: 0.85rem;
-      font-weight: bold;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.2s;
+      width:100%; padding:.65rem; background:var(--green); color:#000; border:none;
+      border-radius:7px; font-family:inherit; font-size:.82rem; font-weight:bold;
+      letter-spacing:.12em; cursor:pointer; transition:background .15s,transform .1s;
     }
+    .submit-btn:hover { background:#059669; }
+    .submit-btn:active { transform:scale(.98); }
+    .submit-btn:disabled { background:var(--border); color:var(--text-muted); cursor:not-allowed; }
 
-    .submit-btn:hover { background: #059669; box-shadow: 0 0 16px var(--green-glow); }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
-
-    /* ── HOUSE PANEL ── */
-    .chat-log {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 0.9rem;
-      padding-right: 2px;
-    }
-
-    .chat-log::-webkit-scrollbar { width: 3px; }
-    .chat-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
+    /* House panel */
+    .chat-log { flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:.6rem; margin-bottom:.8rem; padding-right:2px; }
+    .chat-log::-webkit-scrollbar { width:3px; }
+    .chat-log::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
     .chat-msg {
-      padding: 0.7rem 0.85rem;
-      border-radius: 7px;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      animation: fadeSlideIn 0.3s ease;
+      padding:.65rem .8rem; border-radius:7px; font-size:.8rem; line-height:1.5;
+      animation:fadeIn .3s ease; flex-shrink:0; white-space:pre-line;
     }
+    .chat-msg.user { background:var(--surface2); border:1px solid var(--border-dim); color:var(--text-dim); }
+    .chat-msg.user::before { content:'YOU\A'; color:var(--blue); font-weight:bold; font-size:.62rem; letter-spacing:.15em; white-space:pre; }
+    .chat-msg.house { background:var(--house-bg); border:1px solid var(--house-border); color:var(--house); }
+    .chat-msg.house::before { content:'HOUSE\A'; font-weight:bold; font-size:.62rem; letter-spacing:.15em; opacity:.6; white-space:pre; }
+    .chat-msg.house.praise { border-color:var(--green); background:rgba(16,185,129,.06); color:#a7f3d0; }
+    .chat-msg.house.praise::before { color:var(--green); opacity:1; }
 
-    .chat-msg.user {
-      background: var(--surface2);
-      border: 1px solid var(--border-dim);
-      color: var(--text-dim);
-    }
+    .typing { display:none; gap:4px; padding:.4rem .8rem; align-items:center; flex-shrink:0; }
+    .typing.on { display:flex; }
+    .tdot { width:5px;height:5px;border-radius:50%;background:var(--house);animation:tbounce 1s infinite; }
+    .tdot:nth-child(2){animation-delay:.2s} .tdot:nth-child(3){animation-delay:.4s}
+    @keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-5px);opacity:1}}
 
-    .chat-msg.user::before {
-      content: 'YOU  ';
-      color: var(--blue);
-      font-weight: bold;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .chat-msg.house {
-      background: var(--house-bg);
-      border: 1px solid var(--house-border);
-      color: var(--house);
-    }
-
-    .chat-msg.house::before {
-      content: 'HOUSE';
-      font-weight: bold;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      display: block;
-      margin-bottom: 0.25rem;
-      opacity: 0.6;
-    }
-
-    .chat-msg.house.praise {
-      border-color: var(--green);
-      background: rgba(16, 185, 129, 0.06);
-      color: #a7f3d0;
-    }
-
-    .chat-msg.house.praise::before { color: var(--green); }
-
-    .typing {
-      display: none;
-      gap: 4px;
-      padding: 0.5rem 0.85rem;
-      align-items: center;
-    }
-
-    .typing.visible { display: flex; }
-
-    .typing-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--house);
-      animation: typeBounce 1s infinite;
-    }
-
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typeBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
-      30% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    .chat-input-zone { flex-shrink: 0; }
-
-    .chat-hint {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 0.4rem;
-    }
-
+    .chat-input-zone { flex-shrink:0; }
+    .chat-hint { font-size:.63rem; color:var(--text-muted); letter-spacing:.07em; margin-bottom:.35rem; }
     #testInput {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 0.65rem 0.85rem;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.82rem;
-      resize: none;
-      outline: none;
-      min-height: 72px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      margin-bottom: 0.4rem;
+      width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:7px;
+      padding:.6rem .8rem; color:var(--text); font-family:inherit; font-size:.8rem;
+      resize:none; outline:none; min-height:66px; transition:border-color .2s,box-shadow .2s; margin-bottom:.4rem;
     }
-
-    #testInput:focus {
-      border-color: var(--house);
-      box-shadow: 0 0 0 3px var(--yellow-glow);
-    }
-
+    #testInput:focus { border-color:var(--house); box-shadow:0 0 0 3px var(--yellow-glow); }
     .test-btn {
-      width: 100%;
-      padding: 0.6rem;
-      background: transparent;
-      border: 1px solid var(--house-border);
-      border-radius: 7px;
-      color: var(--house);
-      font-family: inherit;
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      width:100%; padding:.55rem; background:transparent; border:1px solid var(--house-border);
+      border-radius:7px; color:var(--house); font-family:inherit; font-size:.78rem;
+      letter-spacing:.12em; cursor:pointer; transition:background .15s,border-color .15s;
     }
+    .test-btn:hover { background:var(--house-bg); border-color:var(--house); }
 
-    .test-btn:hover {
-      background: var(--house-bg);
-      border-color: var(--house);
-    }
-
-    /* ── OVERLAY ── */
+    /* Overlay */
     .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 8, 15, 0.88);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 1rem;
-      backdrop-filter: blur(4px);
+      position:fixed; inset:0; background:rgba(5,8,15,.9); display:none;
+      align-items:center; justify-content:center; z-index:200; padding:1rem; backdrop-filter:blur(4px);
     }
+    .overlay.on { display:flex; }
+    .end-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:2rem; max-width:480px; width:100%; text-align:center; animation:fadeIn .4s ease; }
+    .end-card.win { border-color:var(--green); box-shadow:0 0 50px rgba(16,185,129,.18); }
+    .end-card.lose { border-color:var(--red); box-shadow:0 0 50px rgba(239,68,68,.18); }
+    .end-verdict { font-size:1.25rem; letter-spacing:.25em; margin-bottom:.4rem; }
+    .win .end-verdict { color:var(--green); } .lose .end-verdict { color:var(--red); }
+    .end-disease { font-size:1rem; margin:.8rem 0 .25rem; }
+    .end-disease strong { color:var(--house); }
+    .end-attempts { font-size:.72rem; color:var(--text-muted); margin-bottom:.9rem; }
+    .end-quote { background:var(--house-bg); border-left:3px solid var(--house); padding:.8rem .95rem; font-style:italic; color:var(--house); font-size:.82rem; text-align:left; border-radius:0 7px 7px 0; line-height:1.55; margin:.7rem 0; }
+    .end-stats { font-size:.7rem; color:var(--text-muted); margin-bottom:1rem; }
+    .play-again { padding:.65rem 2rem; background:var(--surface2); border:1px solid var(--border); border-radius:7px; color:var(--text-dim); font-family:inherit; font-size:.82rem; cursor:pointer; transition:background .15s,color .15s; }
+    .play-again:hover { background:var(--border); color:var(--text); }
 
-    .overlay.visible { display: flex; }
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+    .shake { animation:shake .3s ease; }
 
-    .end-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 2rem;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      animation: fadeSlideIn 0.4s ease;
-    }
+    /* Results separator in chat */
+    .result-sep { display:block; font-size:.6rem; letter-spacing:.2em; color:var(--text-muted); margin:.4rem 0 .2rem; }
 
-    .end-card.win  { border-color: var(--green); box-shadow: 0 0 50px rgba(16, 185, 129, 0.18); }
-    .end-card.lose { border-color: var(--red);   box-shadow: 0 0 50px rgba(239, 68, 68, 0.18); }
-
-    .end-verdict {
-      font-size: 1.3rem;
-      letter-spacing: 0.25em;
-      margin-bottom: 0.4rem;
-    }
-
-    .win  .end-verdict { color: var(--green); }
-    .lose .end-verdict { color: var(--red); }
-
-    .end-disease {
-      font-size: 1.05rem;
-      margin: 0.9rem 0 0.3rem;
-    }
-
-    .end-disease strong { color: var(--house); }
-
-    .end-attempts { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
-
-    .end-quote {
-      background: var(--house-bg);
-      border-left: 3px solid var(--house);
-      padding: 0.85rem 1rem;
-      font-style: italic;
-      color: var(--house);
-      font-size: 0.85rem;
-      text-align: left;
-      border-radius: 0 7px 7px 0;
-      line-height: 1.55;
-      margin: 0.75rem 0;
-    }
-
-    .end-stats { font-size: 0.73rem; color: var(--text-muted); margin-bottom: 1.1rem; }
-
-    .play-again {
-      padding: 0.7rem 2rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text-dim);
-      font-family: inherit;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .play-again:hover { background: var(--border); color: var(--text); }
-
-    /* ── SHAKE ── */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-7px); }
-      40%, 80% { transform: translateX(7px); }
-    }
-
-    .shake { animation: shake 0.3s ease; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 960px) {
-      .game-container { grid-template-columns: 1fr; }
-      .panel { min-height: 200px; }
+    @media(max-width:960px){
+      html,body{height:auto;overflow:auto;}
+      .game-container{grid-template-columns:1fr;height:auto;overflow:visible;}
+      .panel{height:auto;min-height:0;}
+      .symptoms-list,.attempt-log,.chat-log{max-height:35vh;}
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="title-row">
-    <h1>HOUSDLE</h1>
-    <div class="title-badge">Princeton-Plainsboro</div>
-  </div>
+  <div class="title-row"><h1>HOUSDLE</h1><div class="title-badge">Princeton-Plainsboro</div></div>
   <div class="subtitle">Diagnose the patient. House will judge you regardless.</div>
   <div class="stats-bar">
     <div class="stat">Solved <span id="statW">0</span></div>
@@ -594,64 +209,47 @@
 </header>
 
 <div class="game-container">
-
-  <!-- SYMPTOMS PANEL -->
   <div class="panel">
     <div class="panel-title">📋 Patient Presentation</div>
     <div class="patient-file">
-      <div class="patient-file-header">Admission Record</div>
-      <div class="patient-fields">
+      <div class="pf-header">Admission Record</div>
+      <div class="pf-row">
         <div class="pf">Patient: <span id="pName">—</span></div>
         <div class="pf">Age: <span id="pAge">—</span></div>
         <div class="pf">Ward: <span>Diagnostics</span></div>
       </div>
     </div>
     <div class="symptoms-list" id="symptomsList"></div>
-    <div class="hidden-symptoms" id="hiddenSlots"></div>
   </div>
 
-  <!-- GUESS PANEL -->
   <div class="panel">
     <div class="panel-title">🔬 Differential Diagnosis</div>
     <div class="dots-row" id="dotsRow"></div>
-    <div class="attempts-remaining" id="attemptsLeft">6 attempts remaining</div>
+    <div class="att-remain" id="attRemain">6 attempts remaining</div>
     <div class="attempt-log" id="attemptLog"></div>
     <div class="input-area">
-      <div class="autocomplete-wrapper">
-        <div class="autocomplete-drop" id="acDrop"></div>
-        <input
-          type="text"
-          id="guessInput"
-          placeholder="Type a diagnosis and select..."
-          autocomplete="off"
-          spellcheck="false"
-        >
+      <div class="ac-wrap">
+        <div class="ac-drop" id="acDrop"></div>
+        <input type="text" id="guessInput" placeholder="Type a diagnosis and select..." autocomplete="off" spellcheck="false">
       </div>
       <button class="submit-btn" id="submitBtn" onclick="submitGuess()">SUBMIT DIAGNOSIS</button>
     </div>
   </div>
 
-  <!-- HOUSE CHATBOX -->
   <div class="panel">
     <div class="panel-title">🩺 Consult Dr. House</div>
     <div class="chat-log" id="chatLog">
-      <div class="chat-msg house">Interesting case. Well — marginally. Someone has to look at it. What test are you thinking? And please: aim higher than your instincts.</div>
+      <div class="chat-msg house">Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.</div>
     </div>
-    <div class="typing" id="typingIndicator">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>
+    <div class="typing" id="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>
     <div class="chat-input-zone">
       <div class="chat-hint">Order a test or ask about the patient (Enter to send)</div>
       <textarea id="testInput" placeholder="e.g. 'Run an MRI' or 'Check for prion disease'..."></textarea>
       <button class="test-btn" onclick="runTest()">RUN TEST ↵</button>
     </div>
   </div>
-
 </div>
 
-<!-- END SCREEN -->
 <div class="overlay" id="overlay">
   <div class="end-card" id="endCard">
     <div class="end-verdict" id="endVerdict"></div>
@@ -664,372 +262,866 @@
 </div>
 
 <script>
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 // DISEASE DATA
-// ────────────────────────────────────────────────
-const DISEASES = [
-  {
-    name: "Auto-Brewery Syndrome",
-    symptoms: [
-      "Patient feels perpetually 'off' for reasons they cannot describe.",
-      "Intermittent episodes of dizziness and inexplicable euphoria with no apparent trigger.",
-      "Family has accused the patient of secret drinking. Patient insists, tearfully, that they are sober.",
-      "Blood alcohol level is elevated. Patient has consumed no alcohol in 72 hours. Lab has rerun it twice.",
-      "The patient's gastrointestinal flora is fermenting carbohydrates into ethanol. Internally.",
-      "The patient is, clinically speaking, a brewery. An artisanal, self-contained, involuntary brewery."
-    ],
-    houseComments: [
-      "Perpetually 'off.' That's broad. Narrow it down. Or don't, and we'll be here a week.",
-      "Euphoria and dizziness. Could be cardiovascular, could be neurological, could be something we'll all be embarrassed we missed.",
-      "The family's convinced they're a secret alcoholic. They might be. Or they might not be. Both are interesting.",
-      "Blood alcohol elevated, no alcohol consumed. Either the test is wrong — it isn't — or biology has gone completely off-script.",
-      "Gut flora has diversified its portfolio. Into ethanol production."
-    ],
-    winQuote: "The patient's own intestinal bacteria decided to pivot to craft brewing. Without asking. Their blood alcohol was measurably elevated and they'd had nothing to drink. The diagnosis is equal parts fascinating and humiliating for everyone who missed it.",
-    loseQuote: "Their GUT WAS FERMENTING ALCOHOL. They were drunk on their own biology. You had a blood alcohol result and no explanation for it. And you still couldn't get there. I'll be in my office."
-  },
-  {
-    name: "Alien Hand Syndrome",
-    symptoms: [
-      "Patient seems distressed about their body in a way that is difficult to articulate.",
-      "Reports that one hand is 'not listening.'",
-      "Left hand has been observed undoing things the right hand just did.",
-      "The non-dominant hand threw an object across the room. Patient claims they did not do this. They are correct.",
-      "One hand acts with apparent autonomy — picking things up, pushing things away — without patient consent.",
-      "The patient's left hand has, functionally, gone rogue. The patient is furious about it and helpless."
-    ],
-    houseComments: [
-      "Something is wrong with their body and they can't articulate it. That's either neurological or they're bad at words.",
-      "One hand not listening. Explore that. What does 'not listening' mean to a hand.",
-      "A hand undoing what the other hand does. That's corpus callosum. Or the most passive-aggressive marriage I've ever heard of.",
-      "It threw something. The hand threw something. The patient didn't decide to throw it. That's a specific kind of spectacular."
-    ],
-    winQuote: "Following damage to the corpus callosum, one hemisphere lost supervisory control over the contralateral hand. The hand still functions — it just no longer consults the patient about what to do. The patient has described it as 'living with a saboteur.' They are not wrong.",
-    loseQuote: "The patient's hand was operating INDEPENDENTLY. It had its own agenda. It threw things. Unprompted. And you were out here running blood panels while a HAND was IN OPEN REVOLT."
-  },
-  {
-    name: "Aquagenic Urticaria",
-    symptoms: [
-      "Skin reactions that appear and disappear without an obvious pattern.",
-      "The patient has become reluctant to discuss bathing habits.",
-      "Hives appear after contact with something the patient cannot identify.",
-      "Showers have become, according to the patient, 'a problem.'",
-      "Urticarial response occurs specifically upon skin contact with water — any water.",
-      "The patient is allergic to water. H₂O. The thing they are made of."
-    ],
-    houseComments: [
-      "Hives with unclear trigger. Start logging everything that precedes an episode. Everything.",
-      "Reluctant about bathing. Either embarrassed or their skin is punishing them for cleanliness.",
-      "Showers are 'a problem.' That sentence is doing a lot of work. Define the problem.",
-      "Water. We're testing water. I want to be there when you tell them."
-    ],
-    winQuote: "The immune system generates histamine in response to water contact. Water. The universal solvent. The substance that makes up most of what they are. The body, in its infinite wisdom, decided that was the enemy. No cure. Antihistamines help. Slightly.",
-    loseQuote: "WATER. They were allergic to WATER. Tap water, rain water, their own sweat. The most abundant substance on the planet. I genuinely don't know what else I can say."
-  },
-  {
-    name: "Cotard's Delusion",
-    symptoms: [
-      "Patient presents with unusual certainty about their own condition.",
-      "Has refused food and water for 48 hours. States there is 'no point.'",
-      "Insists something fundamental has changed about their physical existence.",
-      "Claims several internal organs are absent. Imaging confirms they are all present.",
-      "Is completely convinced, unshakeably, that they are dead.",
-      "The patient believes they are a corpse that hasn't stopped moving yet. They are annoyed we won't acknowledge this."
-    ],
-    houseComments: [
-      "Unusual certainty. Patients who are absolutely sure of something irrational are always interesting.",
-      "Won't eat because there's 'no point.' That's either severe depression or something phenomenologically fascinating.",
-      "Claims their organs are gone. They're there. All of them. The patient disagrees with the scan.",
-      "They believe they're dead. They're not. This is going to be a very specific kind of difficult conversation."
-    ],
-    winQuote: "The brain's self-modeling failed catastrophically. The patient's interoceptive system — the sense of being alive and embodied — went offline. They genuinely could not feel themselves existing. So they concluded they weren't. The logic is, in a tragic way, coherent.",
-    loseQuote: "The patient thought they were DEAD. ACTIVELY DEAD. They refused food because corpses don't eat, which is technically correct, and they are 100% not a corpse. That's a memorable delusion. You should have caught it."
-  },
-  {
-    name: "Exploding Head Syndrome",
-    symptoms: [
-      "The patient is not sleeping well. Specifics are vague.",
-      "Reports being jolted awake repeatedly, but cannot identify what woke them.",
-      "Describes hearing things at night that no one else hears.",
-      "Reports an extremely loud sound — inside their head — that occurs as they fall asleep.",
-      "The sound is described variously as an explosion, a gunshot, or a cymbal crash. It originates inside the skull.",
-      "The patient's brain is manufacturing large explosions at bedtime. This is benign. It doesn't feel benign."
-    ],
-    houseComments: [
-      "Non-restorative sleep. The cause matters more than the outcome. Ask better questions.",
-      "Jolted awake with no stimulus. Either hypnic jerk or something more interesting.",
-      "Hearing things only they hear. Auditory, unilateral or bilateral, at what point in the sleep cycle.",
-      "Loud internal noise at sleep onset. Now we're somewhere. Keep pulling on that thread."
-    ],
-    winQuote: "A misfiring of the auditory cortex during the sleep-wake transition produces what the patient experiences as a massive internal explosion. No structural damage. No danger. Just the brain, briefly and catastrophically, miscommunicating with itself at the worst possible moment. Harmless. Deeply unpleasant.",
-    loseQuote: "Their brain was staging EXPLOSIONS. At BEDTIME. Every night. The patient reported hearing a gunshot inside their own skull and you filed it under 'anxiety.' Bold classification."
-  },
-  {
-    name: "Foreign Accent Syndrome",
-    symptoms: [
-      "Something is subtly different about how the patient communicates.",
-      "Speech has changed since an incident approximately six weeks ago.",
-      "Close contacts report the patient 'sounds different' and cannot explain it further.",
-      "The patient speaks fluently but with a pronounced accent they did not previously have.",
-      "The accent is specifically from a country the patient has never visited and does not speak the language of.",
-      "The patient is from Ohio. They now sound convincingly Norwegian. Neurology did this."
-    ],
-    houseComments: [
-      "Communication changes post-incident. Anything neurological gets my attention.",
-      "Sounds different, still fluent. Not aphasia. This is prosody — the music of speech. Something hit the wrong notes.",
-      "An accent from a place they've never been. Their brain had to store the motor patterns somewhere. It got creative."
-    ],
-    winQuote: "Neurological damage reorganized the speech motor patterns that control prosody — rhythm, intonation, vowel placement. The result sounds like a foreign accent even though the underlying language is identical. The patient didn't acquire the accent. Their brain invented it.",
-    loseQuote: "The patient sounded FOREIGN. They were NOT foreign. Their own BRAIN invented an accent for them. A Norwegian one. From Ohio. And you ran a thyroid panel."
-  },
-  {
-    name: "Trimethylaminuria",
-    symptoms: [
-      "Significant social withdrawal over the past several months.",
-      "Patient reports hygiene has become an increasing preoccupation.",
-      "Interpersonal relationships have deteriorated. The patient cannot explain why.",
-      "Multiple coworkers have filed complaints about an unidentified smell. Patient is mortified.",
-      "Body odor is fishy, persistent, and completely unresponsive to any amount of washing.",
-      "The patient's metabolic system cannot break down trimethylamine. It exits through every available pore. They smell like a harbor."
-    ],
-    houseComments: [
-      "Social withdrawal plus hygiene obsession. Something physical is socially isolating them. Start there.",
-      "Complaints about an odor that the patient can't eliminate. That's not hygiene — that's metabolism.",
-      "Fishy. Persistent. Showers don't help. FMO3 enzyme. Check it."
-    ],
-    winQuote: "A mutation in the FMO3 gene prevents the breakdown of trimethylamine produced during digestion. The compound accumulates and outgasses through sweat, breath, and urine. Smells like fish. Is not fish. No cure — dietary management only.",
-    loseQuote: "The patient smelled like low tide and they couldn't stop it no matter what they did. The smell was the diagnosis. The diagnosis was in your NOSE. Multiple noses, in fact."
-  },
-  {
-    name: "Porphyria",
-    symptoms: [
-      "A constellation of physical and psychiatric symptoms that resist a clean explanation.",
-      "Marked sensitivity to sunlight that seems disproportionate.",
-      "Abdominal pain alongside psychiatric episodes. The combination is conspicuous.",
-      "Urine, upon examination, is a reddish-purple. This was not mentioned until now.",
-      "Neurological symptoms have joined the presentation. The picture is widening.",
-      "Heme biosynthesis is disrupted. Porphyrins are accumulating. In the 14th century, this patient would have been the subject of very serious village gossip."
-    ],
-    houseComments: [
-      "Physical plus psychiatric together means systemic. Don't let anyone silo those symptoms.",
-      "Sunlight sensitivity that severe isn't cosmetic — it's metabolic or immunological.",
-      "Someone checked the urine, yes? Tell me someone checked the urine.",
-      "Purple urine. Right. THAT would have been useful to mention at the beginning."
-    ],
-    winQuote: "Porphyria. Defective heme synthesis. Porphyrins accumulate and cause photosensitivity, neurological symptoms, abdominal crisis, and psychiatric episodes. Medical historians believe this disease is the most likely biological basis for European vampire and werewolf mythology. The patient would have had a difficult medieval experience.",
-    loseQuote: "THE URINE WAS PURPLE. Their URINE. PURPLE. They had PHOTOSENSITIVITY and PSYCHIATRIC EPISODES and PURPLE URINE and you — what. Ordered a CT. A CT was your move."
-  },
-  {
-    name: "Jumping Frenchmen of Maine",
-    symptoms: [
-      "Everyone who knows the patient describes them as 'extremely jumpy.'",
-      "Startle response to unexpected stimuli is dramatically out of proportion.",
-      "After a sudden noise, the patient remains in a prolonged agitated state.",
-      "Patient has been observed involuntarily repeating words that were shouted near them.",
-      "When commands are shouted at the patient, they obey them before processing whether to do so.",
-      "Extreme startle reflex, echolalia, and involuntary command compliance. The patient's nervous system has removed the editorial step."
-    ],
-    houseComments: [
-      "Extremely jumpy. Medically that's hyperekplexia spectrum. Figure out what kind.",
-      "Prolonged agitation post-startle. The nervous system isn't resetting. Something's stuck.",
-      "Echolalia triggered by startle. That's specific enough to be interesting."
-    ],
-    winQuote: "First documented in a 19th-century Maine logging community among French-Canadian workers. Extreme startle reflex, echolalia, and automatic obedience to shouted commands — before the brain has consciously agreed to comply. The condition is real. The reason it's associated with that specific population is still not fully understood.",
-    loseQuote: "You could have SHOUTED a command at the patient and their BODY WOULD HAVE OBEYED before their BRAIN CAUGHT UP. That's a documented medical phenomenon. One of you should have known that."
-  },
-  {
-    name: "Stiff Person Syndrome",
-    symptoms: [
-      "Muscle issues that come and go in a pattern no one has mapped yet.",
-      "Several unexplained falls over the past three months.",
-      "Muscles become rigid in sudden episodes without apparent cause.",
-      "Loud sounds and emotional distress appear to reliably trigger episodes.",
-      "During acute episodes, the patient becomes completely rigid and cannot move.",
-      "The inhibitory neurons that signal muscles to relax are under immunological attack. The muscles never receive permission to stop."
-    ],
-    houseComments: [
-      "Unexplained falls with intermittent muscle involvement. The pattern is everything. Document every episode.",
-      "Triggered by stress and noise. That's not random — the nervous system is hypersensitized somewhere specific.",
-      "Board-rigid. Not stiff — rigid. The muscles are refusing release. That's autoimmune against the inhibitory pathway."
-    ],
-    winQuote: "Anti-GAD antibodies. The immune system targets the GABAergic interneurons that tell muscles to relax. With those neurons compromised, muscles stay contracted. External stimuli — sound, stress, touch — trigger uncontrolled full-body rigidity. The patient's body has forgotten how to let go.",
-    loseQuote: "The patient COULD NOT PHYSICALLY RELAX. Neurologically. The signal to relax was being immunologically blocked. And the solution you landed on was — what, tell them to breathe? Incredible."
-  },
-  {
-    name: "Fibrodysplasia Ossificans Progressiva",
-    symptoms: [
-      "Steadily progressive loss of mobility that no single injury explains.",
-      "Pain and swelling in soft tissue following even minor trauma.",
-      "Physical examination reveals unusual firmness in areas that should be soft.",
-      "Imaging shows calcification forming in muscle and connective tissue.",
-      "Skeletal muscle and connective tissue are actively being replaced by bone.",
-      "The patient's body is building new skeleton. In places where skeleton was never planned."
-    ],
-    houseComments: [
-      "Progressive mobility loss without a clear structural lesion. The etiology is somewhere upstream of the joints.",
-      "Soft tissue calcification. Either dystrophic or the body has made a misguided executive decision.",
-      "The bone is appearing in muscle. That's not myositis ossificans — it's too systemic. Something's wrong at the signaling level."
-    ],
-    winQuote: "A mutation in the ACVR1 gene causes the body's repair machinery to interpret muscle damage as a trigger for bone formation. The skeleton grows. Into soft tissue. Into muscle. Into tendon. The process is irreversible. Any attempt to surgically remove the new bone causes more bone to form. It is one of the crueler diseases on record.",
-    loseQuote: "Their MUSCLES were being converted to BONE. Their BODY WAS BUILDING SKELETON in places that were NEVER MEANT TO HAVE SKELETON. And nobody in this room thought that was worth pursuing? Outstanding restraint."
-  },
-  {
-    name: "Morgellons Disease",
-    symptoms: [
-      "Skin sensations the patient describes with an unusual degree of specificity.",
-      "Reports crawling or biting sensations under the skin.",
-      "Has been evaluated for parasitic infection multiple times. No parasites identified.",
-      "Patient insists they can see fibers or filaments emerging from open skin lesions.",
-      "Unidentified filamentous material is, in fact, present at wound sites on examination.",
-      "The skin is producing something. The origin and nature of the filaments remain genuinely contested."
-    ],
-    houseComments: [
-      "Crawling sensations plus lesions. Either delusional parasitosis or something we don't have a tidy name for.",
-      "Claims to see fibers. Three possibilities: they're embedding them, it's delusional, or there are actually fibers. All three deserve investigation.",
-      "The CDC ran an investigation. They were not satisfied with their own conclusions. That makes it interesting."
-    ],
-    winQuote: "Morgellons. The filaments are real — identified as primarily cellulose-based in independent analyses. The mechanistic explanation remains officially inconclusive. The CDC investigation was thorough, and its findings were quietly ambiguous. It is the kind of disease that makes certain researchers very uncomfortable.",
-    loseQuote: "The patient's SKIN was producing UNIDENTIFIED FIBERS. The CDC looked into this and DIDN'T CLOSE THE CASE CLEANLY. And your diagnosis was 'probably anxiety.' Courageous."
-  },
-  {
-    name: "Alice in Wonderland Syndrome",
-    symptoms: [
-      "Perceptual complaints that the patient finds difficult to articulate.",
-      "Reports that things around them 'look wrong' in a way they cannot specify.",
-      "Objects in the environment appear to be the incorrect size.",
-      "The patient's perception of their own body size is episodically distorted.",
-      "Periods during which the surrounding world warps dramatically in perceived scale, lasting minutes to hours.",
-      "Size perception is broken. Micropsia, macropsia, and dysmetropsia, alternating. Lewis Carroll had this and wrote a book about it."
-    ],
-    houseComments: [
-      "Things 'look wrong.' That's cortical — the processing end, not the input end.",
-      "Size perception specifically. Micropsia and macropsia are distinct from generalized visual disturbance.",
-      "Their own body looks wrong-sized to them. That's the parietal cortex misfiring. Or migraine aura. Both are possible."
-    ],
-    winQuote: "A neurological condition — most commonly migraine-related — causing distortions in perceived size. Lewis Carroll almost certainly experienced it and documented it in meticulous fictional detail instead of seeking treatment. The book has sold considerably better than most medical case reports.",
-    loseQuote: "Lewis Carroll wrote ALICE IN WONDERLAND about a condition named after that book. The condition involves perceiving the wrong SIZE. The clue was in the NAME. I don't know how to make it clearer without diagnosing them myself, which is apparently what I'm going to do."
-  },
-  {
-    name: "Kuru",
-    symptoms: [
-      "Progressive neurological deterioration with no identified cause.",
-      "Tremors that have been slowly worsening over several weeks.",
-      "Inappropriate and unpredictable laughing that the patient cannot control.",
-      "The patient recently returned from an extended trip to a remote region.",
-      "The patient attended a traditional funeral ceremony in the Fore highlands of Papua New Guinea.",
-      "The patient consumed neural tissue at the funeral. They have a prion disease. This is both rare and completely specific."
-    ],
-    houseComments: [
-      "Progressive neuro decline plus tremors. Prion, autoimmune, or infectious — start ruling.",
-      "Laughing at inappropriate times alongside tremors. That's a very specific profile. Very.",
-      "They just got back from where. SAY THE REGION."
-    ],
-    winQuote: "Kuru is a prion disease transmitted through ritual consumption of human neural tissue, practiced historically among the Fore people of Papua New Guinea as part of funeral rites. The infectious agent is a misfolded protein. It is incurable. The patient attended the wrong ceremony.",
-    loseQuote: "The patient went to Papua New Guinea. Attended a ritual feast. Has a progressive laughing tremor disorder. There are two diagnoses that fit that sentence. You found zero of them. Staggering."
-  },
-  {
-    name: "Paris Syndrome",
-    symptoms: [
-      "Acute psychological deterioration following a long international journey.",
-      "No prior psychiatric history. The onset was rapid.",
-      "Patient describes a profound and destabilizing gap between expectation and reality.",
-      "The shattering experience involved a place they had anticipated their entire adult life.",
-      "The patient visited Paris for the first time.",
-      "Paris was not as imagined. The psyche has not processed this and may not."
-    ],
-    houseComments: [
-      "Acute psychiatric break, no prior history, post-travel. Something environmental triggered it. What and where.",
-      "Reality failed to match a cherished expectation badly enough to cause clinical collapse. That's a very specific trauma vector.",
-      "Paris. They went to Paris. I've always assumed it smells like philosophy and cigarettes and disappointment. Apparently for a subset of people, that's medically significant."
-    ],
-    winQuote: "Paris Syndrome predominantly affects tourists — historically Japanese visitors — who arrive with a deeply idealized image of Paris and encounter, instead, an actual city. The gap between the mythologized Paris and the real one is, for some people, neurologically destabilizing. The French have not issued a formal apology.",
-    loseQuote: "The patient's entire mental architecture COLLAPSED because Paris was just PARIS. You ordered an MRI of someone who had a SPIRITUAL COLLISION with a CITY. The Eiffel Tower is not on the scan. Nothing diagnostic is on that scan."
-  },
-  {
-    name: "Autoimmune Encephalitis",
-    symptoms: [
-      "Personality has shifted noticeably over the past several months.",
-      "Episodes of confusion that appear and resolve without apparent cause.",
-      "Psychiatric symptoms have emerged in a person with no prior history.",
-      "New-onset seizures in a previously healthy individual.",
-      "Cerebrospinal fluid analysis shows inflammatory markers without a clear infectious source.",
-      "The patient's immune system has produced antibodies against their own brain receptors and has been dismantling cognition piece by piece."
-    ],
-    houseComments: [
-      "Personality change plus confusion means the brain. Finding which part and why is the actual problem.",
-      "Psychiatric symptoms, first episode, no history. This is not a psychiatric problem. Work it as neurology.",
-      "Seizures plus CSF inflammation plus psych plus confusion. You are circling something. Get closer to it."
-    ],
-    winQuote: "Anti-NMDA receptor encephalitis. The immune system generates antibodies against NMDA receptors — the receptors responsible for memory, cognition, and behavior. What looks like psychosis is actually inflammation. The patient wasn't having a breakdown. They were being quietly dismantled by their own immune cells.",
-    loseQuote: "The patient's immune system was TARGETING THEIR OWN BRAIN RECEPTORS. Turning off thought. One receptor at a time. You chased the psychiatric presentation while the neurology ate them. Classic."
-  },
-  {
-    name: "Hypertrichosis",
-    symptoms: [
-      "Dermatology has referred the patient after an unusual presentation.",
-      "Unusual hair growth that the patient finds distressing.",
-      "Family members have commented on a dramatic change in the patient's appearance over recent months.",
-      "Hair is growing from locations on the face and body where it is not typically present.",
-      "Extensive hair growth now covers the patient's face and torso beyond any expected variation.",
-      "The patient has what the medical literature — with a rare moment of unsubtle nomenclature — refers to as Werewolf Syndrome."
-    ],
-    houseComments: [
-      "Unusual hair growth. Androgen excess is the obvious guess. What's the distribution?",
-      "Atypical follicular activation. Something's telling those follicles to wake up that shouldn't be.",
-      "Face and torso, extensive, symmetrical. That's not hormonal. That's genetic. Go rarer."
-    ],
-    winQuote: "Hypertrichosis. A genetic mutation reactivates dormant follicles across the body and face. The condition was historically interpreted as lycanthropy. It is, in fact, one of the few diseases to have its own folkloric tradition. The patient is not a werewolf. They have a very expressive genome.",
-    loseQuote: "The patient had a condition that medical textbooks call WEREWOLF SYNDROME. With that label. In the textbook. And the differential you landed on was — alopecia? That's the wrong direction. By a lot."
-  },
-  {
-    name: "Hutchinson-Gilford Progeria",
-    symptoms: [
-      "The patient presents with features inconsistent with their stated age.",
-      "Multiple biological markers suggest an age significantly greater than the patient's actual years.",
-      "Bone density, skin integrity, and cardiovascular indicators are all advanced beyond their chronological age.",
-      "Several organ systems are exhibiting age-related deterioration at a rate that is difficult to account for.",
-      "Biological aging is accelerating across all systems simultaneously.",
-      "The patient is eleven years old with the cardiovascular system of a seventy-year-old. LMNA mutation. The clock is running very fast."
-    ],
-    houseComments: [
-      "Biology and biography aren't matching. That's either falsified records or a genetic error in the aging mechanism.",
-      "Multiple systems aging simultaneously and prematurely. This isn't one failing organ. This is a global timer running wrong.",
-      "Cardiovascular age, skin, bone density — all advanced. Lamin A. Look at the nuclear lamina."
-    ],
-    winQuote: "A point mutation in the LMNA gene produces a truncated lamin A protein called progerin. Progerin disrupts nuclear membrane stability, causing accelerated cellular aging across every tissue. These children develop heart disease, stroke, and atherosclerosis in their first decade. We know exactly what causes it. We treat it anyway.",
-    loseQuote: "A CHILD was aging at EIGHT TIMES the normal rate. Their heart was seven decades old. Their body was eating their years. And you needed more time to think. The disease wasn't waiting."
-  },
-  {
-    name: "Electromagnetic Hypersensitivity",
-    symptoms: [
-      "A wide and shifting range of symptoms with no consistent underlying pathology.",
-      "Symptoms appear to correlate with the patient's physical location in ways they have begun tracking obsessively.",
-      "Patient has begun avoiding certain buildings, rooms, and technologies.",
-      "The patient believes wireless electromagnetic fields are causing their symptoms and has documentation.",
-      "Has relocated to a rural area described as having minimal wireless coverage.",
-      "The patient's symptoms are real. Their mechanism is almost certainly not electromagnetic fields. This distinction is important and difficult."
-    ],
-    houseComments: [
-      "Symptoms that vary with location. That's either environmental trigger, anxiety, or both. Start mapping it properly.",
-      "They've formed a theory. Patients with theories make the best and worst patients simultaneously.",
-      "They've self-diagnosed as electromagnetically sensitive. Controlled studies don't support it. Their suffering is real. The cause is our problem now."
-    ],
-    winQuote: "Electromagnetic hypersensitivity. In every double-blind study, subjects cannot reliably detect the presence of electromagnetic fields. Their symptoms are genuine. The cause they believe in is not supported by evidence. Something is wrong with this patient. It is likely not the WiFi. Finding what it actually is will be more work than any of this.",
-    loseQuote: "The patient thought WiFi was attacking them. You thought 'maybe it is.' Neither of you are helping. One of you has a medical degree."
+// ══════════════════════════════════════════════
+// Each playable disease has: symptoms[6], houseComments[4-5], winQuote, loseQuote, testResults{}
+// testResults keys are matched against the player's typed test request.
+
+const PLAYABLE = [
+{
+  name:"Auto-Brewery Syndrome",
+  symptoms:[
+    "Patient feels perpetually 'off' for reasons they cannot describe.",
+    "Intermittent episodes of dizziness and inexplicable euphoria with no apparent trigger.",
+    "Family has staged an intervention about suspected secret drinking. Patient insists, tearfully, they are sober.",
+    "Blood alcohol level is elevated. Patient has consumed no alcohol in 72 hours. Lab has rerun it twice.",
+    "Gastrointestinal flora is fermenting carbohydrates into ethanol. Internally.",
+    "The patient is, clinically speaking, a brewery. An artisanal, involuntary, self-contained brewery."
+  ],
+  houseComments:[
+    "Perpetually 'off.' That's broad enough to mean anything. Start narrowing.",
+    "Euphoria and dizziness. Could be cardiovascular. Could be something we'll all be embarrassed we missed.",
+    "Family thinks they're a secret alcoholic. They might be. Or they might not be. Both are interesting.",
+    "Blood alcohol elevated, no alcohol consumed. Either the test is wrong — it isn't — or biology is improvising."
+  ],
+  winQuote:"The patient's intestinal bacteria pivoted to craft brewing. Without consent. Blood alcohol measurably elevated. Nothing consumed. The diagnosis is equal parts fascinating and humiliating for everyone who missed it.",
+  loseQuote:"Their GUT WAS FERMENTING ALCOHOL. They were drunk on their own biology. You had an unexplained BAL and still couldn't close. I'll be in my office.",
+  testResults:{
+    "blood":          "CBC: Normal. Metabolic panel: Normal. BLOOD ALCOHOL: 0.11%. Patient has consumed nothing for 72 hours. Lab ran it three times. Still 0.11%.",
+    "urine":          "Urinalysis: Elevated ethanol metabolites, urinary acetaldehyde. The lab technician noted the specimen smelled 'vaguely of lager.' This is in the official report.",
+    "mri":            "Brain MRI: No structural abnormalities. The problem is not cranial.",
+    "ct":             "CT abdomen/pelvis: Bowel gas pattern unremarkable. No structural abnormalities. The unremarkable gut is doing remarkable things.",
+    "breathalyzer":   "Positive. 0.09%. Patient has been on a supervised diet of water and crackers for 48 hours. The number is rising.",
+    "breath":         "Breath alcohol: 0.09% and climbing. Patient is sober. Patient is also intoxicated. These facts coexist.",
+    "stool":          "Stool culture: Significant Saccharomyces cerevisiae overgrowth. The patient's colon has a brewmaster.",
+    "gut microbiome": "Gut flora: Dominated by fermentative organisms. Colonic environment actively producing ethanol. This patient is a functional fermentation vessel.",
+    "ecg":            "Normal sinus rhythm. The heart is uninvolved in whatever is happening here."
   }
+},{
+  name:"Alien Hand Syndrome",
+  symptoms:[
+    "Patient is distressed about their body in a way they struggle to articulate.",
+    "Reports that one hand is 'not listening.'",
+    "Left hand has been observed undoing tasks the right hand just completed.",
+    "The non-dominant hand threw an object across the room. The patient claims they did not do this. They are correct.",
+    "One hand acts with apparent autonomy — picking things up, pushing things away — without consent.",
+    "The patient's left hand has, functionally, gone rogue. The patient is furious about it and entirely helpless."
+  ],
+  houseComments:[
+    "Something wrong with their body, can't articulate it. That's either neurological or bad vocabulary.",
+    "One hand not listening. What does 'not listening' look like for a hand.",
+    "A hand undoing what the other hand does. Corpus callosum. Or the most passive-aggressive marriage I've heard of.",
+    "It threw something. Without authorization. That's a very specific and extraordinary finding."
+  ],
+  winQuote:"Following corpus callosum damage, one hemisphere lost supervisory authority over the contralateral hand. The hand still works. It just no longer consults the patient. The patient has described living with it as 'having a saboteur.' They are not wrong.",
+  loseQuote:"The patient's HAND was operating INDEPENDENTLY. It had its own agenda. It threw things. Unprompted. And you ran a blood panel while a hand was in open revolt.",
+  testResults:{
+    "blood":          "CBC and metabolic: Normal. The blood has nothing to do with this.",
+    "mri":            "Brain MRI: Lesion at the corpus callosum. Interhemispheric connectivity disrupted. There is your culprit.",
+    "ct":             "CT head: Confirms corpus callosum lesion. Small. Strategically placed.",
+    "eeg":            "EEG: Asymmetric motor cortex activation. Left hemisphere generating independent motor signals.",
+    "nerve":          "Nerve conduction: Normal bilaterally. The nerves are fine. They're receiving valid instructions — from an unauthorized source.",
+    "psych":          "Psychiatric evaluation: Patient is not delusional about the hand. The hand is genuinely acting without consent. This distinction is clinically important."
+  }
+},{
+  name:"Aquagenic Urticaria",
+  symptoms:[
+    "Skin reactions that appear and disappear without an obvious pattern.",
+    "Patient has grown reluctant to discuss their bathing habits.",
+    "Hives appear after contact with something the patient cannot identify.",
+    "Showers have become, according to the patient, 'a problem.'",
+    "Urticarial response occurs specifically upon contact with water. Any water.",
+    "The patient is allergic to water. H₂O. The substance comprising 60% of what they are."
+  ],
+  houseComments:[
+    "Hives with unclear trigger. Log everything that precedes each episode.",
+    "Reluctant about bathing habits. Either embarrassed or their skin is punishing them for cleanliness.",
+    "Showers are 'a problem.' That sentence is doing a lot of work. Define the problem.",
+    "We're testing water. I want to be in the room when you tell them."
+  ],
+  winQuote:"The immune system generates histamine in response to water contact. Water. The universal solvent. The substance that makes up most of what they are. The body decided that was the enemy. No cure. Antihistamines help. Slightly.",
+  loseQuote:"WATER. They were allergic to WATER. Tap water, rain, their own sweat. The most abundant substance on the planet. I don't know what else I can say.",
+  testResults:{
+    "blood":          "CBC: Normal. IgE: Elevated. Histamine levels spike measurably post-water exposure challenge.",
+    "urine":          "Urinalysis: Normal. The collection process triggered a mild reaction. The lab notes this.",
+    "allergy":        "Standard allergy panel: Negative for all tested antigens. Water is not on the standard panel.",
+    "water":          "Aquagenic challenge test: Positive. Urticarial reaction within 5 minutes of 35°C water applied to forearm. Photographic documentation attached. The reaction is unambiguous.",
+    "skin":           "Dermographism test: Negative. This is not pressure urticaria. The trigger is specifically water.",
+    "mri":            "Brain MRI: Normal. We don't know the immunological mechanism yet, but it is not structural."
+  }
+},{
+  name:"Cotard's Delusion",
+  symptoms:[
+    "Patient presents with unusual certainty about their own condition.",
+    "Has refused food and water for 48 hours. States there is 'no point.'",
+    "Insists something fundamental has changed about their physical existence.",
+    "Claims several internal organs are absent. Imaging confirms all organs are present.",
+    "Is completely convinced, unshakeably, that they are already dead.",
+    "The patient believes they are a corpse that hasn't stopped moving yet. They are annoyed we won't acknowledge this."
+  ],
+  houseComments:[
+    "Unusual certainty about an irrational belief. That combination is always interesting.",
+    "Won't eat because there's 'no point.' That's either severe depression or something phenomenologically extraordinary.",
+    "Claims organs are missing. They're there. All of them. The patient disagrees with the scan.",
+    "They believe they're dead. They are not dead. This conversation will be unusual."
+  ],
+  winQuote:"The brain's self-modeling failed catastrophically. The interoceptive system — the sense of being alive and embodied — went offline. The patient genuinely could not feel themselves existing. So they concluded they weren't. The logic is, in a tragic way, coherent.",
+  loseQuote:"The patient thought they were DEAD. ACTIVELY DEAD. Refused food because corpses don't eat — technically correct — and all of you were too busy with bloodwork to notice.",
+  testResults:{
+    "blood":          "CBC, metabolic, thyroid: All normal. The patient is not dying of anything measurable. They are not dying at all. They don't believe this.",
+    "mri":            "Brain MRI: Reduced activation in the frontal-parietal network. Interoceptive processing significantly diminished. The sense-of-self circuitry is running at very low power.",
+    "pet":            "PET scan: Markedly reduced metabolic activity in prefrontal and parietal regions. The brain areas responsible for the feeling of being alive are nearly dark. Hence the delusion.",
+    "psych":          "Psychiatric evaluation: Patient maintains absolute conviction of their own death. Cooperative but puzzled by our interest in them. Quote: 'I don't understand why you're treating a dead person.' Neither do I, but here we are.",
+    "ecg":            "Normal sinus rhythm. The heart is working. The patient does not believe this."
+  }
+},{
+  name:"Exploding Head Syndrome",
+  symptoms:[
+    "The patient is not sleeping well. Specifics are vague.",
+    "Reports being jolted awake repeatedly but cannot identify what woke them.",
+    "Describes hearing things at night that no one else hears.",
+    "Reports an extremely loud sound — inside their head — occurring at the moment of falling asleep.",
+    "The sound is described as an explosion, gunshot, or cymbal crash. It originates inside the skull.",
+    "The patient's brain is manufacturing explosions at bedtime. This is medically benign. It does not feel benign."
+  ],
+  houseComments:[
+    "Non-restorative sleep. The cause matters more than the symptom. Ask better questions.",
+    "Jolted awake with no stimulus. Hypnic jerk, or something more interesting.",
+    "Hearing things only they can hear. Auditory, at what point in the sleep cycle.",
+    "Loud internal noise at sleep onset. Now we're narrowing. Keep pulling."
+  ],
+  winQuote:"A misfiring of the auditory cortex during the sleep-wake transition produces what the patient experiences as a massive internal explosion. No structural damage. No danger. Just the brain, briefly and catastrophically, miscommunicating with itself at the worst possible moment.",
+  loseQuote:"Their brain was staging EXPLOSIONS. At BEDTIME. The patient reported hearing a gunshot inside their skull and you filed it under 'anxiety.' Bold.",
+  testResults:{
+    "blood":          "CBC and metabolic: Normal.",
+    "mri":            "Brain MRI: No structural abnormalities. The mechanism is functional, not structural.",
+    "eeg":            "EEG during sleep study: Transient auditory cortex activation during hypnagogic phase, no external auditory stimulus. The brain's sound system fired spontaneously.",
+    "sleep":          "Polysomnogram: Auditory cortex activation documented at sleep onset, correlating exactly with patient-reported 'explosion.' No seizure activity. Benign. Terrifying. Benign.",
+    "ecg":            "Normal sinus rhythm."
+  }
+},{
+  name:"Foreign Accent Syndrome",
+  symptoms:[
+    "Something is subtly different about how the patient communicates.",
+    "Speech has changed since an incident approximately six weeks ago.",
+    "Close contacts report the patient 'sounds different' and cannot explain how.",
+    "The patient speaks fluently but with a pronounced accent they did not previously have.",
+    "The accent is from a country the patient has never visited and whose language they do not speak.",
+    "The patient is from Ohio. They now sound convincingly Norwegian. Neurology did this."
+  ],
+  houseComments:[
+    "Communication changes post-incident. Anything neurological gets my attention.",
+    "Sounds different, still fluent. Not aphasia. This is prosody — the music of speech.",
+    "An accent from a place they've never been. Their brain had to store the motor patterns somewhere.",
+  ],
+  winQuote:"Neurological damage reorganized the speech motor patterns that control prosody. The result sounds like a foreign accent even though the underlying language is identical. The patient didn't acquire the accent. Their brain invented it.",
+  loseQuote:"The patient sounded FOREIGN. They WEREN'T. Their own brain invented a Norwegian accent for them. FROM OHIO. And you ran a thyroid panel.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal. This is purely neurological.",
+    "mri":            "Brain MRI: Small lesion in left supplementary motor area. That's where speech motor planning happens. That's where the accent came from.",
+    "ct":             "CT head: Confirms left hemisphere lesion. Speech motor cortex involvement.",
+    "speech":         "Speech-language assessment: Prosodic and phonemic alterations consistent with left SMA disruption. The patient is indistinguishable from a native Norwegian speaker. They are from Cincinnati.",
+    "psych":          "Psychiatric evaluation: Patient is not affecting the accent. They find it as distressing as everyone else does. Possibly more."
+  }
+},{
+  name:"Trimethylaminuria",
+  symptoms:[
+    "Significant social withdrawal over the past several months.",
+    "Patient reports hygiene has become an increasing preoccupation.",
+    "Interpersonal relationships have deteriorated. The patient cannot explain why.",
+    "Multiple coworkers have filed complaints about an unidentified smell. Patient is mortified.",
+    "Body odor is fishy, persistent, and completely unresponsive to any amount of washing.",
+    "The patient's metabolic system cannot break down trimethylamine. It exits through every available pore. They smell like a harbor."
+  ],
+  houseComments:[
+    "Social withdrawal plus hygiene obsession. Something physical is socially isolating them.",
+    "Colleagues complain about an odor the patient can't eliminate. That's metabolic, not hygiene.",
+    "Fishy. Persistent. Showers don't help. FMO3 enzyme. Check it."
+  ],
+  winQuote:"An FMO3 gene mutation prevents breakdown of trimethylamine produced during digestion. The compound accumulates and outgasses through sweat, breath, and urine. Smells like fish. Is not fish. No cure — dietary management only.",
+  loseQuote:"Fish odor syndrome. FISH. ODOR. Their body was broadcasting the diagnosis through multiple senses simultaneously and you all somehow missed it.",
+  testResults:{
+    "blood":          "CBC: Normal. Liver function: Normal. Nothing in the blood explains the symptom.",
+    "urine":          "Urinalysis: Elevated trimethylamine and TMA oxide. The lab report includes two separate technician notes about the odor.",
+    "fmo3":           "FMO3 enzyme activity assay: Markedly deficient. Less than 10% of normal activity. This is your diagnosis.",
+    "enzyme":         "FMO3 enzyme activity: Less than 10% of normal. You found it.",
+    "genetic":        "Genetic panel: Pathogenic variants in both FMO3 alleles. Autosomal recessive. Both parents carry one copy.",
+    "fish":           "Trimethylamine urine challenge: Patient given choline-rich meal. Urine TMA levels 40x normal at 4 hours. The specimen smells exactly like you think it does.",
+    "smell":          "Trimethylamine urine test: Strongly positive. 'Pungent' appears twice in the lab report. The result is not subtle."
+  }
+},{
+  name:"Porphyria",
+  symptoms:[
+    "A constellation of physical and psychiatric symptoms that resist a clean explanation.",
+    "Marked sensitivity to sunlight that seems disproportionate.",
+    "Abdominal pain alongside psychiatric episodes. The combination is conspicuous.",
+    "Urine, upon examination, is a reddish-purple. This was not mentioned until now.",
+    "Neurological symptoms have joined the presentation. The picture is widening.",
+    "Heme biosynthesis is disrupted. Porphyrins are accumulating. In the 14th century, this patient would have been the subject of very serious village gossip."
+  ],
+  houseComments:[
+    "Physical plus psychiatric together means systemic. Don't let anyone silo those symptoms.",
+    "Sunlight sensitivity that severe isn't cosmetic — it's metabolic.",
+    "Someone checked the urine, yes? Tell me someone checked the urine.",
+    "Purple urine. THAT would have been useful to mention at the beginning."
+  ],
+  winQuote:"Porphyria. Defective heme synthesis. Porphyrins accumulate and cause photosensitivity, neurological symptoms, abdominal crisis, and psychiatric episodes. Medical historians believe this is the biological basis for European vampire and werewolf mythology. The patient would have had a difficult medieval experience.",
+  loseQuote:"THE URINE WAS PURPLE. They had PHOTOSENSITIVITY and PSYCHIATRIC EPISODES and PURPLE URINE and you ordered a CT scan.",
+  testResults:{
+    "blood":          "CBC: Mild normocytic anemia. Serum ALA and PBG: Markedly elevated. This is significant.",
+    "urine":          "Watson-Schwartz test: POSITIVE. Urine turns burgundy on UV exposure. Porphobilinogen 8x normal. This is your test result. This is your diagnosis.",
+    "porphyrin":      "Urine porphyrin panel: Uroporphyrin and coproporphyrin significantly elevated. Heme synthesis is broken at multiple steps.",
+    "genetic":        "Genetic testing: Pathogenic HMBS variant confirmed. Acute Intermittent Porphyria.",
+    "mri":            "MRI brain: Posterior reversible encephalopathy pattern during acute crisis. Between attacks: normal.",
+    "liver":          "Liver function: Mildly elevated transaminases. Consistent with porphyria-related hepatic involvement."
+  }
+},{
+  name:"Jumping Frenchmen of Maine",
+  symptoms:[
+    "Everyone who knows the patient describes them as 'extremely jumpy.'",
+    "Startle response to unexpected stimuli is dramatically out of proportion.",
+    "After a sudden noise, the patient remains in a prolonged agitated state.",
+    "Patient has been observed involuntarily repeating words that were shouted near them.",
+    "When commands are shouted at the patient, they obey before processing whether to do so.",
+    "Extreme startle reflex, echolalia, and involuntary command compliance. The patient's nervous system has removed the editorial step."
+  ],
+  houseComments:[
+    "Extremely jumpy. Medically that's hyperekplexia spectrum. Figure out the subtype.",
+    "Prolonged agitation post-startle. The nervous system isn't resetting.",
+    "Echolalia triggered by startle. That's specific enough to be interesting."
+  ],
+  winQuote:"First documented in a 19th-century Maine logging community. Extreme startle reflex, echolalia, and automatic obedience to shouted commands before the brain consciously agrees to comply. The condition is real. Why it concentrated in that specific population is still not fully understood.",
+  loseQuote:"You could have SHOUTED a command at the patient and their BODY WOULD HAVE OBEYED before their BRAIN caught up. That's a documented phenomenon. Someone should have known it.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal.",
+    "mri":            "Brain MRI: No structural abnormalities.",
+    "eeg":            "EEG: Normal. This is not epilepsy. The startle response is a reflex arc abnormality, not a cortical seizure.",
+    "startle":        "Standardized startle protocol: 90dB click at 50cm. Full-body myoclonic jerk, 8.3 seconds of echolalia, automatic compliance with simultaneously shouted command. The neurophysiologist describes the experience as 'memorable.'",
+    "nerve":          "Nerve conduction: Normal. The pathology is at the spinal reflex arc level."
+  }
+},{
+  name:"Stiff Person Syndrome",
+  symptoms:[
+    "Muscle issues that come and go in a pattern no one has mapped yet.",
+    "Several unexplained falls over the past three months.",
+    "Muscles become rigid in sudden episodes without apparent cause.",
+    "Loud sounds and emotional distress appear to reliably trigger episodes.",
+    "During acute episodes, the patient becomes completely rigid and cannot move.",
+    "The inhibitory neurons that signal muscles to relax are under immunological attack. The muscles never receive permission to stop."
+  ],
+  houseComments:[
+    "Unexplained falls with intermittent muscle involvement. The pattern is everything.",
+    "Triggered by stress and noise. The nervous system is hypersensitized somewhere specific.",
+    "Board-rigid. Not stiff — rigid. Muscles refusing release. That's autoimmune against the inhibitory pathway."
+  ],
+  winQuote:"Anti-GAD antibodies. The immune system targets GABAergic interneurons that tell muscles to relax. With those neurons compromised, muscles stay contracted. Stimuli trigger uncontrolled full-body rigidity. The patient's body has forgotten how to let go.",
+  loseQuote:"The patient COULD NOT PHYSICALLY RELAX. Neurologically. The signal to relax was immunologically blocked. The solution you landed on was what, exactly.",
+  testResults:{
+    "blood":          "Anti-GAD65 antibody titer: 890 IU/mL. Normal is less than 1 IU/mL. This is 890 times normal. This is your diagnosis.",
+    "emg":            "EMG: Continuous spontaneous motor unit activity at rest in paraspinal and proximal limb muscles. The muscles are contracting. They never stop.",
+    "mri":            "MRI spine: Unremarkable. The problem is immunological, not structural.",
+    "autoimmune":     "Autoimmune panel: Anti-GAD65 strongly positive. Anti-amphiphysin: Negative. Diagnosis: Stiff Person Syndrome.",
+    "nerve":          "Nerve conduction: Normal. The nerves are fine. The command to relax is simply not arriving."
+  }
+},{
+  name:"Fibrodysplasia Ossificans Progressiva",
+  symptoms:[
+    "Steadily progressive loss of mobility that no single injury explains.",
+    "Pain and swelling in soft tissue following even minor trauma.",
+    "Physical examination reveals unusual firmness in areas that should not be firm.",
+    "Imaging shows calcification forming in muscle and connective tissue.",
+    "Skeletal muscle and connective tissue are actively being replaced by bone.",
+    "The patient's body is building new skeleton. In places where skeleton was never planned."
+  ],
+  houseComments:[
+    "Progressive mobility loss without a clear structural lesion. The etiology is upstream of the joints.",
+    "Soft tissue calcification. Either dystrophic or the body has made a misguided executive decision.",
+    "Bone appearing in muscle. Too systemic for myositis ossificans. Something's wrong at the signaling level."
+  ],
+  winQuote:"An ACVR1 mutation causes the body's repair machinery to interpret muscle damage as a trigger for bone formation. The skeleton grows. Into soft tissue, into muscle, into tendon. The process is irreversible. Any surgical attempt to remove the new bone triggers more bone to form. It is one of the crueler diseases on record.",
+  loseQuote:"Their MUSCLES were being converted to BONE. The BODY WAS BUILDING SKELETON in places NEVER MEANT TO HAVE SKELETON. And nobody pursued it.",
+  testResults:{
+    "xray":           "X-ray of affected region: Heterotopic ossification confirmed. Bone is forming in soft tissue. This is not an imaging artifact.",
+    "ct":             "CT: Extensive ectopic bone deposits in muscle planes. Lamellar bone structure — it is real, organized bone — in the wrong place.",
+    "blood":          "CBC: Normal. Alkaline phosphatase mildly elevated.",
+    "genetic":        "Genetic testing: ACVR1 R206H mutation. Pathognomonic for FOP. Do not biopsy the lesion.",
+    "mri":            "MRI: Soft tissue edema transitioning to ossification signal. The bone is actively forming.",
+    "biopsy":         "Biopsy performed. Results: Heterotopic ossification with active bone formation. The biopsy site itself has now developed new ectopic bone. I told you not to biopsy. This is why I told you not to biopsy."
+  }
+},{
+  name:"Morgellons Disease",
+  symptoms:[
+    "Skin sensations the patient describes with unusual specificity.",
+    "Reports crawling or biting sensations under the skin.",
+    "Has been evaluated for parasitic infection multiple times. No parasites identified.",
+    "Patient insists they can see fibers or filaments emerging from open skin lesions.",
+    "Unidentified filamentous material is, in fact, present at wound sites on examination.",
+    "The skin is producing something. The origin and nature of the filaments remain officially contested."
+  ],
+  houseComments:[
+    "Crawling sensations plus lesions. Delusional parasitosis or something we don't have a tidy name for.",
+    "Claims to see fibers. Three possibilities: embedding them, delusional, or actual fibers. All deserve investigation.",
+    "The CDC ran an investigation. They did not cleanly close it. That makes it interesting."
+  ],
+  winQuote:"The filaments are real — identified as primarily cellulose-based in independent analyses. The mechanistic explanation remains officially inconclusive. The CDC investigation was thorough, and its findings were quietly ambiguous. It is the kind of disease that makes certain researchers uncomfortable.",
+  loseQuote:"The patient's SKIN was producing UNIDENTIFIED FIBERS. The CDC looked into this and DIDN'T CLOSE THE CASE CLEANLY. Your diagnosis was 'probably anxiety.' Courageous.",
+  testResults:{
+    "skin":           "Skin biopsy with fiber analysis: Filamentous material recovered. Fibers identified as primarily cellulose-based, trace keratin. No synthetic material. The fibers are real. Their origin is unresolved.",
+    "blood":          "CBC: Mild eosinophilia. Otherwise normal.",
+    "parasite":       "Comprehensive parasitology workup: No ova, cysts, or organisms identified.",
+    "mri":            "Brain MRI: No abnormalities.",
+    "dermatology":    "Dermatopathology: Chronic inflammatory infiltrate with subepidermal filaments. The fibers are present. The etiology is officially inconclusive."
+  }
+},{
+  name:"Alice in Wonderland Syndrome",
+  symptoms:[
+    "Perceptual complaints the patient finds difficult to articulate.",
+    "Reports that things around them 'look wrong' in a way they cannot specify.",
+    "Objects in the environment appear to be the incorrect size.",
+    "The patient's perception of their own body size is episodically distorted.",
+    "Periods during which the surrounding world warps dramatically in perceived scale, lasting minutes to hours.",
+    "Size perception is broken. Micropsia, macropsia, and dysmetropsia, alternating. Lewis Carroll had this and wrote a book about it."
+  ],
+  houseComments:[
+    "Things 'look wrong.' That's cortical — the processing end, not the input end.",
+    "Size perception specifically. Micropsia and macropsia are distinct from general visual disturbance.",
+    "Their own body looks wrong-sized to them. Parietal cortex. Or migraine aura. Both possible."
+  ],
+  winQuote:"A neurological condition — most commonly migraine-related — causing distortions in perceived size. Lewis Carroll almost certainly experienced it and documented it in meticulous fictional detail instead of seeking treatment. The book has sold considerably better than most medical case reports.",
+  loseQuote:"Lewis Carroll wrote ALICE IN WONDERLAND about a syndrome named after that book. The syndrome involves perceiving the wrong SIZE. The clue was in the NAME. I don't know how to make it clearer.",
+  testResults:{
+    "mri":            "Brain MRI between episodes: Normal. Functional MRI during episode: Abnormal activation in parietal-occipital junction — the region responsible for size processing. It is not functioning correctly.",
+    "eeg":            "EEG: Slow-wave abnormalities over parietal regions during reported episodes. No seizure activity.",
+    "blood":          "CBC, metabolic: Normal.",
+    "migraine":       "Migraine evaluation: History consistent with migraine with complex aura. AIWS episodes represent aura phenomena. Lewis Carroll had this. He chose fiction over medicine.",
+    "eye":            "Ophthalmological exam: Normal. The eyes are fine. The problem is in how the brain processes what the eyes send."
+  }
+},{
+  name:"Kuru",
+  symptoms:[
+    "Progressive neurological deterioration with no identified cause.",
+    "Tremors that have been slowly worsening over several weeks.",
+    "Inappropriate and unpredictable laughing that the patient cannot control.",
+    "The patient recently returned from an extended trip to a remote region.",
+    "The patient attended a traditional funeral ceremony in the Fore highlands of Papua New Guinea.",
+    "The patient consumed neural tissue at the funeral. They have a prion disease. This is both rare and completely specific."
+  ],
+  houseComments:[
+    "Progressive neuro decline plus tremors. Prion, autoimmune, or infectious. Start ruling.",
+    "Laughing at inappropriate times alongside tremors. That's a very specific profile.",
+    "They came back from WHERE. Say the region."
+  ],
+  winQuote:"Kuru is a prion disease transmitted through ritual consumption of human neural tissue, practiced historically among the Fore people of Papua New Guinea as part of funeral rites. The infectious agent is a misfolded protein. Incurable. The patient attended the wrong ceremony.",
+  loseQuote:"The patient went to Papua New Guinea. Attended a ritual feast. Has a progressive laughing tremor disorder. There are two diagnoses that fit that sentence. You found zero of them.",
+  testResults:{
+    "blood":          "CBC and metabolic: Normal. Standard infectious disease panel: Negative. The agent is a misfolded protein. It will not show on standard panels.",
+    "mri":            "MRI brain: Symmetric T2 signal changes in basal ganglia and cerebellum. Progressive neuronal loss. The pattern is consistent with prion disease.",
+    "csf":            "CSF analysis: Elevated 14-3-3 protein. RT-QuIC assay for prion seeding activity: POSITIVE. This is a prion disease.",
+    "prion":          "Prion protein assay: Abnormal PrPSc detected. This is Kuru. We need the patient's complete dietary history from Papua New Guinea. Their complete dietary history.",
+    "travel":         "Travel history review: Patient attended a communal funeral feast in the Fore highlands. The specific nature of the meal consumed is relevant to the diagnosis. We need details."
+  }
+},{
+  name:"Paris Syndrome",
+  symptoms:[
+    "Acute psychological deterioration following a long international journey.",
+    "No prior psychiatric history. The onset was rapid.",
+    "Patient describes a profound and destabilizing gap between expectation and reality.",
+    "The shattering experience involved a place they had anticipated their entire adult life.",
+    "The patient visited Paris for the first time.",
+    "Paris was not as imagined. The psyche has not processed this and may not."
+  ],
+  houseComments:[
+    "Acute psychiatric break, no prior history, post-travel. Something environmental triggered it.",
+    "Reality failed to match a cherished expectation badly enough to cause clinical collapse. Specific trauma vector.",
+    "Paris. They went to Paris. I've always assumed it smells like philosophy and disappointment. Apparently that's clinically significant for some people."
+  ],
+  winQuote:"Paris Syndrome predominantly affects tourists — historically Japanese visitors — who arrive with a deeply idealized image of Paris and encounter, instead, an actual city. The gap between the mythologized Paris and the real one is, for some people, neurologically destabilizing. The French have not issued a formal apology.",
+  loseQuote:"The patient's entire mental architecture COLLAPSED because Paris was just PARIS. You ordered an MRI of someone who had a SPIRITUAL COLLISION with a CITY.",
+  testResults:{
+    "blood":          "CBC, metabolic, thyroid, toxicology: All normal. There is nothing physically wrong with this patient. Physically.",
+    "mri":            "Brain MRI: No structural abnormalities.",
+    "psych":          "Psychiatric evaluation: Acute stress reaction with dissociative features. No prior history. Precipitating event: first visit to Paris, France. Patient quote: 'It didn't look like the pictures.' Duration: 6 days and counting.",
+    "cortisol":       "Cortisol: Elevated. Consistent with acute stress. The stressor is documented.",
+    "ecg":            "Sinus tachycardia, rate 98. Anxiety-consistent findings. Otherwise normal."
+  }
+},{
+  name:"Autoimmune Encephalitis",
+  symptoms:[
+    "Personality has shifted noticeably over the past several months.",
+    "Episodes of confusion that appear and resolve without apparent cause.",
+    "Psychiatric symptoms have emerged with no prior history.",
+    "New-onset seizures in a previously healthy individual.",
+    "Cerebrospinal fluid shows inflammatory markers without a clear infectious source.",
+    "The patient's immune system has produced antibodies against their own brain receptors and has been dismantling cognition piece by piece."
+  ],
+  houseComments:[
+    "Personality change plus confusion means the brain. Finding which part and why is the problem.",
+    "Psychiatric symptoms, first episode, no history. This is not a psychiatric problem. Work it as neurology.",
+    "Seizures plus CSF inflammation plus psych plus confusion. You are circling something. Get closer."
+  ],
+  winQuote:"Anti-NMDA receptor encephalitis. The immune system generates antibodies against NMDA receptors — the receptors responsible for memory, cognition, and behavior. What looks like psychosis is inflammation. The patient wasn't having a breakdown. They were being quietly dismantled by their own immune cells.",
+  loseQuote:"The patient's immune system was TARGETING THEIR OWN BRAIN RECEPTORS. Turning off thought, one receptor at a time. You chased the psychiatric presentation while the neurology ate them.",
+  testResults:{
+    "blood":          "Anti-NMDA receptor antibodies: POSITIVE. Titer 1:160. This is the diagnosis. Confirm with CSF antibody panel.",
+    "csf":            "CSF: Lymphocytic pleocytosis. Oligoclonal bands present. Anti-NMDAR antibodies in CSF: Confirmed. Diagnosis: Anti-NMDA Receptor Encephalitis.",
+    "mri":            "MRI brain: T2/FLAIR signal changes in hippocampi and limbic regions. Classic distribution for anti-NMDA receptor encephalitis.",
+    "eeg":            "EEG: Extreme delta brush pattern. Nearly pathognomonic for anti-NMDA receptor encephalitis. Stop everything else and run the antibody panel.",
+    "psych":          "Psychiatric evaluation: Psychosis of new onset in previously healthy individual. This is not primary psychiatric disease — it is autoimmune. Treating it psychiatrically alone will not help."
+  }
+},{
+  name:"Hypertrichosis",
+  symptoms:[
+    "Dermatology has referred the patient after an unusual presentation.",
+    "Unusual hair growth that the patient finds distressing.",
+    "Family members have commented on a dramatic change in the patient's appearance over recent months.",
+    "Hair is growing from locations on the face and body where it is not typically present.",
+    "Extensive hair growth now covers the patient's face and torso beyond any expected variation.",
+    "The patient has what the medical literature — with a rare moment of unsubtle nomenclature — refers to as Werewolf Syndrome."
+  ],
+  houseComments:[
+    "Unusual hair growth. Androgen excess is the obvious guess. What's the distribution?",
+    "Atypical follicular activation. Something's telling those follicles to wake up that shouldn't.",
+    "Face and torso, extensive, symmetrical. That's not hormonal. That's genetic. Go rarer."
+  ],
+  winQuote:"Hypertrichosis. A genetic mutation reactivates dormant follicles across the body and face. The condition was historically interpreted as lycanthropy. It is, in fact, one of the few diseases to have its own folkloric tradition. The patient is not a werewolf. They have a very expressive genome.",
+  loseQuote:"The patient had what textbooks call WEREWOLF SYNDROME. With that label. In the textbook. And the differential you landed on was alopecia? That's the wrong direction by a significant margin.",
+  testResults:{
+    "blood":          "CBC: Normal. Comprehensive androgen panel: All within normal reference ranges. This is not hormonal.",
+    "genetic":        "Genetic testing: Xq27.3-q28 locus duplication confirmed. Responsible for reactivating dormant hair follicle genes that should remain suppressed postnatally.",
+    "hormone":        "Comprehensive hormone panel: Normal across all axes. The follicles are responding to a genetic instruction, not a circulating signal.",
+    "skin":           "Skin biopsy: Normal follicular architecture. Increased follicular density and activation. The follicles are structurally normal. They simply have permission they shouldn't have."
+  }
+},{
+  name:"Hutchinson-Gilford Progeria",
+  symptoms:[
+    "The patient presents with features inconsistent with their stated age.",
+    "Multiple biological markers suggest an age significantly greater than their actual years.",
+    "Bone density, skin integrity, and cardiovascular indicators are all advanced beyond their chronological age.",
+    "Several organ systems are exhibiting age-related deterioration simultaneously.",
+    "Biological aging is accelerating across all systems.",
+    "The patient is eleven years old with the cardiovascular system of a seventy-year-old. LMNA mutation. The clock is running very fast."
+  ],
+  houseComments:[
+    "Biology and biography aren't matching. Either falsified records or a genetic error in the aging mechanism.",
+    "Multiple systems aging simultaneously and prematurely. A global timer running wrong.",
+    "Cardiovascular age, skin, bone — all advanced. Lamin A. Look at the nuclear lamina."
+  ],
+  winQuote:"A point mutation in LMNA produces a truncated lamin A protein called progerin. Progerin disrupts nuclear membrane stability, causing accelerated cellular aging in every tissue. These children develop heart disease and stroke in their first decade. We know exactly what causes it. We treat it anyway.",
+  loseQuote:"A CHILD was aging at EIGHT TIMES the normal rate. Their heart was seven decades old. And you needed more time to think.",
+  testResults:{
+    "blood":          "CBC: Normal. Lipid panel: LDL 287 mg/dL, HDL 21 mg/dL. These are the cardiovascular values of an octogenarian. Patient is 11.",
+    "genetic":        "Genetic testing: LMNA c.1824C>T (p.G608G) variant. Classic Hutchinson-Gilford Progeria mutation. The resulting protein — progerin — is toxic to the nuclear lamina.",
+    "ecg":            "ECG: ST depression and T-wave abnormalities. Coronary artery disease pattern. In an 11-year-old.",
+    "xray":           "Skeletal survey: Premature epiphyseal fusion. Bone age: 60-65 years. Chronological age: 11.",
+    "echo":           "Echocardiogram: Coronary artery disease with reduced EF. Cardiovascular findings normally seen in septuagenarians."
+  }
+},{
+  name:"Electromagnetic Hypersensitivity",
+  symptoms:[
+    "A wide and shifting range of symptoms with no consistent underlying pathology.",
+    "Symptoms appear to correlate with the patient's physical location in ways they have begun tracking obsessively.",
+    "Patient has begun avoiding certain buildings, rooms, and technologies.",
+    "The patient believes wireless electromagnetic fields are causing their symptoms and has documentation.",
+    "Has relocated to a rural area described as having minimal wireless coverage.",
+    "The patient's symptoms are real. Their attributed cause is almost certainly not electromagnetic fields. This distinction is important and will be difficult."
+  ],
+  houseComments:[
+    "Symptoms that vary with location. Environmental trigger, anxiety, or both. Map it properly.",
+    "They've formed a theory. Patients with theories make the best and worst patients simultaneously.",
+    "They've self-diagnosed as electromagnetically sensitive. Controlled studies don't support it. Their suffering is real. The cause is our problem now."
+  ],
+  winQuote:"Electromagnetic hypersensitivity. In every double-blind study, subjects cannot reliably detect electromagnetic field presence above chance. Their symptoms are genuine. The cause they believe in is not supported by evidence. Something is wrong with this patient. It is likely not the WiFi.",
+  loseQuote:"The patient thought WiFi was attacking them. You thought 'maybe it is.' Neither of you are helping. One of you has a medical degree.",
+  testResults:{
+    "blood":          "CBC, metabolic, inflammatory markers, CRP, ESR: All normal. No physiological correlate identified.",
+    "mri":            "Brain MRI: No structural abnormalities. No lesions attributable to electromagnetic exposure.",
+    "emf":            "Double-blind EMF challenge: Patient correctly identified active vs. sham exposure in 47% of trials. Expected by chance: 50%. Below chance. Symptoms occurred at equal rates in both conditions.",
+    "wifi":           "Double-blind EMF challenge: Patient correctly identified active vs. sham exposure in 47% of trials. Expected by chance: 50%. Symptoms occurred equally in both conditions. The WiFi is not causing this.",
+    "allergy":        "Allergy panel: Negative.",
+    "psych":          "Psychiatric evaluation: Somatic symptom disorder features. Genuine suffering present. Primary attribution to EMF not supported by testing. Something else is causing these symptoms."
+  }
+},{
+  name:"Capgras Syndrome",
+  symptoms:[
+    "Patient seems to be having issues with a close relationship they cannot explain.",
+    "Reports that someone they love is 'different somehow.'",
+    "Insists a family member has been subtly replaced, though cannot specify how.",
+    "Claims with conviction that their spouse is an imposter who looks exactly like their actual spouse.",
+    "Cannot explain who performed the replacement or why. Only that it happened.",
+    "The patient's brain cannot match a loved one's face to the emotional response that face should trigger. It concluded the only logical explanation is impersonation."
+  ],
+  houseComments:[
+    "Relationship issue they can't explain. That could be anything. What specifically is different.",
+    "'Different somehow.' Patients who describe things as 'different somehow' are almost always pointing at something neurological.",
+    "An imposter who looks exactly like the real person. The brain is getting the face right and the feeling wrong. That's a specific circuit problem."
+  ],
+  winQuote:"Reduced connectivity between the fusiform face area and the amygdala. The brain recognizes the face but cannot generate the expected emotional resonance. Missing the feeling, it constructs a narrative to explain the gap: impersonation. The logic is internally consistent. The imposter does not exist.",
+  loseQuote:"The patient's brain was RECOGNIZING faces without FEELING them. The result: a convincing, coherent delusion about imposters. You were out here doing blood panels while a circuit error was rewriting their entire social reality.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal.",
+    "mri":            "Brain MRI: Reduced connectivity between fusiform face area and amygdala. The face recognition-to-emotional response circuit is disrupted.",
+    "psych":          "Psychiatric evaluation: Patient is not psychotic in the general sense. The belief is highly specific — restricted to one person. They recognize faces. They cannot feel the match. The brain concluded impersonation. This is its answer.",
+    "eeg":            "EEG: Normal."
+  }
+},{
+  name:"Kleine-Levin Syndrome",
+  symptoms:[
+    "Has been unusually difficult to rouse over the past several days.",
+    "Episodes of sleeping 18+ hours with hyperphagia and confusion when awake.",
+    "This is the third such episode in two years. Each lasts one to three weeks.",
+    "During episodes, the patient eats compulsively, speaks childishly, and is profoundly confused.",
+    "Patient is currently on day nine of an episode. They were awake for 30 minutes yesterday.",
+    "The patient has slept through most of the past six months, in total. The episodes cluster without explanation."
+  ],
+  houseComments:[
+    "Hard to rouse. Could be toxicological, metabolic, or something rarer. Tox screen first.",
+    "Third episode. Recurrent. Episodic. That's not most things. That's a short list.",
+    "Sleeps 20 hours. Wakes. Eats compulsively. Confused. Then recovers completely. That's Kleine-Levin."
+  ],
+  winQuote:"Kleine-Levin Syndrome. Recurrent episodes of hypersomnia, hyperphagia, and cognitive impairment, each lasting days to weeks, with complete recovery between episodes. The cause is unknown. The pattern is unmistakable. Also known as Sleeping Beauty Syndrome, which is, for once, an accurate fairy-tale parallel.",
+  loseQuote:"The patient was sleeping 20 hours a day in multi-week recurring episodes with complete recovery between. There is one diagnosis for that pattern. You didn't find it.",
+  testResults:{
+    "blood":          "CBC, metabolic, thyroid, toxicology: Normal during episode. Normal between episodes. This disease is invisible to standard labs.",
+    "mri":            "Brain MRI: Normal between episodes. SPECT during episode: Hypoperfusion of thalamus and hypothalamus.",
+    "eeg":            "EEG during episode: Diffuse slow-wave activity. Non-specific. Not seizure-based.",
+    "sleep":          "Polysomnogram: Normal sleep architecture but massively extended. Patient slept 22 hours in the past 24 hours. When awake: confusion, hyperphagia, childlike speech.",
+    "toxicology":     "Comprehensive toxicology: Negative. This is not drug-induced."
+  }
+},{
+  name:"Wilson's Disease",
+  symptoms:[
+    "Liver function tests are abnormal. Patient is in their late teens.",
+    "Psychiatric symptoms have emerged alongside the liver abnormalities.",
+    "Neurological symptoms are joining the picture: tremor, dysarthria.",
+    "Ophthalmological exam reveals golden-brown rings at the corneal periphery.",
+    "Serum ceruloplasmin is low. 24-hour urine copper is elevated.",
+    "The patient's body cannot excrete copper. It has accumulated in their liver, brain, and eyes for years."
+  ],
+  houseComments:[
+    "Liver plus psychiatric in a teenager. Autoimmune hepatitis, Wilson's, or something viral. Check the eyes.",
+    "Neurological joining liver and psych. That narrows it considerably.",
+    "Did someone look at the eyes. Someone needs to look at the eyes."
+  ],
+  winQuote:"An ATP7B gene mutation prevents copper excretion. Copper accumulates in the liver, brain, and cornea over years. Kayser-Fleischer rings — the golden deposits at the corneal periphery — are nearly pathognomonic. They were visible from the beginning. Someone should have looked at the eyes earlier.",
+  loseQuote:"The patient had RINGS IN THEIR EYES. Visible with a slit lamp. Visible, golden-brown, copper rings IN THEIR CORNEA. And you were checking their cholesterol.",
+  testResults:{
+    "blood":          "Serum ceruloplasmin: 12 mg/dL (normal: 20-40 mg/dL). Markedly reduced. Serum copper: Paradoxically low free copper. This pattern is classic.",
+    "urine":          "24-hour urine copper: 450 μg/24h (normal: <100 μg/24h). Copper is accumulating everywhere and being excreted in excess.",
+    "genetic":        "Genetic testing: ATP7B biallelic mutations confirmed. Wilson's Disease.",
+    "liver":          "Liver biopsy: Copper deposits confirmed on rhodanine staining. Early cirrhotic changes.",
+    "slit lamp":      "Slit-lamp examination: Kayser-Fleischer rings present bilaterally. Golden-brown copper deposits at the corneal periphery. This finding alone is nearly diagnostic. It was there the entire time.",
+    "mri":            "MRI brain: 'Face of giant panda' sign in midbrain on T2. Copper deposition in basal ganglia. The copper is in the brain. It has been accumulating for years."
+  }
+},{
+  name:"Congenital Central Hypoventilation Syndrome",
+  symptoms:[
+    "Patient has been admitted following an 'episode' during sleep.",
+    "Oxygen saturation drops significantly when the patient falls asleep.",
+    "The patient breathes normally while awake. While asleep, they simply stop.",
+    "Patient requires mechanical ventilation at night. Autonomic breathing control is absent during sleep.",
+    "The automatic system that maintains breathing during sleep has failed.",
+    "If the patient falls asleep without ventilation, they will stop breathing and not register distress. Also known as Ondine's Curse."
+  ],
+  houseComments:[
+    "Desaturation during sleep only. Either obstructive or central. Very different problems.",
+    "Breathes fine when awake. Stops when asleep. This is central, not obstructive. The apneas are not mechanical.",
+    "The voluntary drive is intact. The automatic one isn't. That's a specific distinction."
+  ],
+  winQuote:"The autonomous respiratory drive — the system that breathes for you when you're not thinking about breathing — is absent. The patient can breathe when they decide to. They cannot breathe when asleep. Named for the nymph Ondine who cursed her unfaithful lover to maintain only conscious bodily functions. The mythology is apt.",
+  loseQuote:"The patient would DIE if they fell asleep without ventilation. Because they FORGET TO BREATHE when UNCONSCIOUS. That's not subtle. That's the entire symptom.",
+  testResults:{
+    "blood":          "ABG while awake: Normal. ABG during sleep: pH 7.19, pCO2 72 mmHg, pO2 52 mmHg. The patient stops breathing when they sleep. The body does not notice.",
+    "oxygen":         "Overnight pulse oximetry: SpO2 drops to 62% during sleep. No arousal response. The patient is not aware this is happening.",
+    "sleep":          "Polysomnogram: Central apneas throughout all sleep stages. No respiratory effort during episodes. No arousal response to hypoxia or hypercapnia. The automatic drive to breathe is absent.",
+    "genetic":        "Genetic testing: PHOX2B heterozygous expansion. Congenital Central Hypoventilation Syndrome confirmed.",
+    "mri":            "MRI brain: No structural abnormalities. The problem is at the autonomic respiratory control network — functionally absent, structurally invisible."
+  }
+},{
+  name:"Charles Bonnet Syndrome",
+  symptoms:[
+    "Patient reports seeing things.",
+    "The visions are vivid, detailed, and not distressing to the patient, which is itself unusual.",
+    "Patient knows the visions are not real. They watch them 'like television.'",
+    "Vision has been declining. The visions appeared shortly afterward.",
+    "Sees fully-formed people, animals, and geometric patterns in full color in their visually impaired field.",
+    "The patient is nearly blind and experiencing vivid, non-threatening hallucinations as a direct neurological consequence."
+  ],
+  houseComments:[
+    "Seeing things, not distressed. Most psychosis comes with distress. This is different.",
+    "Knows the visions aren't real. That rules out most psychotic disorders.",
+    "Vision decline followed by hallucinations. The brain is generating content to fill the input gap."
+  ],
+  winQuote:"When the visual cortex is deprived of input, it generates its own. Charles Bonnet Syndrome occurs in people with significant visual impairment — the brain, unwilling to process nothing, produces detailed, non-threatening visual experiences. The patient isn't psychotic. They're receiving television from their own occipital lobe.",
+  loseQuote:"The patient was NEARLY BLIND and their VISUAL CORTEX was MAKING UP CONTENT to fill the gap. That is a documented phenomenon with a name. The name is Charles Bonnet Syndrome. It is not schizophrenia.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal.",
+    "mri":            "Brain MRI: No lesions. Visual cortex shows spontaneous activation independent of visual input during episodes.",
+    "eye":            "Ophthalmological exam: Macular degeneration, bilateral. Central visual acuity: 20/400. The visual input has substantially decreased. The cortex is compensating.",
+    "eeg":            "EEG: No seizure activity. Visual cortex generating spontaneous output. Not epileptiform.",
+    "psych":          "Psychiatric evaluation: Patient fully aware visions are not real. No delusions. No thought disorder. No psychosis. Diagnosis: Charles Bonnet Syndrome."
+  }
+},{
+  name:"Argyria",
+  symptoms:[
+    "Patient has been using an alternative health supplement for the past 18 months.",
+    "Skin coloration has been changing gradually.",
+    "Family members describe a visible change in the patient's appearance.",
+    "The patient's skin is visibly grey-blue. This is not cyanosis.",
+    "The discoloration is diffuse, symmetrical, and more pronounced in sun-exposed areas.",
+    "Silver has deposited in the patient's dermis. The color is permanent. The internet told them this supplement would boost their immune system."
+  ],
+  houseComments:[
+    "Unusual skin coloration after supplement use. The supplement is almost certainly the cause.",
+    "Grey-blue. Symmetrical. Not cyanotic — the saturation is wrong for cyanosis. This is something deposited.",
+    "18 months of colloidal silver. What color do they think silver turns skin. It's not a rhetorical question."
+  ],
+  winQuote:"Colloidal silver consumption leads to silver deposition in the dermis. UV exposure causes photoreduction of the silver particles, producing a grey-blue discoloration. It does not wash out. It does not fade significantly. The immune benefits: none documented. The color: permanent. The internet: not a doctor.",
+  loseQuote:"The patient was TURNING GREY because they ATE SILVER for 18 MONTHS. Because a WEBSITE said it would make them HEALTHIER. And you needed six guesses.",
+  testResults:{
+    "blood":          "Serum silver: 38 μg/L (normal: <1 μg/L). Patient has been consuming colloidal silver for 18 months.",
+    "skin":           "Skin biopsy: Silver granules confirmed in dermis under polarized light. Photomicrograph attached. The deposits are real.",
+    "urine":          "Urine silver: Elevated. The patient is excreting silver. The rest is staying in the dermis.",
+    "xray":           "X-ray: No relevant findings. Silver is not significantly radio-opaque at these concentrations.",
+    "blood2":         "Liver and renal function: Normal. Silver toxicity is primarily cosmetic in this patient."
+  }
+},{
+  name:"Congenital Insensitivity to Pain",
+  symptoms:[
+    "Patient has no memory of ever experiencing pain.",
+    "Injury history is extraordinary: fractures discovered incidentally, burns untreated, dental damage extensive.",
+    "Physical examination reveals multiple old injuries in various stages of healing.",
+    "The patient underwent appendectomy — the appendicitis was found on routine imaging. They felt nothing.",
+    "Pain testing: No response to any painful stimulus at any intensity.",
+    "The SCN9A gene mutation has silenced the pain signaling pathway entirely. The patient cannot feel pain. This sounds convenient. It is, medically, extremely dangerous."
+  ],
+  houseComments:[
+    "Never experienced pain. That could be bravado, alexithymia, or something we need to test for.",
+    "The injury history is the key. Multiple fractures. Burns. All untreated. Not because they ignored pain — because there was no pain.",
+    "Pain testing is next. If they genuinely feel nothing at any intensity, we have a very specific diagnosis."
+  ],
+  winQuote:"An SCN9A loss-of-function mutation silences Nav1.7 sodium channels in pain-sensing neurons. The pathway from injury to perception is non-functional. Pain is gone. Proprioception and touch: intact. This sounds useful. It is not. Pain is the only system that tells you your body is being destroyed. Without it, the body destroys itself, slowly, and you don't notice.",
+  loseQuote:"The patient CANNOT FEEL PAIN. At all. At any intensity. Their body has been destroying itself for years without their knowledge. That's a very specific finding with a very specific name.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal.",
+    "genetic":        "Genetic testing: Pathogenic SCN9A variant. Loss-of-function mutation in Nav1.7. Pain signaling pathway is non-functional.",
+    "nerve":          "Nerve conduction: Sensory nerve action potentials intact for touch and proprioception. Pain fiber testing: No response at any stimulus intensity.",
+    "pain":           "Standardized pain protocol: Von Frey filaments, pin prick, heat probe (50°C), cold pressor — no response at any intensity. Patient cooperative and alert throughout. They feel nothing.",
+    "mri":            "Brain MRI: Normal. The brain would feel pain if the signal ever arrived."
+  }
+},{
+  name:"Pseudobulbar Affect",
+  symptoms:[
+    "Patient has episodes of emotional expression that seem disconnected from their actual state.",
+    "Reports laughing uncontrollably during a funeral. They were not amused.",
+    "Episodes of crying occur spontaneously, often at neutral or positive stimuli.",
+    "The emotional outbursts are embarrassing and socially debilitating.",
+    "Patient cried continuously for 22 minutes during a news segment about dogs. They had no particular feelings about dogs.",
+    "The corticobulbar pathway is disrupted. Emotional expression and emotional experience are no longer connected."
+  ],
+  houseComments:[
+    "Laughing at funerals they're not enjoying. That's not psychiatric — that's a circuit problem.",
+    "Emotional expression disconnected from emotional experience. That's a specific pathway.",
+    "Cried for 22 minutes about dogs. Felt nothing about dogs. This is almost elegant in its specificity."
+  ],
+  winQuote:"Corticobulbar pathway disruption uncouples the motor output of emotion from the subjective experience of it. The patient laughs without being amused. Cries without being sad. The expression fires; the feeling doesn't match. It is not psychiatric. It is circuitry. Treatable.",
+  loseQuote:"The patient was having emotional OUTBURSTS that were COMPLETELY DISCONNECTED from their ACTUAL EMOTIONAL STATE. The crying and laughing were running without the feeling. That's a named condition. With a mechanism. And a treatment.",
+  testResults:{
+    "blood":          "CBC, metabolic: Normal.",
+    "mri":            "Brain MRI: Evidence of corticobulbar pathway involvement consistent with underlying neurological condition causing PBA.",
+    "eeg":            "EEG: No seizure activity. The episodes are not seizures.",
+    "psych":          "Psychiatric evaluation: Patient reports NO subjective emotional experience corresponding to episodes. Cried for 20 minutes during routine questioning. Did not feel sad. The expression and experience are disconnected."
+  }
+},{
+  name:"PANDAS",
+  symptoms:[
+    "A previously normal child has suddenly developed repetitive behaviors.",
+    "Onset was acute — essentially overnight. No gradual progression.",
+    "Patient had a streptococcal infection approximately two weeks before symptom onset.",
+    "OCD-like behaviors, motor tics, and emotional lability appeared simultaneously.",
+    "Strep titers are elevated. Behavior was completely normal 19 days ago.",
+    "Anti-streptococcal antibodies have cross-reacted with basal ganglia neurons. The immune system confused the brain with a bacterium."
+  ],
+  houseComments:[
+    "Sudden onset OCD-like behaviors in a child. Not typical for OCD. Something triggered this.",
+    "Overnight onset. OCD doesn't appear overnight. Something flipped a switch.",
+    "Strep two weeks ago. Now this. The immune system was busy."
+  ],
+  winQuote:"Pediatric Autoimmune Neuropsychiatric Disorders Associated with Streptococcal infections. Anti-strep antibodies cross-react with basal ganglia neurons. The patient's immune system cleared the strep and, in the process, began attacking their own brain. OCD in 48 hours. The immune system is creative in the worst ways.",
+  loseQuote:"The patient developed OCD IN 48 HOURS because their IMMUNE SYSTEM MISTOOK THEIR BRAIN FOR A STREPTOCOCCAL BACTERIUM. That sentence contains the diagnosis. It was available at the beginning.",
+  testResults:{
+    "blood":          "Anti-streptolysin O titer: 890 IU/mL (normal <200). Anti-DNase B: Elevated. Streptococcal exposure confirmed and recent.",
+    "throat":         "Throat culture: Group A Streptococcus. The infection that started this.",
+    "mri":            "MRI brain: Basal ganglia volume increase. Neuroinflammation in caudate and putamen visible on imaging.",
+    "autoimmune":     "Anti-basal ganglia antibodies: Positive. The immune system generated antibodies to strep that cross-react with basal ganglia neurons.",
+    "psych":          "Psychiatric evaluation: OCD symptoms of abrupt onset with motor tics and emotional lability. All appeared simultaneously, 16 days after confirmed strep infection. This is not de novo OCD."
+  }
+},{
+  name:"Wernicke-Korsakoff Syndrome",
+  symptoms:[
+    "Memory is impaired in ways the patient does not seem to notice.",
+    "Patient answers questions about the past confidently. The answers change each time.",
+    "The patient is filling memory gaps with invented content. They believe every word.",
+    "History of significant alcohol use. Eye movement abnormalities noted on examination.",
+    "Patient confabulated their entire day without awareness. The stories are detailed, coherent, and completely fabricated.",
+    "Thiamine deficiency has damaged the mammillary bodies. The patient cannot form new memories and has retrofitted every gap with invented ones they believe absolutely."
+  ],
+  houseComments:[
+    "Memory impaired, patient unaware. Anosognosia for memory. That's a specific pattern.",
+    "Confident answers that change. Not lying — confabulating. The brain filling gaps with fiction.",
+    "Alcohol history plus eye movement abnormalities plus confabulation. Classic triad. Classic diagnosis."
+  ],
+  winQuote:"Thiamine deficiency — typically from chronic alcohol use — damages the mammillary bodies and thalamus. The patient cannot form new memories. The brain, unwilling to report gaps, fills them with invented content delivered with complete conviction. The patient is not lying. They genuinely believe what they're telling you. Every time.",
+  loseQuote:"The patient was MAKING UP THEIR ENTIRE HISTORY and BELIEVING IT COMPLETELY. The confabulations were detailed, confident, and completely false. That is a named condition. Named after two people. Both names are in the diagnosis.",
+  testResults:{
+    "blood":          "Thiamine (vitamin B1) level: 15 nmol/L (normal: >70 nmol/L). Severely deficient.",
+    "mri":            "MRI brain: T2/FLAIR signal changes in mammillary bodies, periaqueductal gray, and thalami. Classic Wernicke's encephalopathy distribution.",
+    "psych":          "Cognitive evaluation: Patient confabulated their entire morning in detail. They described breakfast, a phone call, and a walk. None occurred. The fabrications are unintentional and completely believed.",
+    "csf":            "CSF: Normal. The pathology is structural, not inflammatory.",
+    "eye":            "Ophthalmological exam: Nystagmus and lateral rectus palsy. Classic ocular findings of Wernicke's encephalopathy."
+  }
+}];
+
+// Non-playable diseases (recognized as guesses but never the answer)
+const KNOWN = [
+  {n:"Diabetes Type 1",       q:"Type 1 diabetes. For this patient. I've seen longer diagnostic leaps. They were all wrong too."},
+  {n:"Diabetes Type 2",       q:"Metabolic syndrome. While this patient presents with what you just read. Sure."},
+  {n:"Hypertension",          q:"High blood pressure. The diagnosis that fits everything and explains nothing."},
+  {n:"Asthma",                q:"Asthma. Look at the symptoms again. Then tell me where you got asthma."},
+  {n:"COPD",                  q:"COPD. The respiratory system is not the problem here. Look elsewhere."},
+  {n:"Influenza",             q:"Influenza. You think this is the flu. Please re-read everything."},
+  {n:"COVID-19",              q:"COVID-19. It is not COVID-19. Also, the year is not 2020."},
+  {n:"Anxiety Disorder",      q:"Anxiety. You've decided the extraordinary is anxiety. At least it's fast to write."},
+  {n:"Major Depressive Disorder", q:"Depression. Creative. Wrong."},
+  {n:"Heart Attack",          q:"Myocardial infarction. Is the patient clutching their chest? Look at the chart. Come back."},
+  {n:"Pneumonia",             q:"Pneumonia. Because whatever is happening here is definitely a lung infection. Obviously."},
+  {n:"Stroke",                q:"Stroke. Acute onset, yes. Otherwise the presentation doesn't match. Try again."},
+  {n:"Alzheimer's Disease",   q:"Alzheimer's. Not impossible. Also not what this patient has."},
+  {n:"Schizophrenia",         q:"Schizophrenia. The psychiatric presentation is real. The diagnosis is wrong."},
+  {n:"Bipolar Disorder",      q:"Bipolar. Not the right diagnosis. The affect is not the primary pathology."},
+  {n:"Multiple Sclerosis",    q:"MS. Demyelinating, yes, potentially. But the presentation doesn't fit. Narrow further."},
+  {n:"Parkinson's Disease",   q:"Parkinson's. The tremors are noted. The rest of the picture doesn't match."},
+  {n:"Lupus",                 q:"Lupus. It's never lupus."},
+  {n:"Rheumatoid Arthritis",  q:null},
+  {n:"Fibromyalgia",          q:"Fibromyalgia. The pain is real. The diagnosis is a placeholder. Keep looking."},
+  {n:"Epilepsy",              q:"Epilepsy. The neurological component is real. Not the right diagnosis."},
+  {n:"Celiac Disease",        q:null},
+  {n:"Crohn's Disease",       q:null},
+  {n:"Ulcerative Colitis",    q:null},
+  {n:"Irritable Bowel Syndrome", q:null},
+  {n:"GERD",                  q:null},
+  {n:"Peptic Ulcer Disease",  q:null},
+  {n:"Endometriosis",         q:null},
+  {n:"PCOS",                  q:null},
+  {n:"Hypothyroidism",        q:null},
+  {n:"Hyperthyroidism",       q:null},
+  {n:"Anemia",                q:null},
+  {n:"Gout",                  q:null},
+  {n:"Migraine",              q:null},
+  {n:"OCD",                   q:null},
+  {n:"PTSD",                  q:null},
+  {n:"ADHD",                  q:null},
+  {n:"Autism Spectrum Disorder", q:null},
+  {n:"HIV/AIDS",              q:null},
+  {n:"Tuberculosis",          q:null},
+  {n:"Malaria",               q:null},
+  {n:"Dengue Fever",          q:null},
+  {n:"Typhoid Fever",         q:null},
+  {n:"Hepatitis A",           q:null},
+  {n:"Hepatitis B",           q:null},
+  {n:"Hepatitis C",           q:null},
+  {n:"Lyme Disease",          q:null},
+  {n:"Meningitis",            q:null},
+  {n:"Sepsis",                q:null},
+  {n:"Atrial Fibrillation",   q:null},
+  {n:"Heart Failure",         q:null},
+  {n:"Kidney Failure",        q:null},
+  {n:"Liver Cirrhosis",       q:null},
+  {n:"Osteoporosis",          q:null},
+  {n:"Osteoarthritis",        q:null},
+  {n:"Scoliosis",             q:null},
+  {n:"Carpal Tunnel Syndrome",q:null},
+  {n:"Gallstones",            q:null},
+  {n:"Kidney Stones",         q:null},
+  {n:"Urinary Tract Infection",q:null},
+  {n:"Appendicitis",          q:null},
+  {n:"Diverticulitis",        q:null},
+  {n:"Pancreatitis",          q:null},
+  {n:"Pneumothorax",          q:null},
+  {n:"Pulmonary Embolism",    q:null},
+  {n:"Deep Vein Thrombosis",  q:null},
+  {n:"Marfan Syndrome",       q:null},
+  {n:"Ehlers-Danlos Syndrome",q:null},
+  {n:"Narcolepsy",            q:null},
+  {n:"Sleep Apnea",           q:null},
+  {n:"Restless Leg Syndrome", q:null},
+  {n:"Tourette Syndrome",     q:null},
+  {n:"Psoriasis",             q:null},
+  {n:"Eczema",                q:null},
+  {n:"Vitiligo",              q:null},
+  {n:"Alopecia Areata",       q:null},
+  {n:"Rosacea",               q:null},
+  {n:"Melanoma",              q:null},
+  {n:"Leukemia",              q:null},
+  {n:"Lymphoma",              q:null},
+  {n:"Breast Cancer",         q:null},
+  {n:"Colon Cancer",          q:null},
+  {n:"Lung Cancer",           q:null},
+  {n:"Prostate Cancer",       q:null},
+  {n:"Sarcoidosis",           q:null},
+  {n:"Amyloidosis",           q:null},
+  {n:"Hemophilia",            q:null},
+  {n:"Sickle Cell Disease",   q:null},
+  {n:"Thalassemia",           q:null},
+  {n:"Polycythemia Vera",     q:null},
+  {n:"Rheumatic Fever",       q:null},
+  {n:"Delusional Disorder",   q:null},
+  {n:"Conversion Disorder",   q:null},
+  {n:"Somatic Symptom Disorder", q:null},
+  {n:"Munchausen Syndrome",   q:null},
+  {n:"Narcolepsy",            q:null},
+  {n:"Trigeminal Neuralgia",  q:null},
+  {n:"Bell's Palsy",          q:null},
+  {n:"Guillain-Barré Syndrome",q:null},
+  {n:"Myasthenia Gravis",     q:null},
+  {n:"ALS",                   q:null},
+  {n:"Huntington's Disease",  q:null},
+  {n:"Cerebral Palsy",        q:null},
+  {n:"Spina Bifida",          q:null},
+  {n:"Down Syndrome",         q:null},
+  {n:"Turner Syndrome",       q:null},
+  {n:"Klinefelter Syndrome",  q:null},
+  {n:"Phenylketonuria",       q:null},
+  {n:"Gaucher Disease",       q:null},
+  {n:"Niemann-Pick Disease",  q:null},
+  {n:"Tay-Sachs Disease",     q:null},
+  {n:"Fabry Disease",         q:null},
+  {n:"Pompe Disease",         q:null},
+  {n:"Cystic Fibrosis",       q:null},
+  {n:"Achondroplasia",        q:null},
+  {n:"Neurofibromatosis",     q:null},
+  {n:"Tuberous Sclerosis",    q:null},
+  {n:"Von Hippel-Lindau Disease",q:null},
 ];
 
-// ────────────────────────────────────────────────
-// HOUSE RESPONSE DATA
-// ────────────────────────────────────────────────
-const MUNDANE = [
+// Merged lookup for autocomplete and guess validation
+const ALL_DISEASES = [
+  ...PLAYABLE.map(d => ({name:d.name, playable:true, wrongQuip:null})),
+  ...KNOWN.map(d => ({name:d.n, playable:false, wrongQuip:d.q}))
+];
+
+// ══════════════════════════════════════════════
+// HOUSE RESPONSE SYSTEM
+// ══════════════════════════════════════════════
+
+const MUNDANE_KW = [
   'blood test','blood work','bloodwork','cbc','complete blood count','blood panel',
   'mri','magnetic resonance',
   'ct scan','cat scan','computed tomography',
   'x-ray','xray','x ray','chest x',
   'urine test','urinalysis','urine analysis',
   'ecg','ekg','electrocardiogram',
-  'echocardiogram','echo',
+  'echocardiogram',
   'ultrasound','sonogram',
   'biopsy',
   'temperature','fever check',
@@ -1043,475 +1135,489 @@ const MUNDANE = [
   'physical exam','physical examination',
   'thyroid panel','tsh',
   'liver function','liver panel',
-  'kidney function','renal panel','bmp',
+  'kidney function','renal panel',
   'stool sample','stool test',
   'pregnancy test',
-  'complete metabolic','cmp',
-  'vitamin d','vitamin b',
+  'vitamin d','vitamin b12',
   'iron level','ferritin',
   'sleep study','polysomnogram',
-  'lung function','spirometry',
-  'nerve test','emg'
+  'lung function','spirometry'
 ];
 
-const MUNDANE_RESPONSES = [
-  t => `${t}. Brilliant. Hippocrates invented that one. 400 BC. Would you like to try something from after the Renaissance?`,
-  t => `A ${t}. Let me guess — you also want to confirm the patient has a skeleton. Standard stuff.`,
-  t => `${t}. The diagnostic equivalent of checking if the car is low on gas by asking the driver if they've been driving. Fine. Order it. Then do some actual thinking.`,
-  t => `Oh, a ${t}. How completely, utterly, soul-eroding expected. We'll get results that are exactly as useful as you deserve.`,
-  t => `I would call that good thinking, but I'd be lying, and we'd both know it. Run the ${t}. Then come back with something that required brain activity.`,
-  t => `${t}. Yes. The thing we check in every case, for every patient, for every symptom since time began. I'm sure this one will be the breakthrough.`,
-  t => `Fine. ${t}. But when it comes back normal — and it will — I expect you to have a Plan B that involves actually thinking.`,
-  t => `The ${t}. Classic. Conservative. Deeply, profoundly uninspired. Go ahead. I'll be here, wondering where medicine went.`,
-  t => `Sure, order the ${t}. And while we wait for results that tell us nothing, maybe consider what we'd do if the patient were interesting.`,
-  t => `A ${t}. You know what — yes. Run it. I'll use the time to think about something useful, since one of us should.`
+const MUNDANE_Q = [
+  t=>`${t}. Hippocrates invented that one. 400 BC. Would you like to try something from after the Renaissance?`,
+  t=>`A ${t}. Let me guess, next you'll want to confirm the patient has a skeleton.`,
+  t=>`${t}. The diagnostic equivalent of checking if the car has gas by asking the driver if they've been driving.`,
+  t=>`Oh, a ${t}. How completely, utterly, soul-eroding expected.`,
+  t=>`I would call that good thinking but I'd be lying. Run the ${t}. Then come back with something that required brain activity.`,
+  t=>`${t}. The thing we check in every case, for every patient, for every symptom, since time began.`,
+  t=>`Fine. ${t}. When it comes back normal — and it will — I expect a Plan B that involves actual thinking.`,
+  t=>`The ${t}. Classic. Conservative. Deeply uninspired. I'll be here wondering where medicine went.`,
+  t=>`Sure, order the ${t}. I'll use the time to think about something useful, since one of us should.`,
+  t=>`A ${t}. Yes. Run it. I'll wait here, unimpressed, until the results confirm nothing.`
 ];
 
-const PRAISE_KEYWORDS = [
-  'prion','creutzfeldt','kuru','funeral feast','ritual consumption',
-  'auto.?brew','gut ferment','gut.*alcohol','intestinal ferment','endogenous alcohol','brew.*gut',
-  'aquagen','water allerg',
-  'cotard','walking corpse','believes.*dead','dead.*patient',
-  'alien hand','hand.*autonomo','autonomous.*hand',
-  'foreign accent','involuntary accent',
-  'trimethyl','fish odor','fish smell',
-  'exploding head','head.*explod',
-  'alice.*wonderland','size.*perception.*broken','micropsia','macropsia',
-  'jumping french','hyperekplexia.*echolalia',
-  'stiff person',
-  'morgellons','skin.*fiber','fiber.*skin',
-  'fibrodysplasia','muscle.*bone','ossif.*progres',
-  'porphyria','purple urine',
-  'paris syndrome',
-  'autoimmune encephalit','nmda.*receptor','anti.?gad',
-  'werewolf syndrome','hypertrichosis',
-  'progeria','hutchinson.*gilford','lmna',
-  'papau','papua.*guinea','fore.*tribe','fore.*people','cannib',
-  'electromagnetic.*hypersensit',
-  'medieval.*disease','ancient.*pathogen',
-  'rare.*genetic.*disorder',
-  'endogenous.*ethanol',
-  'gut.*yeast','gut.*candida',
-  'heavy metal.*thallium','thallium poisoning',
-  'arsenic.*chronic','chronic.*arsenic',
-  'parasit.*exotic','exotic.*parasit',
-  'prion.*protein','misfolded.*protein',
-  'fmo3','enzyme deficiency.*smell'
+const PRAISE_KW = [
+  /prion|creutzfeldt|kuru/i,
+  /auto.?brew|gut ferment|gut.*alcohol|intestin.*ethanol|endogenous.*alcohol|gut.*yeast|gut.*candida/i,
+  /aquagen|water allerg/i,
+  /cotard|walking corpse|believes.*dead/i,
+  /alien hand|hand.*autonomo/i,
+  /foreign accent|involuntary accent/i,
+  /trimethyl|fish odor|fish smell|fmo3/i,
+  /exploding head|head.*explod/i,
+  /alice.*wonderland|micropsia|macropsia/i,
+  /jumping french|hyperekplexia.*echolalia/i,
+  /stiff person/i,
+  /morgellons|skin.*fiber|fiber.*skin/i,
+  /fibrodysplasia|muscle.*bone|ossif.*progres/i,
+  /porphyria|purple urine/i,
+  /paris syndrome/i,
+  /nmda.*receptor|anti.?nmda|autoimmune encephalit/i,
+  /hypertrichosis|werewolf syndrome/i,
+  /progeria|hutchinson.*gilford|lmna/i,
+  /papua.*guinea|fore.*tribe|fore.*people|ritual.*consumption|funeral.*feast/i,
+  /electromagnetic.*hypersensit/i,
+  /capgras|imposter.*delusion/i,
+  /kleine.?levin|sleeping beauty syndrome/i,
+  /wilson.*disease|kayser.*fleischer|ceruloplasmin/i,
+  /ondine|central.*hypoventil/i,
+  /charles bonnet/i,
+  /argyria|colloidal silver/i,
+  /congenital.*insensitiv.*pain|scn9a/i,
+  /pseudobulbar affect/i,
+  /pandas.*strep|anti.*basal ganglia/i,
+  /wernicke|korsakoff|confabulat/i,
+  /cannib|ritual.*eat|ate.*human/i,
+  /heavy metal.*thallium|thallium poisoning/i,
+  /medieval.*disease|ancient.*pathogen/i,
+  /bat virus|exotic.*parasit|parasit.*exotic/i,
 ];
 
-const PRAISE_RESPONSES = [
-  t => `That is — and I want to be measured here — the first thing anyone has suggested today that required actual cognition. Order it.`,
-  t => `Most people here would have ordered another ${['blood test','MRI','CT scan'][Math.floor(Math.random()*3)]}. You suggested THAT. I may need to recalibrate my expectations of this department.`,
-  t => `Oh. Oh, that's interesting. That's GENUINELY interesting. I haven't been genuinely interested in three weeks. Order it immediately.`,
-  t => `If that comes back positive, I will personally carry you through this corridor. Metaphorically. I don't touch people. But emotionally: shoulder carry.`,
-  t => `That's the kind of lateral thinking that separates doctors from clipboard-holders. The instinct is correct. Follow it all the way.`,
-  t => `I was absolutely prepared to be disappointed by everyone in this building today. You have complicated that plan. Well done.`,
-  t => `You're thinking at the correct altitude. Most people here think at ankle height. This is at least waist height. We're making progress.`,
-  t => `Outstanding. Most diagnosticians would have walked past that. You stopped, looked at it, and saw something. That's actually what we're supposed to do.`,
-  t => `If you're right about this, I will tell you you're right. Once. Savour it. I won't repeat it.`,
-  t => `That's a test I haven't ordered in years. Because nobody else ever thinks to order it. Until apparently today.`
+const PRAISE_Q = [
+  _=>`That is — and I want to be measured here — the first thing suggested today that required actual cognition. Order it immediately.`,
+  _=>`Most people here would have ordered another blood test. You suggested THAT. I may need to recalibrate my expectations of this department.`,
+  _=>`Oh. Oh, that's interesting. That's GENUINELY interesting. I haven't been genuinely interested in three weeks. Order it.`,
+  _=>`If that comes back positive, I will carry you through this corridor. Metaphorically. I don't touch people. But emotionally: shoulder carry.`,
+  _=>`That's the kind of lateral thinking that separates doctors from clipboard-holders. Follow it all the way.`,
+  _=>`I was absolutely prepared to be disappointed by everyone in this building today. You have complicated that plan. Well done.`,
+  _=>`You're thinking at the correct altitude. Most people here think at ankle height. This is at least waist height. Progress.`,
+  _=>`Outstanding. Most diagnosticians would have walked past that. You stopped, looked, and saw something. That's actually what we're supposed to do.`,
+  _=>`If you're right about this, I will tell you you're right. Once. Savour it.`,
+  _=>`That's a test I haven't ordered in years. Because nobody ever thinks to order it. Until apparently today.`
 ];
 
-const MEDIUM_KEYWORDS = [
+const MEDIUM_KW = [
   'genetic','gene panel','dna','mutation','sequencing',
   'autoimmune','immune panel','immunology',
-  'lumbar puncture','spinal tap','csf analysis',
+  'lumbar puncture','spinal tap','csf',
   'toxicology','tox screen','poison screen',
   'hormone panel','cortisol','adrenal',
   'neurological exam','cranial nerves','cerebellar',
-  'eeg','brain activity',
-  'nerve conduction','ncs',
+  'eeg','brain wave','brain activity',
+  'nerve conduction','ncs','emg',
   'enzyme assay','enzyme panel',
-  'travel history',
-  'psychiatric evaluation',
-  'rare disease panel',
-  'metabolic panel','metabolic disorder',
+  'travel history','travel history',
+  'psych eval','psychiatric evaluation',
+  'rare disease','rare condition',
+  'metabolic disorder',
   'skin culture','skin swab',
   'heavy metal screen',
   'infectious disease consult',
   'neurology consult',
-  'spect','pet scan'
+  'spect','pet scan',
+  'slit lamp','slit-lamp',
+  'ceruloplasmin','copper level',
+  'anti-gad','anti gad',
+  'rt-quic','14-3-3'
 ];
 
-const MEDIUM_RESPONSES = [
-  t => `Warmer. The instinct to go deeper is correct. Now go deeper than that.`,
-  t => `That's an interesting pivot. Not interesting enough to fully satisfy me, but interesting. Adjust by about 20 degrees and try again.`,
-  t => `You're circling something. I can feel you circling it. Stop circling and go in.`,
-  t => `Reasonable. Intelligent, even. This case is neither reasonable nor intelligent. Think more unusually.`,
-  t => `Not bad. Not what I'd order first. But not the catastrophic waste of resources the last suggestion was. Progress.`,
-  t => `${t}. That shows you're actually trying. Try about 40% harder and we might get somewhere.`
+const MEDIUM_Q = [
+  _=>`Warmer. The instinct to go deeper is correct. Now go deeper than that.`,
+  _=>`Interesting pivot. Not interesting enough to satisfy me, but interesting. Adjust by 20 degrees and try again.`,
+  _=>`You're circling something. I can feel you circling it. Stop circling and go in.`,
+  _=>`Reasonable. Intelligent, even. This case is neither reasonable nor intelligent. Think more unusually.`,
+  _=>`Not bad. Not what I'd order first. But not the catastrophic waste of resources the last suggestion was.`,
+  _=>`That shows you're actually trying. Try about 40% harder and we might get somewhere.`
 ];
 
-const DEFAULT_RESPONSES = [
-  t => `Interesting request. Vague, but interesting. Elaborate.`,
-  t => `That tells me you're thinking about it, at least. What specifically do you expect to find?`,
-  t => `Run it. And while we wait for results, think about what a positive finding would actually mean for the diagnosis.`,
-  t => `Fine. I'll add it to the list. Manage your expectations accordingly.`,
-  t => `You want to run that. The 'why' is more interesting than the test. What's the logic chain?`,
-  t => `I've seen worse test orders. This isn't among the best. Order it anyway.`,
-  t => `That's not nothing. It's not much, but it's not nothing. Proceed with appropriate humility.`
+const DEFAULT_Q = [
+  _=>`Interesting request. Vague, but interesting. Elaborate.`,
+  _=>`That tells me you're thinking. What specifically do you expect to find?`,
+  _=>`Run it. While we wait, think about what a positive result would mean for the diagnosis.`,
+  _=>`Fine. I'll add it to the list. Manage your expectations.`,
+  _=>`The 'why' is more interesting than the test. What's your logic chain?`,
+  _=>`I've seen worse test orders. This isn't among the best. Order it anyway.`
 ];
 
-// ────────────────────────────────────────────────
+// Standard test field keyword groups
+const FIELD_KEYS = {
+  blood:     ['blood test','blood work','bloodwork','cbc','complete blood','metabolic panel','bmp','cmp','blood panel'],
+  urine:     ['urine','urinalysis','urine test','urine analysis'],
+  mri:       ['mri','magnetic resonance'],
+  ct:        ['ct scan','cat scan','computed tomography'],
+  xray:      ['x-ray','xray','x ray','chest x'],
+  ecg:       ['ecg','ekg','electrocardiogram'],
+  ultrasound:['ultrasound','sonogram'],
+  eeg:       ['eeg','brain wave','brain activity'],
+  csf:       ['lumbar puncture','spinal tap','csf','cerebrospinal'],
+  genetic:   ['genetic test','dna test','gene panel','gene test','sequencing','genetic screen'],
+  psych:     ['psychiatric eval','psych eval','psychiatric assessment','mental health eval','mental eval'],
+  skin:      ['skin biopsy','skin test','skin culture','skin swab','dermatology biopsy'],
+  hormone:   ['hormone panel','hormone test','cortisol test','thyroid panel','tsh test'],
+  toxicology:['toxicology','tox screen','poison screen','heavy metal screen'],
+  emg:       ['emg','nerve conduction','ncs','electromyography'],
+  sleep:     ['sleep study','polysomnogram','sleep test','overnight study'],
+  echo:      ['echocardiogram','cardiac echo'],
+  nerve:     ['nerve conduction','ncs','nerve test'],
+  autoimmune:['autoimmune panel','immune panel','immunology panel'],
+  eye:       ['eye exam','ophthalmology','slit lamp','slit-lamp','visual acuity'],
+  liver:     ['liver biopsy','liver test','hepatic'],
+  oxygen:    ['oxygen','pulse ox','spo2','o2 sat'],
+  pain:      ['pain test','pain threshold','pain response'],
+  travel:    ['travel history','travel record','travel log'],
+  allergy:   ['allergy test','allergy panel'],
+  breath:    ['breathalyzer','breath alcohol','breath test'],
+  fish:      ['fish test','fish smell test','tma test','trimethylamine test'],
+  stool:     ['stool','fecal','bowel culture'],
+  water:     ['water test','water challenge','aquagenic test'],
+  porphyrin: ['porphyrin','porphobilinogen','watson-schwartz'],
+  prion:     ['prion','rt-quic','14-3-3 protein'],
+  startle:   ['startle test','startle protocol','startle response test'],
+  copper:    ['copper level','ceruloplasmin'],
+  silver:    ['silver level','serum silver'],
+  emf:       ['emf test','electromagnetic test','wifi test','radiation test'],
+};
+
+// Generic fallback results when disease doesn't have a specific result for a field
+const GENERIC = {
+  blood:     "CBC: Normal. Metabolic panel: Normal. Nothing diagnostic here.",
+  urine:     "Urinalysis: Within normal limits.",
+  mri:       "No structural abnormalities identified.",
+  ct:        "No acute findings.",
+  xray:      "No acute cardiopulmonary findings.",
+  ecg:       "Normal sinus rhythm.",
+  ultrasound:"No abnormalities identified on imaging.",
+  eeg:       "No epileptiform activity. Normal background rhythm.",
+  csf:       "Cell count, protein, glucose within normal limits.",
+  genetic:   "No pathogenic variants on standard panel. Consider expanded testing.",
+  psych:     "No primary psychiatric disorder identified. Further observation recommended.",
+  skin:      "No diagnostic findings on standard dermatological evaluation.",
+  hormone:   "Hormone levels within normal reference ranges.",
+  toxicology:"No toxic substances identified on standard screen.",
+  emg:       "Normal nerve conduction and muscle response.",
+  sleep:     "Normal sleep architecture. No significant events.",
+  echo:      "Normal cardiac structure and function.",
+};
+
+const PENDING = [
+  "Pending. We'll have results in 4-6 business days, which helps no one.",
+  "Results pending. Which is another way of saying 'not yet useful.'",
+  "Test ordered. Results pending. Try thinking in the meantime."
+];
+
+// ══════════════════════════════════════════════
 // GAME STATE
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 const MAX_GUESSES = 6;
-
 const NAMES = ["John D.","Sarah M.","Robert T.","Emily K.","Michael B.","Lisa C.","David W.","Karen H.","James P.","Maria S."];
 const AGES  = ["34","52","41","67","28","45","73","39","55","22"];
-
-const WRONG_COMMENTS = [
+const WRONG_FALLBACK = [
   "Wrong. Spectacularly, confidently wrong. Regroup.",
   "No. But points for the conviction with which you were wrong.",
-  "Incorrect. The patient would like a second opinion. So would I.",
+  "Incorrect. The patient would like a refund on your confidence.",
   "Still no. I'm starting to think you're doing this on purpose.",
   "Not that either. I hope you have a plan that doesn't involve guessing alphabetically.",
   "Wrong again. We're running out of time and you're running out of ideas. Think."
 ];
 
-let state = {
-  disease: null,
-  guesses: [],
-  symptomsShown: 1,
-  gameOver: false,
-  won: false,
-  wins:   +localStorage.getItem('h_w') || 0,
-  losses: +localStorage.getItem('h_l') || 0,
-  streak: +localStorage.getItem('h_s') || 0,
+let G = {
+  disease: null, guesses: [], symptomsShown: 1,
+  gameOver: false, won: false,
+  wins:   +localStorage.getItem('h_w')||0,
+  losses: +localStorage.getItem('h_l')||0,
+  streak: +localStorage.getItem('h_s')||0,
 };
 
-// ────────────────────────────────────────────────
-// INIT
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
+// INIT & RENDER
+// ══════════════════════════════════════════════
 function initGame() {
-  state.disease = DISEASES[Math.floor(Math.random() * DISEASES.length)];
-  state.guesses = [];
-  state.symptomsShown = 1;
-  state.gameOver = false;
-  state.won = false;
-
-  const pi = Math.floor(Math.random() * NAMES.length);
+  G.disease = PLAYABLE[Math.floor(Math.random()*PLAYABLE.length)];
+  G.guesses = []; G.symptomsShown = 1; G.gameOver = false; G.won = false;
+  const pi = Math.floor(Math.random()*NAMES.length);
   document.getElementById('pName').textContent = NAMES[pi];
   document.getElementById('pAge').textContent  = AGES[pi];
-
-  document.getElementById('guessInput').value = '';
+  document.getElementById('guessInput').value  = '';
   document.getElementById('guessInput').disabled = false;
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('testInput').value = '';
-
+  document.getElementById('submitBtn').disabled  = false;
+  document.getElementById('testInput').value   = '';
   document.getElementById('chatLog').innerHTML =
-    '<div class="chat-msg house">Interesting case. Well — marginally. Someone has to look at it. What test are you thinking? And please: aim higher than your instincts.</div>';
-
-  document.getElementById('overlay').classList.remove('visible');
-
+    '<div class="chat-msg house">Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.</div>';
+  document.getElementById('overlay').classList.remove('on');
   renderAll();
 }
 
-// ────────────────────────────────────────────────
-// RENDER
-// ────────────────────────────────────────────────
 function renderAll() {
-  renderSymptoms();
-  renderAttempts();
-  renderDots();
-  renderStats();
-  document.getElementById('attemptsLeft').textContent =
-    `${MAX_GUESSES - state.guesses.length} attempt${MAX_GUESSES - state.guesses.length !== 1 ? 's' : ''} remaining`;
+  renderSymptoms(); renderAttempts(); renderDots(); renderStats();
+  document.getElementById('attRemain').textContent =
+    `${MAX_GUESSES - G.guesses.length} attempt${MAX_GUESSES - G.guesses.length !== 1?'s':''} remaining`;
 }
 
 function renderSymptoms() {
   const list = document.getElementById('symptomsList');
-  const lock = document.getElementById('hiddenSlots');
   list.innerHTML = '';
-
-  for (let i = 0; i < state.symptomsShown; i++) {
-    const card = document.createElement('div');
-    card.className = 'symptom-card' + (i === state.symptomsShown - 1 && state.symptomsShown > 1 ? ' fresh' : '');
-    card.innerHTML = `<div class="obs-label">Observation ${i + 1}</div>${state.disease.symptoms[i]}`;
-    list.appendChild(card);
-    if (i === state.symptomsShown - 1) setTimeout(() => card.classList.remove('fresh'), 1800);
+  for (let i = 0; i < G.symptomsShown; i++) {
+    const el = document.createElement('div');
+    el.className = 'symptom-card' + (i===G.symptomsShown-1 && G.symptomsShown>1?' fresh':'');
+    el.innerHTML = `<div class="obs-label">Observation ${i+1}</div>${G.disease.symptoms[i]}`;
+    list.appendChild(el);
+    if (i===G.symptomsShown-1) setTimeout(()=>el.classList.remove('fresh'),1800);
   }
-
-  lock.innerHTML = '';
-  const remaining = state.disease.symptoms.length - state.symptomsShown;
-  for (let i = 0; i < Math.min(remaining, MAX_GUESSES - state.guesses.length - 1); i++) {
-    const slot = document.createElement('div');
-    slot.className = 'locked-slot';
-    slot.textContent = `[ Observation ${state.symptomsShown + i + 1} — unlock with next wrong guess ]`;
-    lock.appendChild(slot);
-  }
+  list.scrollTop = list.scrollHeight;
 }
 
 function renderAttempts() {
   const log = document.getElementById('attemptLog');
   log.innerHTML = '';
-
-  state.guesses.forEach((g, i) => {
+  G.guesses.forEach(g => {
     const row = document.createElement('div');
-    row.className = 'attempt-row ' + (g.correct ? 'correct' : 'wrong');
+    row.className = 'att-row '+(g.correct?'correct':'wrong');
     row.textContent = g.text;
     log.appendChild(row);
-
     if (!g.correct && g.comment) {
-      const snark = document.createElement('div');
-      snark.className = 'house-snark';
-      snark.textContent = `"${g.comment}"`;
-      log.appendChild(snark);
+      const s = document.createElement('div');
+      s.className = 'house-snark';
+      s.textContent = `"${g.comment}"`;
+      log.appendChild(s);
     }
   });
-
-  const remaining = MAX_GUESSES - state.guesses.length;
-  if (!state.gameOver) {
-    for (let i = 0; i < remaining; i++) {
+  if (!G.gameOver) {
+    const rem = MAX_GUESSES - G.guesses.length;
+    for (let i=0;i<rem;i++) {
       const row = document.createElement('div');
-      row.className = 'attempt-row empty';
-      row.textContent = i === 0 ? 'Awaiting your diagnosis...' : '';
+      row.className = 'att-row empty';
+      row.textContent = i===0?'Awaiting your diagnosis...':'';
       log.appendChild(row);
     }
   }
+  log.scrollTop = log.scrollHeight;
 }
 
 function renderDots() {
   const row = document.getElementById('dotsRow');
   row.innerHTML = '';
-  for (let i = 0; i < MAX_GUESSES; i++) {
+  for (let i=0;i<MAX_GUESSES;i++) {
     const d = document.createElement('div');
-    if (i < state.guesses.length) {
-      d.className = 'dot ' + (state.guesses[i].correct ? 'win' : 'used');
-    } else {
-      d.className = 'dot';
-    }
+    d.className = 'dot' + (i<G.guesses.length ? ' '+(G.guesses[i].correct?'win':'used') : '');
     row.appendChild(d);
   }
 }
 
 function renderStats() {
-  document.getElementById('statW').textContent = state.wins;
-  document.getElementById('statL').textContent = state.losses;
-  document.getElementById('statS').textContent = state.streak;
+  document.getElementById('statW').textContent = G.wins;
+  document.getElementById('statL').textContent = G.losses;
+  document.getElementById('statS').textContent = G.streak;
 }
 
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 // GUESS LOGIC
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 function submitGuess() {
-  if (state.gameOver) return;
-  const input = document.getElementById('guessInput');
-  const raw = input.value.trim();
-  if (!raw) { shake(input); return; }
+  if (G.gameOver) return;
+  const inp = document.getElementById('guessInput');
+  const raw = inp.value.trim();
+  if (!raw) { shake(inp); return; }
 
-  const match = DISEASES.find(d => d.name.toLowerCase() === raw.toLowerCase());
-
+  const match = ALL_DISEASES.find(d => d.name.toLowerCase()===raw.toLowerCase());
   if (!match) {
-    addHouseChat(`"${raw}" is not a recognized diagnosis. Try spelling it in a way that appears in any medical reference ever written.`);
-    shake(input);
+    addHouseMsg(`"${raw}" doesn't appear in any medical reference I respect. Spell it correctly or try a real disease.`, false);
+    shake(inp); return;
+  }
+  if (G.guesses.find(g => g.text.toLowerCase()===raw.toLowerCase())) {
+    addHouseMsg("You already guessed that. The patient still doesn't have it the second time either.", false);
     return;
   }
 
-  if (state.guesses.find(g => g.text.toLowerCase() === raw.toLowerCase())) {
-    addHouseChat("You already guessed that. The patient still doesn't have it. Try a different wrong answer.");
-    return;
+  const correct = match.name === G.disease.name;
+  const idx = G.guesses.length;
+  let comment;
+  if (!correct) {
+    if (!match.playable && match.wrongQuip) {
+      comment = match.wrongQuip;
+    } else {
+      comment = G.disease.houseComments?.[idx] ?? WRONG_FALLBACK[Math.min(idx, WRONG_FALLBACK.length-1)];
+    }
   }
 
-  const correct = match.name === state.disease.name;
-  const guessIdx = state.guesses.length;
-
-  state.guesses.push({
-    text: match.name,
-    correct,
-    comment: correct ? null : (state.disease.houseComments?.[guessIdx] ?? WRONG_COMMENTS[Math.min(guessIdx, WRONG_COMMENTS.length - 1)])
-  });
-
-  input.value = '';
+  G.guesses.push({text:match.name, correct, comment: correct?null:comment});
+  inp.value = '';
   document.getElementById('acDrop').classList.remove('open');
 
   if (correct) {
-    state.won = true;
-    state.gameOver = true;
-    state.wins++;
-    state.streak++;
-    localStorage.setItem('h_w', state.wins);
-    localStorage.setItem('h_s', state.streak);
+    G.won=true; G.gameOver=true; G.wins++; G.streak++;
+    localStorage.setItem('h_w',G.wins); localStorage.setItem('h_s',G.streak);
   } else {
-    if (state.symptomsShown < state.disease.symptoms.length) state.symptomsShown++;
-    if (state.guesses.length >= MAX_GUESSES) {
-      state.gameOver = true;
-      state.losses++;
-      state.streak = 0;
-      localStorage.setItem('h_l', state.losses);
-      localStorage.setItem('h_s', '0');
-      document.getElementById('guessInput').disabled = true;
-      document.getElementById('submitBtn').disabled = true;
+    if (G.symptomsShown < G.disease.symptoms.length) G.symptomsShown++;
+    if (G.guesses.length >= MAX_GUESSES) {
+      G.gameOver=true; G.losses++; G.streak=0;
+      localStorage.setItem('h_l',G.losses); localStorage.setItem('h_s','0');
+      document.getElementById('guessInput').disabled=true;
+      document.getElementById('submitBtn').disabled=true;
     }
   }
-
   renderAll();
-  if (state.gameOver) setTimeout(() => showEnd(), correct ? 700 : 1000);
+  if (G.gameOver) setTimeout(()=>showEnd(), correct?700:1000);
 }
 
 function showEnd() {
-  const win = state.won;
-  const card = document.getElementById('endCard');
-  card.className = 'end-card ' + (win ? 'win' : 'lose');
-  document.getElementById('endVerdict').textContent = win ? 'CORRECT DIAGNOSIS' : 'PATIENT UNDIAGNOSED';
-  document.getElementById('endDisease').innerHTML = `The answer was: <strong>${state.disease.name}</strong>`;
+  const win = G.won;
+  document.getElementById('endCard').className = 'end-card '+(win?'win':'lose');
+  document.getElementById('endVerdict').textContent = win?'CORRECT DIAGNOSIS':'PATIENT UNDIAGNOSED';
+  document.getElementById('endDisease').innerHTML = `The answer was: <strong>${G.disease.name}</strong>`;
   document.getElementById('endAttempts').textContent = win
-    ? `Diagnosed in ${state.guesses.length} attempt${state.guesses.length !== 1 ? 's' : ''}`
-    : `You exhausted all 6 attempts.`;
-  document.getElementById('endQuote').textContent = win ? state.disease.winQuote : state.disease.loseQuote;
-  document.getElementById('endStats').textContent = `Session: ${state.wins}W / ${state.losses}L  —  Streak: ${state.streak}`;
-  document.getElementById('overlay').classList.add('visible');
+    ? `Diagnosed in ${G.guesses.length} attempt${G.guesses.length!==1?'s':''}`
+    : 'You exhausted all 6 attempts.';
+  document.getElementById('endQuote').textContent = win?G.disease.winQuote:G.disease.loseQuote;
+  document.getElementById('endStats').textContent = `Session: ${G.wins}W / ${G.losses}L  —  Streak: ${G.streak}`;
+  document.getElementById('overlay').classList.add('on');
 }
 
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 // HOUSE CHATBOX
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 function runTest() {
   const el = document.getElementById('testInput');
-  const text = el.value.trim();
-  if (!text) return;
-
-  addUserChat(text);
+  const txt = el.value.trim();
+  if (!txt) return;
+  addUserMsg(txt);
   el.value = '';
-
-  const typing = document.getElementById('typingIndicator');
-  typing.classList.add('visible');
-
+  const t = document.getElementById('typing');
+  t.classList.add('on');
   setTimeout(() => {
-    typing.classList.remove('visible');
-    const { response, isPraise } = getHouseResponse(text);
-    addHouseChat(response, isPraise);
-  }, 700 + Math.random() * 700);
+    t.classList.remove('on');
+    const {text, isPraise} = buildHouseResponse(txt);
+    addHouseMsg(text, isPraise);
+  }, 700+Math.random()*700);
 }
 
-function getHouseResponse(text) {
-  const low = text.toLowerCase();
+function buildHouseResponse(txt) {
+  const low = txt.toLowerCase();
 
-  // Check praise keywords (regex-based)
-  for (const kw of PRAISE_KEYWORDS) {
-    if (new RegExp(kw, 'i').test(low)) {
-      const fn = PRAISE_RESPONSES[Math.floor(Math.random() * PRAISE_RESPONSES.length)];
-      return { response: fn(text), isPraise: true };
+  // Quip category
+  let quip='', isPraise=false;
+  for (const rx of PRAISE_KW) {
+    if (rx.test(low)) { quip=PRAISE_Q[Math.floor(Math.random()*PRAISE_Q.length)](); isPraise=true; break; }
+  }
+  if (!quip) {
+    for (const kw of MUNDANE_KW) {
+      if (low.includes(kw)) { quip=MUNDANE_Q[Math.floor(Math.random()*MUNDANE_Q.length)](cap(kw)); break; }
     }
   }
-
-  // Check mundane keywords
-  for (const kw of MUNDANE) {
-    if (low.includes(kw)) {
-      const label = kw.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      const fn = MUNDANE_RESPONSES[Math.floor(Math.random() * MUNDANE_RESPONSES.length)];
-      return { response: fn(label), isPraise: false };
+  if (!quip) {
+    for (const kw of MEDIUM_KW) {
+      if (low.includes(kw)) { quip=MEDIUM_Q[Math.floor(Math.random()*MEDIUM_Q.length)](); break; }
     }
   }
+  if (!quip) quip=DEFAULT_Q[Math.floor(Math.random()*DEFAULT_Q.length)]();
 
-  // Check medium keywords
-  for (const kw of MEDIUM_KEYWORDS) {
-    if (low.includes(kw)) {
-      const fn = MEDIUM_RESPONSES[Math.floor(Math.random() * MEDIUM_RESPONSES.length)];
-      return { response: fn(text), isPraise: false };
-    }
-  }
-
-  // Default
-  const fn = DEFAULT_RESPONSES[Math.floor(Math.random() * DEFAULT_RESPONSES.length)];
-  return { response: fn(text), isPraise: false };
+  // Test result
+  const result = getTestResult(low);
+  const text = result ? `${quip}\n\n─── Results ───\n${result}` : quip;
+  return {text, isPraise};
 }
 
-function addUserChat(msg) {
+function getTestResult(low) {
+  const tr = G.disease.testResults || {};
+
+  // 1. Specific keys in disease testResults
+  for (const [key, val] of Object.entries(tr)) {
+    if (low.includes(key.toLowerCase())) return val;
+  }
+
+  // 2. Standard field matchers → disease field result or generic
+  for (const [field, keywords] of Object.entries(FIELD_KEYS)) {
+    for (const kw of keywords) {
+      if (low.includes(kw)) {
+        return tr[field] || GENERIC[field] || null;
+      }
+    }
+  }
+  return null;
+}
+
+function cap(s) { return s.split(' ').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '); }
+
+function addUserMsg(msg) {
   const log = document.getElementById('chatLog');
   const el = document.createElement('div');
-  el.className = 'chat-msg user';
-  el.textContent = msg;
-  log.appendChild(el);
-  log.scrollTop = log.scrollHeight;
+  el.className = 'chat-msg user'; el.textContent = msg;
+  log.appendChild(el); log.scrollTop = log.scrollHeight;
 }
 
-function addHouseChat(msg, praise = false) {
+function addHouseMsg(msg, praise=false) {
   const log = document.getElementById('chatLog');
   const el = document.createElement('div');
-  el.className = 'chat-msg house' + (praise ? ' praise' : '');
+  el.className = 'chat-msg house'+(praise?' praise':'');
   el.textContent = msg;
-  log.appendChild(el);
-  log.scrollTop = log.scrollHeight;
+  log.appendChild(el); log.scrollTop = log.scrollHeight;
 }
 
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 // AUTOCOMPLETE
-// ────────────────────────────────────────────────
+// ══════════════════════════════════════════════
 let acIdx = -1;
+const guessInp = document.getElementById('guessInput');
+const acDrop   = document.getElementById('acDrop');
 
-document.getElementById('guessInput').addEventListener('input', function () {
-  const val = this.value.trim().toLowerCase();
-  const drop = document.getElementById('acDrop');
+guessInp.addEventListener('input', function() {
+  const v = this.value.trim().toLowerCase();
   acIdx = -1;
-
-  if (val.length < 2) { drop.classList.remove('open'); return; }
-
-  const hits = DISEASES
-    .map(d => d.name)
-    .filter(n => !state.guesses.find(g => g.text === n) && n.toLowerCase().includes(val));
-
-  if (!hits.length) { drop.classList.remove('open'); return; }
-
-  drop.innerHTML = '';
-  hits.forEach((name, i) => {
+  if (v.length < 2) { acDrop.classList.remove('open'); return; }
+  const hits = ALL_DISEASES
+    .map(d=>d.name)
+    .filter(n => !G.guesses.find(g=>g.text===n) && n.toLowerCase().includes(v))
+    .slice(0,12);
+  if (!hits.length) { acDrop.classList.remove('open'); return; }
+  acDrop.innerHTML = '';
+  hits.forEach(name => {
     const item = document.createElement('div');
-    item.className = 'ac-item';
-    item.textContent = name;
+    item.className = 'ac-item'; item.textContent = name;
     item.addEventListener('mousedown', e => {
-      e.preventDefault();
-      document.getElementById('guessInput').value = name;
-      drop.classList.remove('open');
+      e.preventDefault(); guessInp.value = name; acDrop.classList.remove('open');
     });
-    drop.appendChild(item);
+    acDrop.appendChild(item);
   });
-  drop.classList.add('open');
+  acDrop.classList.add('open');
 });
 
-document.getElementById('guessInput').addEventListener('keydown', function (e) {
-  const drop = document.getElementById('acDrop');
-  const items = drop.querySelectorAll('.ac-item');
-  if (!drop.classList.contains('open')) {
-    if (e.key === 'Enter') submitGuess();
-    return;
-  }
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    acIdx = Math.min(acIdx + 1, items.length - 1);
-    items.forEach((el, i) => el.classList.toggle('active', i === acIdx));
-    if (acIdx >= 0) this.value = items[acIdx].textContent;
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    acIdx = Math.max(acIdx - 1, -1);
-    items.forEach((el, i) => el.classList.toggle('active', i === acIdx));
-    if (acIdx >= 0) this.value = items[acIdx].textContent;
-  } else if (e.key === 'Enter') {
-    if (acIdx >= 0) { this.value = items[acIdx].textContent; drop.classList.remove('open'); }
-    else { drop.classList.remove('open'); submitGuess(); }
-  } else if (e.key === 'Escape') {
-    drop.classList.remove('open');
-  }
+guessInp.addEventListener('keydown', function(e) {
+  const items = acDrop.querySelectorAll('.ac-item');
+  if (!acDrop.classList.contains('open')) { if(e.key==='Enter') submitGuess(); return; }
+  if (e.key==='ArrowDown') {
+    e.preventDefault(); acIdx=Math.min(acIdx+1,items.length-1);
+    items.forEach((el,i)=>el.classList.toggle('active',i===acIdx));
+    if(acIdx>=0) this.value=items[acIdx].textContent;
+  } else if (e.key==='ArrowUp') {
+    e.preventDefault(); acIdx=Math.max(acIdx-1,-1);
+    items.forEach((el,i)=>el.classList.toggle('active',i===acIdx));
+    if(acIdx>=0) this.value=items[acIdx].textContent;
+  } else if (e.key==='Enter') {
+    if(acIdx>=0){this.value=items[acIdx].textContent;acDrop.classList.remove('open');}
+    else{acDrop.classList.remove('open');submitGuess();}
+  } else if (e.key==='Escape') { acDrop.classList.remove('open'); }
 });
 
-document.getElementById('guessInput').addEventListener('blur', () => {
-  setTimeout(() => document.getElementById('acDrop').classList.remove('open'), 200);
+guessInp.addEventListener('blur', ()=>setTimeout(()=>acDrop.classList.remove('open'),200));
+document.getElementById('testInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();runTest();}
 });
 
-document.getElementById('testInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runTest(); }
-});
-
-// ────────────────────────────────────────────────
-// UTILS
-// ────────────────────────────────────────────────
 function shake(el) {
-  el.classList.remove('shake');
-  void el.offsetWidth;
-  el.classList.add('shake');
-  setTimeout(() => el.classList.remove('shake'), 400);
+  el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+  setTimeout(()=>el.classList.remove('shake'),400);
 }
 
-// ── START ──
 initGame();
 </script>
 </body>
