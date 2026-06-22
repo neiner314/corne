@@ -1017,6 +1017,621 @@ const PLAYABLE = [
     "csf":            "CSF: Normal. The pathology is structural, not inflammatory.",
     "eye":            "Ophthalmological exam: Nystagmus and lateral rectus palsy. Classic ocular findings of Wernicke's encephalopathy."
   }
+},{
+  name:"Guillain-Barré Syndrome",
+  symptoms:[
+    "The patient walked in. Then their legs stopped cooperating.",
+    "Weakness is moving upward. Started in the feet. Now the knees are involved.",
+    "Two weeks ago: a stomach bug that resolved on its own. Unrelated? Probably not.",
+    "The patient can't feel their feet. Or the floor. Or much of anything below the waist.",
+    "Breathing is becoming an effort. The patient is measuring it now.",
+    "Reflexes: absent. All of them. The wiring is dissolving from the outside in."
+  ],
+  houseComments:[
+    "Ascending weakness after a viral illness. Either something's eating the myelin or you're not looking at the right patient.",
+    "No reflexes anywhere. That's not a soft finding. That's the peripheral nervous system waving a white flag.",
+    "Breathing is compromised. This one can kill. Stop theorizing and start narrowing."
+  ],
+  winQuote:"Molecular mimicry. The immune system attacked Campylobacter and accidentally tagged peripheral myelin as the same enemy. The result: ascending paralysis, absent reflexes, potential respiratory failure. Classic post-infectious autoimmune polyneuropathy.",
+  loseQuote:"THE PATIENT COULDN'T BREATHE. ASCENDING PARALYSIS. NO REFLEXES. PRIOR GI ILLNESS. YOU HAD SIX CLUES AND STILL MISSED IT. IT'S IN EVERY NEUROLOGY TEXTBOOK.",
+  testResults:{
+    "blood":   "CBC: mild lymphocytosis. ESR elevated. Anti-ganglioside antibodies (anti-GQ1b): positive.",
+    "csf":     "Lumbar puncture: elevated protein (2.8 g/L), normal cell count. Classic albuminocytologic dissociation.",
+    "emg":     "Nerve conduction: markedly reduced conduction velocity, prolonged distal latencies, absent F-waves. Demyelinating pattern.",
+    "mri":     "MRI spine: enhancement of cauda equina nerve roots post-gadolinium. Consistent with active inflammation.",
+    "oxygen":  "SpO2: 91% on room air. Respiratory muscle involvement. Consider ICU transfer.",
+  }
+},{
+  name:"Myasthenia Gravis",
+  symptoms:[
+    "The eyelids are drooping. Patient reports it's worse at the end of the day.",
+    "Double vision — intermittent, fatigable. Better after rest.",
+    "Chewing a meal has become an exhausting activity. Patient stops mid-bite.",
+    "Voice fades over the course of a conversation. Starts clear, ends to a mumble.",
+    "Muscle weakness throughout — provoked by activity, relieved by rest. The pattern is consistent.",
+    "Ice pack test: apply cold to the eyelid. Ptosis improves. The neuromuscular junction is the problem."
+  ],
+  houseComments:[
+    "Fatigable weakness. Better with rest, worse with activity. That's not laziness. That's neuromuscular junction dysfunction.",
+    "Droopy eyelid that improves with cold? That's not subtle. That's a diagnosis requesting itself.",
+    "Voice fades mid-sentence. Chewing is exhausting. Either autoimmune or they've been talking to the administration for too long."
+  ],
+  winQuote:"Autoantibodies against acetylcholine receptors at the neuromuscular junction. Every repeated signal depletes the available receptor pool. The muscles fire fine at first, then fail progressively — exactly like the presentation.",
+  loseQuote:"FATIGABLE PTOSIS. FATIGABLE DIPLOPIA. FATIGABLE EVERYTHING. IT'S MYASTHENIA. THE DISEASE IS NAMED AFTER THE VERY THING THAT MADE IT OBVIOUS.",
+  testResults:{
+    "blood":    "AChR antibodies: positive (elevated at 14 nmol/L, ref <0.4). Anti-MuSK: negative.",
+    "emg":      "Repetitive nerve stimulation: decremental response >10% at 3 Hz. Single-fiber EMG: increased jitter.",
+    "ct":       "CT chest: anterior mediastinal mass consistent with thymoma. Thymoma-associated MG.",
+    "ice":      "Ice pack test: applied to left eyelid x 2 min. Ptosis improved from 4mm to 1mm. Positive.",
+    "eye":      "Ophthalmology: bilateral ptosis, variable exotropia. Fatigable on sustained upgaze.",
+    "psych":    "Cognitive testing: normal. Patient is clearly experiencing physical symptoms, not functional disorder."
+  }
+},{
+  name:"Addison's Disease",
+  symptoms:[
+    "Patient is exhausted. Not tired — exhausted. Months of this.",
+    "Blood pressure drops dramatically when they stand. They've fainted twice.",
+    "Craving salt with an intensity they describe as compulsive.",
+    "Skin darkening in unusual locations: gum line, skin folds, old scars. Not a tan.",
+    "Sodium low. Potassium high. The electrolytes are telling a story.",
+    "ACTH stimulation test: cortisol fails to rise. The adrenal glands are not responding."
+  ],
+  houseComments:[
+    "Profound fatigue, low BP, and hyperpigmentation in the gums. Either they visited a very aggressive tanning salon or the adrenals are failing.",
+    "Hyponatremia, hyperkalemia, and they're craving salt. The electrolytes are waving at you.",
+    "ACTH stimulation failed. The glands aren't answering the phone. Find out why they stopped picking up."
+  ],
+  winQuote:"Primary adrenal insufficiency. The cortex isn't making cortisol or aldosterone. ACTH rises trying to compensate, and the MSH byproduct causes hyperpigmentation. The electrolytes flip. The BP drops. The patient fades. Classic.",
+  loseQuote:"HYPERPIGMENTED GUM LINE. CRAVING SALT. ORTHOSTATIC HYPOTENSION. FAILED ACTH STIM. THE ADRENAL GLANDS ESSENTIALLY RESIGNED AND YOU MISSED THE MEMO.",
+  testResults:{
+    "blood":    "Sodium: 128 mEq/L. Potassium: 5.8 mEq/L. Cortisol: 3 μg/dL (8am, ref >18). ACTH: markedly elevated.",
+    "hormone":  "ACTH stimulation test: baseline cortisol 3.1 μg/dL, peak at 60 min 4.2 μg/dL. Inadequate response. Adrenal insufficiency confirmed.",
+    "mri":      "CT abdomen: bilateral adrenal glands mildly enlarged with calcifications. Pattern consistent with autoimmune adrenalitis.",
+    "autoimmune":"Anti-21-hydroxylase antibodies: strongly positive. Autoimmune adrenalitis confirmed as etiology.",
+    "ecg":      "ECG: peaked T-waves, widened QRS. Hyperkalemia affecting cardiac conduction."
+  }
+},{
+  name:"Cushing's Syndrome",
+  symptoms:[
+    "Weight gain localized to the abdomen and face. The face is round. Very round.",
+    "Purple stretch marks on the abdomen — wide, deep. Not the ordinary kind.",
+    "Patient bruises from contact that shouldn't bruise anyone. Paper-thin skin.",
+    "Hypertension, high glucose, and a buffalo hump. Three separate 'diagnoses' — or one.",
+    "24-hour urine cortisol: three times the upper limit of normal.",
+    "Low-dose dexamethasone suppression: cortisol fails to suppress. Something is overriding the feedback loop."
+  ],
+  houseComments:[
+    "Round face, purple striae, central obesity. Either they ate the entire hospital cafeteria or cortisol is doing something it really shouldn't.",
+    "Cortisol three times normal. The axis is broken — question is where: pituitary, adrenal, or somewhere else entirely.",
+    "Dexamethasone didn't suppress anything. The system isn't listening to the feedback. Find the source."
+  ],
+  winQuote:"Chronic cortisol excess — endogenous or exogenous. Fat redistributes centrally. Skin thins. Glucose rises. BP rises. Purple striae form as collagen breaks down. Every finding flows from a single hormone in excess.",
+  loseQuote:"MOON FACE. BUFFALO HUMP. PURPLE STRIAE. CORTISOL TRIPLE THE NORMAL. THE SYNDROME IS NAMED AFTER THE SURGEON WHO DESCRIBED IT BECAUSE THE PRESENTATION IS THAT CLASSIC.",
+  testResults:{
+    "blood":    "Glucose: 168 mg/dL. Cortisol (8am): 52 μg/dL (ref 7–23). ACTH: detectable, not suppressed.",
+    "urine":    "24-hour urine free cortisol: 420 μg/day (ref <50). Markedly elevated.",
+    "hormone":  "Low-dose dexamethasone suppression test: morning cortisol 48 μg/dL post-dex. No suppression. Cushing's confirmed. High-dose suppression: partial suppression — pituitary source favored.",
+    "mri":      "MRI pituitary: 6mm hypointense lesion in left hemipituitary. Consistent with microadenoma.",
+    "ct":       "CT abdomen: bilateral adrenal hyperplasia secondary to elevated ACTH stimulation."
+  }
+},{
+  name:"Pulmonary Embolism",
+  symptoms:[
+    "Patient can't catch their breath. Onset: sudden. No prodrome.",
+    "Sharp chest pain, worse on inhalation. Pleuritic character.",
+    "Just returned from a 14-hour international flight. Both legs in a confined seat.",
+    "Leg is swollen, warm, and tender along the calf. Not both legs. One.",
+    "D-dimer: markedly elevated. Oxygen saturation: 88% on room air.",
+    "CT pulmonary angiogram: filling defects in bilateral pulmonary arteries. Large clot burden."
+  ],
+  houseComments:[
+    "Sudden dyspnea and pleuritic chest pain after a long-haul flight. Either they're having a panic attack at 30,000 feet elevation or a clot went somewhere it shouldn't.",
+    "One swollen, tender leg plus chest symptoms. The diagnosis is connecting those two dots.",
+    "D-dimer elevated and O2 sat at 88. That's not an anxiety reading. Order imaging."
+  ],
+  winQuote:"Deep vein thrombosis propagated to the pulmonary circulation. The clot obstructed pulmonary artery flow, raised right heart pressure, and impaired gas exchange. Immobilization was the trigger. Classic Virchow's triad: stasis, hypercoagulability, endothelial injury.",
+  loseQuote:"LONG FLIGHT. SWOLLEN LEG. SUDDEN CHEST PAIN. ELEVATED D-DIMER. OXYGEN 88%. THE CLOT TRAVELED FROM THE DEEP VEINS TO THE LUNGS AND YOU THOUGHT ABOUT SOMETHING ELSE.",
+  testResults:{
+    "blood":    "D-dimer: 4.8 μg/mL FEU (ref <0.5). PT/INR: normal. Factor V Leiden: negative.",
+    "ct":       "CTPA: bilateral pulmonary artery filling defects, right > left. Saddle embolus component. Right heart strain pattern.",
+    "ecg":      "ECG: S1Q3T3 pattern. Sinus tachycardia, right axis deviation. Signs of acute right heart strain.",
+    "oxygen":   "SpO2: 88% on room air. ABG: PO2 58 mmHg, PCO2 32 mmHg. Hypoxic, hypocapnic — classic PE gas exchange pattern.",
+    "ultrasound":"Lower extremity Doppler: non-compressible left popliteal vein. DVT confirmed as source."
+  }
+},{
+  name:"Bacterial Meningitis",
+  symptoms:[
+    "The headache is the worst of the patient's life. They are specific about this.",
+    "High fever and neck so stiff they cannot touch chin to chest.",
+    "Kernig's sign positive. Brudzinski's sign positive.",
+    "Photophobia and phonophobia: the lights had to be turned off in the room.",
+    "Petechial rash spreading across the torso and limbs.",
+    "CSF: turbid. Glucose critically low. Protein elevated. Gram-positive diplococci on smear."
+  ],
+  houseComments:[
+    "Worst headache of life, stiff neck, fever. That's a lumbar puncture conversation, not a migraine workup.",
+    "Kernig's and Brudzinski's are textbook. The meninges are irritated and they're advertising it.",
+    "Petechial rash in a febrile patient with meningismus. Start antibiotics before the cultures come back."
+  ],
+  winQuote:"Bacterial infection of the meninges — classic triad: fever, nuchal rigidity, altered consciousness. The petechial rash points to Neisseria meningitidis. CSF analysis confirms it. Time to antibiotics is the only variable that matters.",
+  loseQuote:"NUCHAL RIGIDITY. PETECHIAE. KERNIG'S POSITIVE. TURBID CSF. THE PATIENT NEEDED ANTIBIOTICS AN HOUR AGO AND YOU WERE STILL THINKING.",
+  testResults:{
+    "csf":     "CSF: opening pressure 340 mmH2O (high). WBC 2400 cells/μL (>90% neutrophils). Glucose: 18 mg/dL (serum 95). Protein: 320 mg/dL. Gram stain: Gram-negative diplococci.",
+    "blood":   "WBC: 28,000 with left shift. CRP: markedly elevated. Blood cultures: Neisseria meningitidis growing at 8 hours.",
+    "ct":      "CT head (pre-LP): no mass lesion, no herniation. Proceeded to lumbar puncture.",
+    "skin":    "Skin petechiae biopsy: gram-negative diplococci in dermal vessels. Disseminated meningococcemia confirmed."
+  }
+},{
+  name:"Aortic Dissection",
+  symptoms:[
+    "Chest pain: tearing. Ripping. The patient described it as being cut open from the inside.",
+    "Pain radiating straight through to the back, between the shoulder blades.",
+    "Blood pressure: 190/110 in the right arm. 140/80 in the left. Different arms, different readings.",
+    "History: long-standing uncontrolled hypertension. Known Marfan features.",
+    "Chest X-ray: widened mediastinum.",
+    "CT angiogram: intimal flap in the ascending aorta. Type A dissection. Surgical emergency."
+  ],
+  houseComments:[
+    "Tearing chest pain radiating to the back. The word 'tearing' is doing a lot of diagnostic work here.",
+    "Blood pressure differential between arms. Either one arm is broken or the aorta is.",
+    "Widened mediastinum on chest X-ray. Don't repeat the ECG. Get a CT."
+  ],
+  winQuote:"A tear in the aortic intima created a false lumen propagating with every heartbeat. Type A involves the ascending aorta and is immediately life-threatening. Surgical repair within hours. The BP differential and mediastinal widening were the signs — if you knew what you were looking for.",
+  loseQuote:"TEARING CHEST PAIN. BP DIFFERENTIAL BETWEEN ARMS. WIDENED MEDIASTINUM. MARFAN FEATURES. EVERY SINGLE CLUE WAS A NEON SIGN AND YOU LOOKED AWAY.",
+  testResults:{
+    "ct":       "CTA chest: intimal flap in ascending aorta extending to aortic arch. Stanford Type A. False lumen partially thrombosed. No pericardial effusion yet.",
+    "xray":     "Chest X-ray: mediastinal width 9.2 cm (ref <8). Loss of aortic knuckle definition. Suggestive of mediastinal hematoma.",
+    "blood":    "D-dimer: elevated at 2.1 μg/mL. Troponin: mildly elevated (myocardial ischemia from coronary involvement).",
+    "ecg":      "ECG: ST depression in lateral leads. Right coronary ostium involvement possible.",
+    "echo":     "Bedside TTE: aortic root 4.8 cm. Flap visible in proximal ascending aorta. Mild aortic regurgitation."
+  }
+},{
+  name:"Celiac Disease",
+  symptoms:[
+    "Chronic diarrhea — years. Multiple GI workups. Always 'functional.'",
+    "Iron-deficiency anemia despite adequate dietary iron. The absorption isn't happening.",
+    "Abdominal bloating and cramping that gets worse after pasta, bread, or any wheat product.",
+    "Dermatitis herpetiformis: intensely itchy vesicular rash on elbows and knees.",
+    "Anti-tissue transglutaminase IgA: strongly positive. Anti-endomysial antibodies: positive.",
+    "Duodenal biopsy: villous atrophy, crypt hyperplasia, intraepithelial lymphocytosis. Celiac disease confirmed."
+  ],
+  houseComments:[
+    "Years of GI symptoms, iron-deficient despite eating iron, and a rash on the elbows. Three separate diagnoses or the same piece of bread causing all of them.",
+    "Anti-tTG positive. The immune system has declared war on gluten and is taking the gut down with it.",
+    "Villous atrophy on biopsy. The small intestine is flattening out. Every nutrient is sliding past without being absorbed."
+  ],
+  winQuote:"Gluten triggers an immune response that destroys small intestinal villi. No villi means no absorption surface. Iron, calcium, vitamins — all missed. The dermatitis herpetiformis is IgA deposition in the skin responding to the same antigen.",
+  loseQuote:"VILLOUS ATROPHY. ANTI-TTG POSITIVE. YEARS OF GI SYMPTOMS ONLY WITH GLUTEN. IT'S BEEN IN THEIR DIET EVERY DAY AND IT'S BEEN THE ANSWER THE WHOLE TIME.",
+  testResults:{
+    "blood":      "CBC: Hgb 9.8 g/dL. MCV 72 fL (microcytic). Iron: low, ferritin: low. Anti-tTG IgA: 94 U/mL (ref <4). Total IgA: normal.",
+    "autoimmune": "Anti-endomysial antibodies (EMA): positive. Anti-DGP IgG: positive. IgA deficiency excluded.",
+    "skin":       "Skin biopsy of papular lesion: IgA deposits at dermal-epidermal junction. Dermatitis herpetiformis confirmed.",
+    "csf":        "Not indicated. Neurological symptoms are nutritional, not inflammatory.",
+    "stool":      "Fecal fat: elevated. Fat malabsorption quantified at 18g/day (ref <7g)."
+  }
+},{
+  name:"Pheochromocytoma",
+  symptoms:[
+    "Episodes of pounding headache, sweating, and palpitations. Each lasting 20-30 minutes.",
+    "Blood pressure spikes to 220/130 during episodes. Normal between them.",
+    "Patient describes a feeling of impending doom during each attack.",
+    "The episodes are triggered by pressing on the abdomen during examination.",
+    "24-hour urine metanephrines: grossly elevated. Catecholamines in the urine.",
+    "CT abdomen: 4.2cm right adrenal mass with heterogeneous enhancement. Classic location."
+  ],
+  houseComments:[
+    "Episodic hypertension, headache, diaphoresis, palpitations. Either anxiety or a tumor is secreting adrenaline on a schedule.",
+    "You pressed on the abdomen and the blood pressure went to 220. The mass told you where it is.",
+    "Urine metanephrines elevated. The adrenal gland has a very active tenant that shouldn't be there."
+  ],
+  winQuote:"A catecholamine-secreting tumor of the adrenal medulla. Each paroxysm is a surge of epinephrine and norepinephrine. The triad — headache, diaphoresis, palpitations — plus episodic hypertension is the signature. Surgical resection is curative.",
+  loseQuote:"PAROXYSMAL HYPERTENSION. ADRENAL MASS. ELEVATED METANEPHRINES. THE TUMOR WAS LITERALLY ADVERTISING ITS LOCATION EVERY TIME YOU TOUCHED THE ABDOMEN.",
+  testResults:{
+    "blood":   "Plasma metanephrines: normetanephrine 4.2 nmol/L (ref <0.9), metanephrine 2.8 nmol/L (ref <0.5). Grossly elevated.",
+    "urine":   "24-hour urine: metanephrines 5200 μg/day (ref <400), VMA: 42 mg/day (ref <8). Catecholamine excess confirmed.",
+    "ct":      "CT abdomen with contrast: 4.2 × 3.8 cm right adrenal mass, heterogeneous, avid enhancement, central necrosis. Pheochromocytoma morphology.",
+    "hormone": "Cortisol: normal. Aldosterone: normal. The excess is catecholamines, not corticosteroids.",
+    "genetic": "SDHB gene sequencing: no pathogenic variant. SDH complex testing: normal. Sporadic pheochromocytoma."
+  }
+},{
+  name:"Acromegaly",
+  symptoms:[
+    "Hat size has been increasing. Shoes, too. The patient assumed it was normal aging.",
+    "Jaw protrusion, brow prominence, and hands that look larger than they did in old photographs.",
+    "Carpal tunnel syndrome, bilateral. Diagnosed two years ago. Never adequately explained.",
+    "Sleep apnea, new-onset hypertension, diabetes — all developed within the past decade.",
+    "IGF-1: more than four times the upper limit of normal for age.",
+    "MRI pituitary: 1.8cm macroadenoma compressing the optic chiasm."
+  ],
+  houseComments:[
+    "Growing hat size in an adult. Bones don't grow after puberty unless something is telling them to.",
+    "Bilateral carpal tunnel, new-onset diabetes, sleep apnea, jaw enlargement. Four diagnoses or one hormone.",
+    "IGF-1 four times normal. The pituitary has been running a growth hormone factory for years."
+  ],
+  winQuote:"A GH-secreting pituitary adenoma has been producing excess growth hormone for years. IGF-1 mediates the tissue growth. Bones, soft tissue, and organs all enlarge insidiously. The complications — DM, HTN, sleep apnea — accumulate silently. Average diagnosis delay: 10 years.",
+  loseQuote:"ENLARGING EXTREMITIES. PROTRUDING JAW. IGF-1 FOUR TIMES NORMAL. PITUITARY MASS ON MRI. THE DISEASE WAS GROWING THE PATIENT'S HANDS FOR A DECADE AND YOU STILL NEEDED MORE CLUES.",
+  testResults:{
+    "blood":    "IGF-1: 842 ng/mL (age-adjusted ref 100–200). GH nadir on glucose suppression: 12 ng/mL (ref <1). GH axis not suppressible.",
+    "hormone":  "Oral glucose tolerance test: GH nadir 11.8 ng/mL. Failure to suppress confirms active acromegaly. Prolactin: mildly elevated (co-secretion).",
+    "mri":      "MRI pituitary with gadolinium: 1.8 × 1.6 cm macroadenoma, left-sided, with chiasmal compression. Cavernous sinus invasion: absent.",
+    "eye":      "Visual field testing: bitemporal hemianopia on perimetry. Optic chiasm under pressure.",
+    "sleep":    "Polysomnogram: AHI 38 events/hour. Severe obstructive sleep apnea secondary to macroglossia and pharyngeal soft tissue hypertrophy."
+  }
+},{
+  name:"Diabetic Ketoacidosis",
+  symptoms:[
+    "Patient is breathing rapidly and deeply. Not out of breath — breathing on purpose.",
+    "Fruity odor on the breath. Everyone in the room notices.",
+    "Blood glucose: 480 mg/dL. The glucose monitor just read 'HI.'",
+    "Patient is nauseated, vomiting, and has had abdominal pain since yesterday.",
+    "Arterial blood gas: pH 7.14. Bicarbonate: 9 mEq/L. Anion gap: 28.",
+    "Type 1 diabetic. Ran out of insulin five days ago."
+  ],
+  houseComments:[
+    "Kussmaul breathing, fruity breath, and a glucose of 480. The body is using fat for fuel because the insulin ran out.",
+    "pH 7.14. That's not metabolic compensation. That's the edge of what the body can tolerate.",
+    "Type 1 diabetic, no insulin, ketones in the urine. The acid is building and the clock is running."
+  ],
+  winQuote:"Insulin absence triggers lipolysis, ketogenesis, and metabolic acidosis. Glucose rises unchecked. Ketones accumulate. The body tries to buffer with bicarbonate — runs out — then breathes harder to blow off CO2. The fruity smell is acetone exhaled.",
+  loseQuote:"KUSSMAUL BREATHING. FRUITY BREATH. GLUCOSE 480. pH 7.14. ANION GAP 28. KNOWN TYPE 1 DIABETIC OUT OF INSULIN. EVERY NUMBER WAS A NEON SIGN.",
+  testResults:{
+    "blood":   "Glucose: 482 mg/dL. pH 7.14. Bicarb: 9 mEq/L. Anion gap: 28. Potassium: 5.9 (total body depleted). Na: 131. BUN: elevated.",
+    "urine":   "Urinalysis: 4+ ketones, 4+ glucose. No infection. Specific gravity: 1.035.",
+    "hormone": "Insulin level: <1 μU/mL. Glucagon: markedly elevated. C-peptide: undetectable.",
+    "breath":  "Breathalyzer: negative for alcohol. Acetone on breath confirmed by gas chromatography.",
+    "ecg":     "ECG: peaked T-waves secondary to hyperkalemia. No arrhythmia yet."
+  }
+},{
+  name:"Fatal Familial Insomnia",
+  symptoms:[
+    "Patient has not slept a full night in four months. Sleeping pills have no effect whatsoever.",
+    "Progressive autonomic dysfunction: sweating, elevated heart rate, hypertension — all without cause.",
+    "Motor deterioration: ataxia, myoclonus, and involuntary movements now present.",
+    "Hallucinations: vivid, complex, and indistinguishable from reality. Happen at what should be sleep time.",
+    "EEG: no sleep spindles. The thalamus is not generating sleep architecture. It may not be capable of it.",
+    "Positive family history: father died of the same progressive insomnia and dementia 22 years ago."
+  ],
+  houseComments:[
+    "Can't sleep. Sleeping pills don't work. Not insomnia — something is destroying the sleep circuitry.",
+    "Autonomic dysfunction, ataxia, myoclonus, and hallucinations. Four separate findings pointing at the same small structure.",
+    "Family history of fatal sleep disorder. If the thalamus is turning into Swiss cheese, there's only one thing doing it."
+  ],
+  winQuote:"A prion-mediated destruction of the thalamus, inherited as an autosomal dominant mutation. The thalamic nuclei responsible for generating sleep are ablated first. Insomnia is absolute. Autonomic chaos follows. Then dementia. Then death. No treatment exists.",
+  loseQuote:"ABSOLUTE INSOMNIA UNRESPONSIVE TO ALL MEDICATION. THALAMIC DESTRUCTION. POSITIVE FAMILY HISTORY. PRION DISEASE WAS THE ONLY THING THAT EXPLAINED ALL OF IT AND YOU RAN OUT OF GUESSES.",
+  testResults:{
+    "mri":     "MRI brain: T2 hyperintensities in thalamus (bilateral pulvinar). FDG-PET: marked thalamic hypometabolism. Cortex relatively spared.",
+    "eeg":     "EEG: absent sleep spindles, K-complexes, and slow-wave sleep. Architecture is disintegrated. No epileptiform activity.",
+    "prion":   "CSF RT-QuIC: positive. 14-3-3 protein: markedly elevated. Consistent with active prion disease.",
+    "genetic": "PRNP gene sequencing: D178N mutation with methionine at codon 129. Pathogenic. Fatal familial insomnia genotype confirmed.",
+    "psych":   "Cognitive and psychiatric assessment: complex visual hallucinations, marked attention deficit, preserved insight early but rapidly declining."
+  }
+},{
+  name:"Locked-In Syndrome",
+  symptoms:[
+    "Patient appears awake and alert but cannot speak or move any voluntary muscle.",
+    "Only intact movement: vertical eye gaze. Patient blinks in response to questions.",
+    "MRI: large infarct in the basis pontis. Upper brainstem and cortex intact.",
+    "EEG: normal waking pattern. The patient is fully conscious. Nothing is wrong with the mind.",
+    "Communication established via eye-blink code: patient reports full sensory awareness throughout.",
+    "Etiology: basilar artery occlusion. The 'de-efferented' cortex observes everything and can control nothing."
+  ],
+  houseComments:[
+    "Awake, aware, and completely unable to move or speak. The lights are on. Everything is on. Just no way out.",
+    "Normal EEG in a patient who appears comatose. Either the machine is broken or the problem is in the pipes, not the generator.",
+    "Vertical gaze intact. Horizontal: gone. Communication is possible if you know how to look."
+  ],
+  winQuote:"Basilar artery occlusion destroyed the corticospinal and corticobulbar tracts in the ventral pons. The cortex is intact — awake, thinking, feeling. But every motor output is severed. Only vertical gaze remains via the intact dorsal midbrain. The patient inside is fully present.",
+  loseQuote:"FULLY CONSCIOUS PATIENT. NO VOLUNTARY MOVEMENT. INTACT VERTICAL GAZE. NORMAL EEG. PONTINE INFARCT ON MRI. THEY WERE COMMUNICATING BY BLINKING AND YOU STILL COULDN'T IDENTIFY IT.",
+  testResults:{
+    "mri":  "MRI brain: acute DWI restriction in bilateral ventral pons extending to medulla. Basilar artery territory. Dorsal tegmentum spared.",
+    "eeg":  "EEG: normal waking alpha rhythm throughout. Consistent with an intact and alert cortex.",
+    "ct":   "CT angiogram: basilar artery occlusion, proximal. No distal flow. Posterior circulation compromised.",
+    "eye":  "Ophthalmology bedside exam: vertical saccades intact. Horizontal: completely absent. OKN: absent.",
+    "csf":  "CSF: normal. No infection, no hemorrhage. The insult is ischemic and structural."
+  }
+},{
+  name:"Lesch-Nyhan Syndrome",
+  symptoms:[
+    "Infant male: developmental delay, hypotonia, and involuntary writhing movements from six months.",
+    "Self-mutilation: lip and finger biting causing tissue loss. Patient appears distressed by own actions.",
+    "Orange crystalline deposits in the diaper: 'orange sand' in urine on several occasions.",
+    "Serum uric acid: 11.8 mg/dL. Severe hyperuricemia in a child.",
+    "Neurological: choreoathetosis, spasticity, and cognitive impairment.",
+    "HPRT enzyme activity: undetectable. HPRT1 gene: hemizygous pathogenic mutation confirmed."
+  ],
+  houseComments:[
+    "A child biting off their own lips while clearly not wanting to. The neurological system is forcing actions the patient is fighting against.",
+    "Hyperuricemia in a child plus a movement disorder. The missing enzyme is leaving metabolic wreckage everywhere it goes.",
+    "HPRT enzyme: zero. The purine salvage pathway is closed. Urate accumulates. The basal ganglia dissolve."
+  ],
+  winQuote:"A defect in HPRT disrupts the purine salvage pathway. Urate accumulates, damaging joints and kidneys. But the neurological damage — basal ganglia dysfunction — produces compulsive self-injury that the patient cannot stop and consciously opposes. X-linked. No cure.",
+  loseQuote:"CHILD WITH COMPULSIVE SELF-MUTILATION THEY ACTIVELY OPPOSE. ORANGE CRYSTALS IN URINE. URIC ACID OF 11.8. UNDETECTABLE HPRT ENZYME. THIS IS AN EPONYMOUS SYNDROME AND YOU RAN OUT OF TIME.",
+  testResults:{
+    "blood":   "Uric acid: 11.8 mg/dL (ref 2–7). CBC: normal. Renal function: mildly impaired.",
+    "urine":   "24-hour urine: uric acid 1,200 mg/day (ref <800). Orange crystalline sediment on UA. Uric acid nephropathy risk.",
+    "genetic": "HPRT1 gene sequencing: hemizygous c.143G>A missense mutation. Pathogenic. X-linked inheritance confirmed.",
+    "psych":   "Behavioral assessment: compulsive self-injurious behavior (lip biting, finger biting) with apparent distress — patient attempts to prevent own actions.",
+    "mri":     "MRI brain: reduced caudate nucleus volume bilaterally. Basal ganglia atrophy consistent with HPRT deficiency."
+  }
+},{
+  name:"Urbach-Wiethe Disease",
+  symptoms:[
+    "Patient reports never experiencing fear. Not suppressed fear — genuinely absent. In any situation.",
+    "Hoarse voice since childhood. Skin lesions: waxy, yellowish papules on face and extremities.",
+    "Intubation shows yellowish plaques in the larynx and pharynx.",
+    "CT head: bilateral amygdala calcification. Dense, symmetric, and bilateral.",
+    "Psychological testing: normal cognition, normal emotional range except for the complete absence of fear response.",
+    "Exposure to CO2-enriched air (a fear stimulus even in other amygdala-damaged patients): no anxiety, no fear."
+  ],
+  houseComments:[
+    "Patient reports zero fear. Ever. In any circumstance. That's not stoicism. Something's missing.",
+    "Bilateral amygdala calcification on CT. The structure responsible for fear recognition is mineralized.",
+    "Hoarse voice, skin plaques, and amygdala calcification since childhood. Lipid deposits going somewhere they're not supposed to."
+  ],
+  winQuote:"Lipoid proteinosis — mutations in extracellular matrix protein 1 (ECM1) cause lipid-like material to deposit throughout the body. In the brain, it calcifies the amygdala bilaterally. The amygdala is the fear circuit. Without it, the patient cannot generate or recognize fear. A perfect lesion study.",
+  loseQuote:"ABSENT FEAR IN ALL CONTEXTS. BILATERAL AMYGDALA CALCIFICATION. SKIN AND LARYNGEAL PLAQUES SINCE CHILDHOOD. THE AMYGDALAE TURNED TO STONE AND FEAR WENT WITH THEM.",
+  testResults:{
+    "ct":      "CT head: bilateral amygdala calcification, symmetric and dense. Hippocampus and surrounding structures intact.",
+    "mri":     "MRI brain: blooming artifact at bilateral amygdalae on susceptibility-weighted imaging. No cortical involvement.",
+    "genetic": "ECM1 gene sequencing: homozygous frameshift mutation. Consistent with autosomal recessive lipoid proteinosis.",
+    "psych":   "Fear conditioning paradigm: patient shows no galvanic skin response to threat stimuli. Cognitive fear knowledge intact — patient knows what should be scary but experiences nothing.",
+    "skin":    "Skin biopsy: PAS-positive amorphous material in dermis, perivascular distribution. Consistent with ECM1-related lipoid proteinosis."
+  }
+},{
+  name:"Tree Man Syndrome",
+  symptoms:[
+    "Wart-like growths emerging from the hands and feet, massive in extent.",
+    "The growths have been present since adolescence and have expanded over decades.",
+    "Standard wart treatments: completely ineffective. Surgical removal followed by rapid regrowth.",
+    "Immune function: severely impaired, specifically in cell-mediated immunity.",
+    "HPV DNA sequencing from lesions: epidermodysplasia verruciformis-specific strains (HPV 5, HPV 8).",
+    "EVER1/EVER2 gene mutations confirmed. The skin cannot mount an immune response to these HPV strains."
+  ],
+  houseComments:[
+    "Wart-like growths covering the hands and feet, progressive for decades. Standard HPV treatments don't touch it.",
+    "Immune system specifically impaired at responding to certain HPV strains. The virus has found a door that doesn't lock.",
+    "EVER1 mutation. The skin is open to HPV subtypes that normal skin would neutralize. And they grow without limit."
+  ],
+  winQuote:"Epidermodysplasia verruciformis: EVER1/EVER2 gene mutations impair the skin's ability to control HPV 5 and HPV 8. These strains cause diffuse, bark-like lesions across sun-exposed skin. Untreatable, progressive, and with high malignant transformation risk.",
+  loseQuote:"BARK-LIKE LESIONS EVERYWHERE. SPECIFIC HPV STRAINS. SPECIFIC GENE MUTATIONS. THE SKIN SURRENDERED TO A VIRUS AND BUILT A FOREST AND YOU DIDN'T IDENTIFY IT.",
+  testResults:{
+    "skin":    "Skin biopsy: HPV-induced koilocytosis, massive epidermal hyperplasia. HPV 5 and HPV 8 DNA by in situ hybridization.",
+    "genetic": "EVER2 (TMC8) gene sequencing: homozygous frameshift mutation. Autosomal recessive epidermodysplasia verruciformis confirmed.",
+    "blood":   "Lymphocyte subset analysis: reduced NK cell activity. Selective deficit in anti-HPV cellular immunity. Standard immunity otherwise normal.",
+    "autoimmune":"Immunoglobulin panel: normal. Not an immunodeficiency in the broad sense — deficit is specifically to EV-HPV strains."
+  }
+},{
+  name:"Persistent Genital Arousal Disorder",
+  symptoms:[
+    "Patient reports constant, unwanted physical arousal unrelated to any sexual thought, desire, or stimulus.",
+    "Arousal is not relieved by orgasm. Returns within minutes. Distressing, not pleasurable.",
+    "Symptoms worse with sitting; improved with movement. Possible pudendal nerve involvement.",
+    "Duration: 14 months. Patient has stopped working and rarely leaves home.",
+    "MRI pelvis: tarlov cysts at S2–S3 level compressing sacral nerve roots.",
+    "Pelvic floor evaluation: levator ani hypertonia. Pudendal nerve conduction: delayed."
+  ],
+  houseComments:[
+    "Constant physical arousal completely disconnected from any desire. Involuntary, relentless, and profoundly disabling.",
+    "Not psychological. Not voluntary. The nerve root is being compressed and it's misfiring.",
+    "Tarlov cysts at S2–S3. The sacral nerve roots drive genital sensation and they're being pinched. This is a structural diagnosis."
+  ],
+  winQuote:"Persistent genital arousal disorder — a condition of intrusive, unwanted, painful physical arousal caused by peripheral nerve dysfunction or compression, often at the sacral level. Not psychological. Not pleasurable. Profoundly disabling. Massively underdiagnosed.",
+  loseQuote:"INVOLUNTARY CONSTANT AROUSAL UNRELIEVED BY ORGASM. NERVE COMPRESSION ON MRI. PELVIC FLOOR HYPERTONIA. IT WASN'T SUBTLE. IT WAS STRUCTURAL AND IT WAS NAMEABLE.",
+  testResults:{
+    "mri":     "MRI lumbosacral spine and pelvis: Tarlov cysts at S2–S3 with nerve root compression. Sacral foramina partially occluded bilaterally.",
+    "emg":     "Pudendal nerve motor latency: prolonged bilaterally (>2.4 ms, ref <2.1). Sacral reflexes: diminished.",
+    "psych":   "Psychological assessment: no primary psychiatric disorder. Significant secondary depression and anxiety in response to the condition. Libido: absent. This is not desire.",
+    "blood":   "Hormone panel: testosterone, estrogen, FSH, LH, prolactin all within normal range. Hormonal etiology excluded."
+  }
+},{
+  name:"Stendhal Syndrome",
+  symptoms:[
+    "Patient collapsed in the Uffizi Gallery in Florence after viewing Botticelli's Primavera.",
+    "Symptoms: tachycardia, dizziness, dissociation, and brief hallucinations with art as the apparent trigger.",
+    "Patient is Italian, well-read, and emotionally invested in the arts. First episode.",
+    "Neurological exam: completely normal. No seizure activity on EEG.",
+    "Psychiatric assessment: no baseline disorder. No prior history of panic attacks.",
+    "Exposure to dense concentrations of beauty — multiple masterworks viewed rapidly — appears to be the precipitant."
+  ],
+  houseComments:[
+    "Fainted in front of a painting. Not hunger. Not heat. The art did something.",
+    "No underlying disorder, no structural pathology. The human nervous system overwhelmed by aesthetic input. I find it irritating that this is a thing.",
+    "Florence. The Uffizi. First visit. Too much beauty, too fast, not enough cortical buffering. There's a name for this."
+  ],
+  winQuote:"Stendhal syndrome — psychosomatic symptoms precipitated by exposure to concentrated aesthetic experience, typically in Florence. Named after the French author who described it in 1817. The limbic system, flooded with beauty, short-circuits. Treated by removal from the stimulus and supportive care.",
+  loseQuote:"COLLAPSED IN A GALLERY. ART TRIGGERED IT. ITALY. NO PATHOLOGY ON ANY TEST. THE FRENCH AUTHOR DESCRIBED IT IN 1817 AND YOU STILL COULDN'T NAME IT.",
+  testResults:{
+    "eeg":    "EEG: normal. No epileptiform activity. No ictal pattern correlating with episodes.",
+    "mri":    "MRI brain: completely normal.",
+    "blood":  "CBC, metabolic panel, glucose, electrolytes: all normal. No metabolic cause for collapse.",
+    "psych":  "Psychiatric evaluation: no baseline disorder. Acute psychosomatic reaction to intense aesthetic stimulus. Limbic dysregulation hypothesized.",
+    "ecg":    "ECG during episode (via telemetry): sinus tachycardia to 138 bpm. No arrhythmia. Resolved spontaneously."
+  }
+},{
+  name:"Koro",
+  symptoms:[
+    "Patient, male, presents in acute panic, manually holding his penis and refusing to release it.",
+    "Patient is convinced the genitalia are retracting into the body and this retraction will cause death.",
+    "Belief is unshakeable. No amount of medical reassurance has helped. Request for device to prevent retraction.",
+    "Patient is from a region where this belief system is culturally present. Others in community affected.",
+    "Physical exam: genitalia entirely normal. No anatomical abnormality.",
+    "No psychotic baseline — belief is culture-specific and episode-limited."
+  ],
+  houseComments:[
+    "The patient is holding himself in the ED because he believes retraction equals death. I've seen worse presenting complaints.",
+    "Culture-specific genital retraction panic. It spreads. This is not delusion in the psychiatric sense — it's epidemic psychology.",
+    "Normal anatomy. Intense fear. Culture-specific belief. This is textbook. Literally textbook — it's in the DSM appendix."
+  ],
+  winQuote:"Koro — a culture-bound syndrome predominant in South and East Asia. The belief that genitalia are retracting into the body, causing death. Can occur in epidemic clusters. The anatomical organ is normal. The fear is real. Treatment: reassurance, anxiolytics, and cultural context.",
+  loseQuote:"ACUTE GENITAL RETRACTION PANIC. CULTURE-SPECIFIC. EPIDEMIC PATTERN. NORMAL ANATOMY. NO BASELINE PSYCHOSIS. THIS ONE IS IN THE CULTURAL APPENDIX OF EVERY PSYCHIATRIC REFERENCE TEXT.",
+  testResults:{
+    "blood":   "CBC, metabolic panel: normal. Cortisol: elevated (stress response). No metabolic abnormality.",
+    "psych":   "Psychiatric assessment: no baseline psychosis, schizophrenia, or delusional disorder. Culture-specific acute syndrome. Clear sensorium. Insight partially intact — patient knows doctors disagree but cannot override fear.",
+    "hormone": "Testosterone, FSH, LH: normal. No endocrine basis for symptoms.",
+    "mri":     "MRI not indicated. Physical examination unremarkable. No structural basis."
+  }
+},{
+  name:"Jerusalem Syndrome",
+  symptoms:[
+    "Tourist, previously no psychiatric history, admitted after behaving as a biblical prophet in the Old City.",
+    "Patient wrapped in hotel bedsheets and delivering sermons to crowds at the Western Wall.",
+    "Delusions of divine mission: patient believes they have been chosen to announce the second coming.",
+    "Symptoms began on day three of visiting Jerusalem — first exposure to the religious sites.",
+    "After removal from Jerusalem and psychiatric support: complete resolution. Patient returns to baseline.",
+    "No prior episodes. No family history. No substance use. Diagnosis is location-dependent."
+  ],
+  houseComments:[
+    "Fully functional person becomes a prophet three days into a Holy Land vacation. The city did something.",
+    "No prior psychiatric history, complete resolution on removal. The diagnosis is Jerusalem. Literally.",
+    "A place so saturated with the weight of belief that some brains reboot as a prophet. I'd find it more interesting if it didn't happen every week."
+  ],
+  winQuote:"Jerusalem syndrome: acute psychotic-like episodes triggered by visiting Jerusalem, occurring in individuals with no prior psychiatric history. Typically self-limited and resolves completely after removal from the site. The religious-historical saturation of the environment is the precipitant.",
+  loseQuote:"PREVIOUSLY HEALTHY TOURIST. WRAPPED IN BEDSHEETS. PREACHING IN JERUSALEM. NO PRIOR PSYCHIATRIC HISTORY. COMPLETE RESOLUTION ON REMOVAL. THE CITY WAS THE DIAGNOSIS.",
+  testResults:{
+    "blood":   "Toxicology: negative. CBC, metabolic panel: normal. No substance-induced basis.",
+    "psych":   "Psychiatric evaluation: acute psychosis, grandiose delusions of religious mission. No baseline disorder. Complete resolution within 5–7 days after removal from Jerusalem and supportive management.",
+    "mri":     "MRI brain: normal. No structural lesions to explain acute presentation.",
+    "eeg":     "EEG: no epileptiform activity. No temporal lobe focus."
+  }
+},{
+  name:"Reduplicative Paramnesia",
+  symptoms:[
+    "Patient, recovering from right hemisphere stroke, insists the hospital is not real.",
+    "Specific belief: the hospital is a duplicate of the real hospital, located elsewhere.",
+    "Patient accepts all physical evidence of being in a hospital but insists it is a copy.",
+    "Navigating the ward normally — the delusion is specific, not global.",
+    "MRI: right frontal and right parietal infarcts. Bilateral involvement on neuropsychiatric testing.",
+    "Confrontation intensifies the delusion. Reassurance has no sustained effect."
+  ],
+  houseComments:[
+    "Patient believes the hospital is a fake copy of the hospital. Not that they're somewhere else — that this place is a replica.",
+    "Right frontal and parietal lesions. The system that matches familiar places has been knocked out and is generating a plausible error.",
+    "A very specific delusion about place — not person, not event. Just: this location is duplicated. There is a diagnosis for this."
+  ],
+  winQuote:"Reduplicative paramnesia: a delusional belief that a familiar place exists in duplicate. Caused by frontal-parietal lesions impairing the brain's place-familiarity integration system. The patient generates a confabulation to resolve the mismatch between recognition and unfamiliarity.",
+  loseQuote:"POST-STROKE DELUSION THAT THE HOSPITAL IS A DUPLICATE. SPECIFIC TO PLACE. FRONTAL AND PARIETAL INFARCTS. THE BRAIN INVENTED A COPY OF REALITY BECAUSE THE REAL THING FELT WRONG.",
+  testResults:{
+    "mri":     "MRI brain: right frontal and right parietal cortical infarcts. Bilateral frontal involvement on diffuse tensor imaging. Prior left parietal lacune also noted.",
+    "psych":   "Neuropsychiatric assessment: intact cognition except place-identity processing. Delusion is specific, encapsulated, and resistant to correction. Confabulation noted when asked to explain the duplication.",
+    "eeg":     "EEG: no epileptiform activity. Delta slowing over right hemisphere consistent with infarct zone."
+  }
+},{
+  name:"Uncombable Hair Syndrome",
+  symptoms:[
+    "A three-year-old presents with hair that is silver-blonde, dry, and stands away from the scalp in all directions.",
+    "Hair cannot be combed flat regardless of product, length, or technique.",
+    "Electron microscopy of hair shaft: triangular or heart-shaped cross-section instead of round.",
+    "Parents describe hair as 'spun glass' in texture and appearance.",
+    "Genetic panel: biallelic PADI3 mutations. A hair follicle peptidylarginine deiminase enzyme defect.",
+    "No systemic involvement. Hair may improve spontaneously after puberty."
+  ],
+  houseComments:[
+    "The child's hair stands straight out in every direction and cannot be combed into any other configuration. At all.",
+    "Triangular hair shaft cross-section on electron microscopy. Round is normal. This is a manufacturing defect.",
+    "PADI3 mutation. The enzyme that processes hair shaft proteins is broken. The result looks like a child was startled and stayed that way."
+  ],
+  winQuote:"Uncombable hair syndrome — PADI3, TGM3, or TCHH gene mutations alter the hair shaft cross-section from round to triangular. The anisotropic shape prevents lying flat. The condition is largely cosmetic, often improves post-puberty, and causes no systemic disease.",
+  loseQuote:"CHILD WITH STRUCTURALLY UNCOMBABLE HAIR. TRIANGULAR HAIR SHAFT. PADI3 MUTATION. IT IS AN EPONYMOUS SYNDROME ABOUT HAIR THAT CANNOT BE COMBED AND YOU COULDN'T NAME IT.",
+  testResults:{
+    "genetic": "Targeted gene panel: homozygous PADI3 missense mutation. Consistent with autosomal recessive uncombable hair syndrome.",
+    "skin":    "Hair shaft electron microscopy: triangular/reniform cross-section with longitudinal grooves. Pilifer trianguli et canaliculi confirmed.",
+    "blood":   "CBC, metabolic panel: normal. No systemic involvement."
+  }
+},{
+  name:"Hemochromatosis",
+  symptoms:[
+    "Fatigue, joint pain, and abdominal discomfort for three years, attributed to middle age.",
+    "Skin has taken on a bronze coloring. Patient noted by family.",
+    "Liver function mildly elevated. Ferritin: 2,800 ng/mL (normal <300). Transferrin saturation: 72%.",
+    "Diabetes, newly diagnosed. The pancreas is failing.",
+    "Cardiac MRI: iron deposition in myocardium. Arrhythmia on Holter monitor.",
+    "HFE gene: C282Y homozygous mutation confirmed. Hereditary hemochromatosis."
+  ],
+  houseComments:[
+    "Bronze skin, diabetes, and liver disease. Separately: three diagnoses. Together: one element.",
+    "Ferritin 2,800 and transferrin saturation 72%. Iron is going places it was never invited.",
+    "HFE mutation, homozygous. The body has been absorbing all the iron it could find for decades and depositing it in every organ."
+  ],
+  winQuote:"Hereditary hemochromatosis — HFE mutation causes excess iron absorption. Iron deposits in liver, pancreas, heart, joints, and skin. The 'bronze diabetes' triad is classic: bronzing, diabetes, cirrhosis. Treatment is phlebotomy — literally draining the excess iron out.",
+  loseQuote:"BRONZE SKIN. FERRITIN 2,800. TRANSFERRIN SATURATION 72%. NEW DIABETES. CARDIAC IRON DEPOSITION. HFE MUTATION. THE ORGAN DAMAGE WAS BEING WRITTEN IN IRON FOR DECADES.",
+  testResults:{
+    "blood":   "Ferritin: 2,812 ng/mL (ref <300). Transferrin saturation: 72% (ref <45%). Serum iron: markedly elevated. ALT/AST: 2× ULN.",
+    "genetic": "HFE gene: C282Y homozygous mutation. Hereditary hemochromatosis type 1 confirmed.",
+    "mri":     "Cardiac MRI T2*: myocardial iron loading (T2* 14ms, ref >20ms). Liver MRI: marked iron deposition.",
+    "liver":   "Liver biopsy: grade 3 hepatic siderosis. Early portal fibrosis. Hemosiderin deposits in hepatocytes.",
+    "ecg":     "Holter monitor: frequent PVCs, one run of non-sustained VT. Iron-related cardiomyopathy."
+  }
+},{
+  name:"Lyme Disease",
+  symptoms:[
+    "Three weeks ago: camping trip in Connecticut. Patient noted a tick briefly attached.",
+    "Expanding ring-shaped rash at the site of attachment. 12 cm diameter. Not itchy.",
+    "Flu-like illness at week two: fever, myalgias, headache.",
+    "Now: new rash on the thigh — no tick bite there. Arthritis in the right knee.",
+    "Facial nerve palsy: left-sided Bell's palsy developed this week.",
+    "ELISA for Borrelia burgdorferi: positive. Western blot: positive (5 of 10 IgG bands)."
+  ],
+  houseComments:[
+    "Tick exposure, expanding ring rash, flu symptoms. It's spreading before you've finished taking the history.",
+    "Disseminated rash, knee arthritis, and facial nerve palsy. The spirochete is touring the body.",
+    "IgG western blot positive. The organism has been here long enough for full antibody maturation."
+  ],
+  winQuote:"Borrelia burgdorferi disseminated from the initial bite site. The erythema migrans rash, flu-like illness, arthritis, and cranial nerve VII palsy are all stages of spirochetal dissemination. Standard antibiotic course is curative at this stage.",
+  loseQuote:"TICK BITE. ERYTHEMA MIGRANS. DISSEMINATED RASH. ARTHRITIS. CRANIAL NERVE PALSY. POSITIVE SEROLOGY. THE TICK LEFT A CALLING CARD AND THE SPIROCHETE SIGNED IT.",
+  testResults:{
+    "blood":   "Lyme ELISA: positive. IgG Western blot: 5/10 bands positive (41, 45, 58, 66, 93 kDa). IgM WB: 2/3 bands. Disseminated stage confirmed.",
+    "csf":     "Lumbar puncture (done for meningeal signs): pleocytosis, elevated protein. Lyme DNA PCR: positive in CSF.",
+    "mri":     "MRI brain: enhancement of CN VII at the geniculate ganglion. Consistent with Lyme neuroborreliosis.",
+    "ecg":     "ECG: PR interval 240ms. First-degree AV block — early cardiac Lyme."
+  }
+},{
+  name:"Narcolepsy with Cataplexy",
+  symptoms:[
+    "Patient falls asleep involuntarily during meals, mid-conversation, and once while driving.",
+    "Sudden muscle weakness triggered by laughter — legs buckle, the jaw goes slack.",
+    "Sleep paralysis: fully conscious but unable to move on waking, often with vivid hallucinations.",
+    "Night sleep: disrupted and poor despite excessive daytime sleepiness.",
+    "Multiple sleep latency test: average sleep onset 3.8 minutes. REM onset in 4 of 5 naps.",
+    "CSF hypocretin-1: 45 pg/mL (normal >200). Severe orexin deficiency confirmed."
+  ],
+  houseComments:[
+    "Falls asleep mid-meal. Legs buckle when they laugh. The sleep system has lost the signal that keeps waking and sleeping where they belong.",
+    "Sleep-onset REM in 4 of 5 naps, mean latency under 4 minutes. That's not a tired person. That's a broken wake-maintenance circuit.",
+    "Hypocretin at 45. Near zero. The orexin neurons are gone, and laughter is the switch that disconnects the muscles."
+  ],
+  winQuote:"Autoimmune destruction of hypocretin-producing neurons in the lateral hypothalamus. Without orexin to stabilize the wake state, sleep intrudes into wakefulness. Cataplexy — REM atonia triggered by emotion — is the pathognomonic feature.",
+  loseQuote:"INVOLUNTARY SLEEP ATTACKS. CATAPLEXY ON LAUGHTER. SLEEP PARALYSIS. MEAN LATENCY 3.8 MINUTES. HYPOCRETIN NEAR ZERO. THE OREXIN SYSTEM WAS DESTROYED AND SLEEP WAS WINNING EVERY TIME.",
+  testResults:{
+    "sleep":   "MSLT: mean sleep latency 3.8 min (ref >8). Sleep-onset REM periods in 4/5 naps. Diagnostic for narcolepsy.",
+    "csf":     "CSF hypocretin-1: 45 pg/mL (ref >200 pg/mL). Values <110 are diagnostic of narcolepsy type 1.",
+    "blood":   "HLA-DQB1*06:02: positive. Present in >95% of patients with narcolepsy + cataplexy. Supports autoimmune etiology.",
+    "eeg":     "Overnight PSG: reduced sleep efficiency, multiple awakenings, REM sleep with absent atonia fragments. SOREMP on nocturnal study.",
+    "mri":     "MRI brain: normal. Hypothalamic neuronal loss is microscopic and not visible on standard imaging."
+  }
+},{
+  name:"Sarcoidosis",
+  symptoms:[
+    "Dry cough, mild dyspnea, and fatigue for five months. No smoking history.",
+    "Bilateral hilar lymphadenopathy on routine chest X-ray — an incidental finding that changed everything.",
+    "Skin: raised, indurated violaceous plaques on the nose and cheeks (lupus pernio).",
+    "Elevated ACE level: 142 U/L (normal <40). Serum calcium: 11.4 mg/dL.",
+    "Eyes: anterior uveitis on slit-lamp examination. Unexplained eye inflammation.",
+    "Bronchoscopy: non-caseating granulomas on transbronchial biopsy. Acid-fast bacilli: absent."
+  ],
+  houseComments:[
+    "Bilateral hilar lymphadenopathy, uveitis, and skin plaques. The granulomas are staging a multisite demonstration.",
+    "ACE elevated. Calcium elevated. Non-caseating granulomas. The immune system is building little nodules in everything.",
+    "Young Black woman with pulmonary infiltrates and skin plaques. Sarcoidosis is in the differential before you even ask a question."
+  ],
+  winQuote:"Systemic granulomatous disease of unknown etiology. Non-caseating granulomas accumulate in lungs, lymph nodes, skin, and eyes. Activated macrophages drive hypercalcemia via excess 1,25-OH vitamin D synthesis. Treatment: corticosteroids when indicated.",
+  loseQuote:"BILATERAL HILAR ADENOPATHY. NON-CASEATING GRANULOMAS. ELEVATED ACE AND CALCIUM. UVEITIS. SKIN PLAQUES. EVERY ORGAN WAS LEAVING A GRANULOMATOUS CALLING CARD.",
+  testResults:{
+    "xray":    "Chest X-ray: bilateral hilar lymphadenopathy, stage II. Perihilar pulmonary infiltrates.",
+    "blood":   "ACE: 142 U/L (ref <40). Calcium: 11.4 mg/dL. 1,25-OH vitamin D: elevated. LFTs: mildly elevated.",
+    "skin":    "Skin biopsy (nasal plaque): non-caseating epithelioid granulomas with Langhans giant cells. AFB stain negative. Fungal stain negative.",
+    "eye":     "Slit-lamp exam: anterior chamber flare and cells bilaterally. Posterior synechiae forming. Sarcoid uveitis.",
+    "csf":     "Not performed — no neurological symptoms. Neurosarcoidosis surveillance imaging: MRI brain normal."
+  }
 }];
 
 // ══════════════════════════════════════════════
@@ -1138,6 +1753,111 @@ const TRAINER_DATA = {
 "Wernicke-Korsakoff Syndrome":{
   symptoms:["Patient presents with the classic triad: confusion, ataxia, and ophthalmoplegia.","Profound anterograde amnesia. Patient unable to form new memories. Retains remote memory.","Confabulation: detailed, internally consistent, but entirely fabricated accounts of recent events. Patient believes them.","History of severe chronic alcohol use disorder with nutritional neglect.","MRI: T2/FLAIR hyperintensity in mammillary bodies, periaqueductal gray, and dorsomedial thalami.","Thiamine level: 15 nmol/L (reference >70 nmol/L). IV thiamine initiated emergently."],
   patientAnswers:{"memory|remember":"What? I was just at the store. Or was that yesterday? I'm honestly not sure.","drink|alcohol":"I have a few drinks. Sometimes more. It helps with the nerves.","yesterday|today|recently":"[Fabricates:] I went to the park this morning, met a friend for coffee. We talked for hours.","eyes|vision|blurry":"They're a little blurry sometimes. And I fall — my balance isn't great.","eat|food":"I don't eat much. Drinking tends to fill you up.","walk|balance|fall":"I shuffle a bit. I've had a few falls lately."}
+},
+"Guillain-Barré Syndrome":{
+  symptoms:["Chief complaint: progressive bilateral leg weakness over the past five days.","Tingling and numbness beginning in both feet, spreading proximally.","Preceding illness: Campylobacter gastroenteritis two weeks prior, self-resolved.","Neurological exam: absent patellar and Achilles reflexes bilaterally. Bilateral distal weakness graded 3/5.","Respiratory function: FVC 1.8L (normal predicted 4.2L). Declining. ABG: normal currently.","Lumbar puncture: elevated protein 2.8 g/L with normal cell count. Albuminocytologic dissociation."],
+  patientAnswers:{"legs|walk|weak":"My legs started feeling weak about five days ago. It's spreading. Yesterday my hands started too.","feet|numb|tingle":"Tingling started in my feet. Now it's up to my knees and I can't feel the floor properly.","stomach|sick|infection":"I had a bad stomach bug about two weeks ago. Three days of diarrhea. Thought it was just food poisoning.","breathe|breath":"It's getting harder to take a deep breath. Not dramatically, but I notice it.","reflex":"My doctor said I have no reflexes. That scared me.","feel|sensation":"Everything feels distant — like I'm wearing thick gloves and socks."}
+},
+"Myasthenia Gravis":{
+  symptoms:["Patient reports drooping of both eyelids, worse in the afternoon and after sustained activity.","Double vision, intermittent. Improves after resting the eyes for several minutes.","Voice becomes quiet and nasal after sustained speaking; clears with rest.","Difficulty chewing firm foods; has to pause mid-meal when jaw fatigue sets in.","Exam: fatigable ptosis reproduced after 60 seconds of sustained upgaze. Ice pack test: positive.","Acetylcholine receptor antibodies: 14 nmol/L (reference <0.4). Strongly positive."],
+  patientAnswers:{"eyes|eyelid|droop":"Both eyelids droop, but the right is worse. It gets much worse as the day goes on — in the morning it's barely noticeable.","vision|double":"I see double sometimes, especially when I'm tired or at the end of the day. It clears if I close my eyes.","speak|voice|talk":"My voice gets quieter and a bit nasal after I've been talking for a while. If I rest it comes back.","chew|eat|jaw":"Eating a full meal is tiring. By halfway through I have to stop and rest before continuing.","when|start":"About eight months ago. Slowly getting worse.","rest|better":"Resting completely relieves it. That's the strange part — twenty minutes of rest and I'm almost normal."}
+},
+"Addison's Disease":{
+  symptoms:["Patient presents with six months of profound fatigue unresponsive to rest.","Orthostatic hypotension: BP 118/74 supine, 82/50 standing. Syncopal episodes on standing.","Hyperpigmentation of buccal mucosa, palmar creases, and an old surgical scar — locations not explained by sun exposure.","Electrolytes: sodium 129 mEq/L, potassium 5.6 mEq/L. Consistent pattern over three draws.","ACTH: 890 pg/mL (ref 10–60). Cortisol: 3.2 μg/dL at 8am. High drive, low response.","Cosyntropin stimulation test: peak cortisol 4.1 μg/dL. Adrenal insufficiency confirmed."],
+  patientAnswers:{"tired|fatigue|energy":"I'm exhausted constantly. I sleep eight hours and wake up just as tired. This has been going on for months.","stand|dizzy|faint":"When I stand up, everything goes black briefly. I've fainted twice. Have to get up slowly.","skin|dark|tan":"I've noticed my gums look darker, and a scar on my arm turned dark. I'm not in the sun more than usual.","salt|crave":"I add salt to everything. I crave it. I've never been like this.","stomach|nausea":"Some nausea, especially in the morning. I've lost about 5 kg without trying.","stress|worse":"When I got sick with a cold last month everything got dramatically worse."}
+},
+"Cushing's Syndrome":{
+  symptoms:["Weight gain over 18 months, concentrated in the abdomen, face, and posterior neck.","Wide, purple-red striae on abdomen, >1 cm. Skin bruises after minimal contact.","Hypertension 158/96 and glucose 148 mg/dL on routine screening.","Muscle weakness: difficulty rising from a chair without arm assistance despite no musculoskeletal complaint.","24-hour urine free cortisol: 420 μg/day (reference <50). Repeated twice with same result.","MRI pituitary: 5mm hypodense focus in right hemipituitary. Microadenoma."],
+  patientAnswers:{"weight|gain|fat":"I've put on a lot of weight but it's all in my belly and my face. My arms and legs are actually thinner.","stretch|mark|skin":"I have these purple marks on my stomach — they're wide and deep, not like ordinary stretch marks.","bruise":"I bruise so easily now. Even just bumping lightly into a counter leaves a bruise for weeks.","weak|muscle":"I can't get up from a low chair without pushing off with my arms. My legs just don't have the strength.","face|round":"People keep saying my face looks fuller. It does — I can see it in photos.","medication|steroid":"No, I'm not on any steroids or any regular medications."}
+},
+"Pulmonary Embolism":{
+  symptoms:["Acute dyspnea onset four hours ago. Patient was packing luggage after a 16-hour flight.","Pleuritic chest pain: sharp, left-sided, worse on deep inspiration and coughing.","Left calf: warm, swollen, tender on palpation. 3cm circumference differential versus right.","SpO2: 87% on room air; improves to 94% on 4L nasal cannula. HR: 118 bpm.","D-dimer: 6.4 μg/mL FEU (reference <0.5). Well's score: 7 — high probability.","CT pulmonary angiogram: bilateral pulmonary artery filling defects. Right heart strain on imaging."],
+  patientAnswers:{"breathe|breath|short":"It started very suddenly — I was just standing up and couldn't catch my breath. It's still bad.","pain|chest":"Sharp pain on the left, only when I breathe in or cough. Otherwise I can tolerate it.","leg|calf":"My left leg has been swollen and tender for about three days. I thought I'd just pulled a muscle.","flight|travel":"I just flew from Japan — 16 hours, tight seat. I barely moved.","heart|fast":"My heart is racing. I can feel it.","blood|clot":"I've never had a clot before. No family history I know of."}
+},
+"Bacterial Meningitis":{
+  symptoms:["Sudden high fever: 39.8°C. Onset within the last eight hours.","Worst headache of patient's life — described as a crushing band around the skull.","Neck: cannot flex past 15 degrees. Nuchal rigidity severe. Kernig's sign positive.","Photophobia and phonophobia: overhead light intolerable. Requested room darkening on arrival.","Non-blanching petechial rash on torso and upper extremities. Rapidly spreading.","Lumbar puncture: WBC 2,400 cells/μL (neutrophilic), glucose 18 mg/dL, protein 320 mg/dL, turbid appearance."],
+  patientAnswers:{"head|headache":"Worst headache of my life. It came on very fast, within a few hours. Nothing touches it.","neck|stiff":"I can barely move my neck. Trying to look down is agony.","fever":"Yes, I feel burning up. My temperature was 40 when the paramedics checked.","light|bright":"Can you turn that light off? It's unbearable.","rash":"I noticed small red spots spreading on my chest and arms about an hour ago.","feel|sick":"I feel like I'm going to die. I know that sounds dramatic but I genuinely feel that bad."}
+},
+"Aortic Dissection":{
+  symptoms:["Acute onset chest pain described as 'tearing' or 'ripping,' instantaneous in onset.","Pain radiates directly to the interscapular back. Patient cannot find a position that relieves it.","Blood pressure: right arm 192/108, left arm 146/82. 46 mmHg systolic differential.","History: hypertension on three agents, poorly controlled. Tall stature, arm span > height.","Chest X-ray: mediastinal width 9.5 cm. Loss of normal aortic contour.","CT angiogram: intimal flap in ascending aorta extending to arch. Stanford Type A dissection."],
+  patientAnswers:{"pain|chest":"It's not like any pain I've had. It started all at once, like something ripped. It goes straight through to my back.","back|between shoulder":"Yes, the worst of it is right between my shoulder blades.","blood pressure|hypertension":"I have high blood pressure. I take three medications but I haven't been checking it regularly.","tall|height":"I'm 6'4\". People always say I'm very tall.","start|sudden":"It was absolutely instantaneous. One second fine, next second this.","history|previous":"I've had chest pain before but nothing remotely like this."}
+},
+"Celiac Disease":{
+  symptoms:["Chronic diarrhea for seven years. Multiple prior GI evaluations, all unremarkable.","Iron-deficiency anemia despite dietary iron supplementation and adequate intake.","Abdominal bloating, cramping, and loose stools consistently worse 1–2 hours after wheat-containing meals.","Intensely pruritic vesicular rash on bilateral elbows and knees: dermatitis herpetiformis morphology.","Anti-tissue transglutaminase IgA: 94 U/mL (reference <4). Total IgA: normal.","Duodenal biopsy: Marsh III lesion — complete villous atrophy, crypt hyperplasia, intraepithelial lymphocytosis."],
+  patientAnswers:{"diarrhea|stool|bowel":"It's been going on for years. Loose stools almost every day. Always worse after certain meals.","wheat|bread|pasta|gluten":"Definitely worse after bread, pasta, or anything with flour. Better when I skip it but I assumed it was coincidence.","rash|itch|skin":"Terrible itching on my elbows and knees. Little blisters that burst. It's been there for two years.","iron|anemia|tired":"I've been told I'm anemic repeatedly. I take iron supplements but my levels never stay up.","stomach|bloating":"Very bloated after meals. I can look pregnant after a big meal with bread.","family|history":"My aunt has 'IBS.' Never formally diagnosed with anything though."}
+},
+"Pheochromocytoma":{
+  symptoms:["Episodic attacks: pounding headache, profuse sweating, and palpitations lasting 20–40 minutes.","Blood pressure during attack (measured in ED): 228/130 mmHg. Normal between episodes.","Sense of impending doom accompanies each episode. Patient has attended ED four times thinking they're dying.","Exam: abdominal palpation over right flank provokes flushing and BP spike to 210/120 in real time.","Plasma metanephrines: normetanephrine 4.2 nmol/L (reference <0.9). Catecholamine excess confirmed.","CT abdomen: 4.3 cm right adrenal mass, heterogeneous with central necrosis. Surgical referral made."],
+  patientAnswers:{"attack|episode|spell":"It comes on suddenly. Pounding headache, heart racing, sweating completely through my clothes. Then it passes.","heart|racing|palpitation":"My heart pounds so hard during these episodes. HR was 148 on one recording.","sweat|perspire":"Drenched. Completely drenched within minutes of an episode starting.","scared|doom|die":"Every time I feel certain I'm dying. That feeling is part of it — not just anxiety.","when|trigger":"They're unpredictable. Though pressing on my abdomen today seemed to trigger one.","pressure|hypertension":"My blood pressure is normal most of the time. That's what confuses everyone."}
+},
+"Acromegaly":{
+  symptoms:["Patient reports needing progressively wider shoes and hats over the past decade.","Facial changes: prognathism, frontal bossing, coarsened features visible in comparison to photographs from ten years prior.","Bilateral carpal tunnel syndrome, diagnosed five years ago. Other diagnoses: sleep apnea, hypertension, type 2 diabetes.","Exam: spade-like hands, macroglossia, widely spaced teeth, skin tags. Colon polyps on screening colonoscopy.","IGF-1: 842 ng/mL (age- and sex-adjusted reference: 100–200 ng/mL). Four-fold elevation.","MRI pituitary: 18mm macroadenoma with suprasellar extension. GH nadir on OGTT: 11.8 ng/mL."],
+  patientAnswers:{"shoe|hat|size":"My shoe size has gone from a 10 to a 13 over the past fifteen years. I thought it was just age.","face|jaw|forehead":"My family says my face has changed. My jaw juts forward and my forehead is more prominent.","hands":"My hands look bigger than they used to. My wedding ring needed to be resized twice.","sleep|snore":"I snore terribly and I've been told I stop breathing in my sleep.","diabetes|sugar":"I was diagnosed with type 2 diabetes three years ago, which surprised me because I watch my diet.","vision":"Sometimes blurry at the periphery. My optician keeps updating my prescription."}
+},
+"Diabetic Ketoacidosis":{
+  symptoms:["Type 1 diabetic, known. Missed last five days of insulin doses due to cost and pharmacy access.","Nausea, vomiting, and crampy diffuse abdominal pain for 24 hours. Unable to keep fluids down.","Rapid deep breathing — Kussmaul respirations — noted immediately on nursing assessment.","Sweet, fruity odor on breath identified by nursing staff before entering room.","Fingerstick glucose: 'HI' (>500 mg/dL). Serum glucose 518 mg/dL confirmed.",
+  "ABG: pH 7.11, pCO2 18, pO2 98. Bicarb: 7 mEq/L. Anion gap: 32. Urine ketones: 4+."],
+  patientAnswers:{"insulin|medication":"I ran out five days ago. I couldn't afford the refill and the pharmacy was closed over the weekend.","sick|nausea|vomit":"Been sick to my stomach since yesterday. Can't keep anything down, even water.","breathe|breathing":"I know I'm breathing fast but I can't slow it down. It feels like I have to breathe.","smell|breath":"I've heard fruity breath is bad. Is that what this is?","pain|stomach":"My whole stomach hurts. Cramps all over. Not in one spot.","glucose|sugar":"My meter just said 'HI.' That's the highest it goes."}
+},
+"Fatal Familial Insomnia":{
+  symptoms:["Patient presents with insomnia of four months' duration. No sleep initiation or maintenance.","Autonomic instability: diaphoresis, hypertension, and tachycardia without cause.","Progressive ataxia and myoclonus over the past six weeks.","Complex visual hallucinations occurring at night, indistinguishable from reality during episodes.","EEG: progressive disintegration of sleep architecture. No sleep spindles. No slow-wave sleep.","Father deceased 21 years ago with an identical progressive syndrome: insomnia, dementia, death."],
+  patientAnswers:{"sleep|insomnia":"I cannot sleep. I close my eyes and nothing happens. No pills work — not melatonin, not prescription hypnotics. Nothing.","dream|hallucination":"I see things at night that feel completely real. People, places. I know they're not there but they feel real.","father|family|parent":"My father died in his forties of something similar — they said progressive insomnia and dementia. No diagnosis.","sweat|heart|autonomic":"I sweat constantly and my heart races without exertion. Uncontrollable.","walk|balance|move":"My balance has been getting worse. I've been falling more. My movements feel jerky.","when|how long":"Sleep started failing four months ago. The other symptoms followed after."}
+},
+"Locked-In Syndrome":{
+  symptoms:["Patient presents following sudden loss of consciousness. Recovered awareness but cannot move or speak.","Neurological exam: complete absence of voluntary movement in all extremities and face.","Eyes: horizontal gaze absent. Vertical gaze intact. Patient blinks twice for 'yes.'","EEG: normal alpha rhythm, fully awake. Cortex is functioning normally.","MRI: acute infarct in bilateral ventral pons. Basilar artery territory. Tegmentum spared.","Communication protocol established: one blink = no, two blinks = yes. Patient confirms full sensory awareness."],
+  patientAnswers:{"hear|aware|conscious":"[via blinks] Patient blinks twice: YES.","pain|feel":"[via blinks] Patient blinks twice: YES. Sensation appears intact.","understand":"[via blinks] Patient blinks twice: YES. Comprehension fully preserved.","move|limb|arm":"[via blinks] Patient blinks once: NO. No voluntary movement possible below the midbrain.","eyes|see":"Vertical gaze intact. Patient tracks examiner with eye contact. Horizontal gaze absent.","scared|frightened":"[via blinks] Patient blinks twice: YES."}
+},
+"Lesch-Nyhan Syndrome":{
+  symptoms:["Male infant, 18 months: developmental regression, hypotonia, and choreoathetosis since six months.","Self-biting of lips and fingers — tissue destruction observed. Parents restrain hands continuously.","Orange crystalline deposits in diapers since age 8 months ('orange sand').","Serum uric acid: 11.8 mg/dL. Severe hyperuricemia in a toddler.","HPRT1 enzyme activity (erythrocytes): undetectable. Purine salvage pathway absent.","HPRT1 gene sequencing: hemizygous pathogenic frameshift mutation. X-linked recessive."],
+  patientAnswers:{"bite|hurt|self":"[via parents] He bites himself — his lips, his fingers. He cries while he's doing it. He doesn't want to. We have to restrain him.","orange|crystal|diaper":"Orange sandy deposits in the diapers since he was eight months old. No one knew what it was.","move|shake|movement":"He has writhing movements in his arms and legs that he can't control. He can't sit up reliably.","develop|talk|walk":"He was normal until about six months. Then he started falling behind developmentally.","family|genetic":"No family history on the mother's side. No brothers with similar issues.","pain":"He seems to feel pain normally — he cries when the biting happens."}
+},
+"Urbach-Wiethe Disease":{
+  symptoms:["Patient, 34, has never experienced fear. No fear of heights, no fear of threats. Confirmed throughout life.","Hoarse voice since childhood. Dermatological findings: waxy papules on face and eyelids.","Laryngoscopy: yellowish plaques throughout the larynx and vocal cords.","CT head: bilateral amygdala calcification — symmetric, dense, confirmed on multiple imaging studies.","Standardized fear testing: no galvanic skin response to threat stimuli. No fear behavioral response.","ECM1 gene: homozygous pathogenic mutation. Autosomal recessive lipoid proteinosis confirmed."],
+  patientAnswers:{"fear|scared|afraid":"I've never been afraid. Not of anything. Heights, dangerous situations, threats — nothing triggers it.","voice|hoarse":"My voice has always been like this. Hoarse, raspy. Since I was a child.","skin|rash|papule":"I have these small waxy bumps on my face and eyelids. People notice them.","family|parent":"My parents are both from the same small village. My sister has a milder form of the same condition.","when|always":"As long as I can remember. I've never been afraid. I know other people are, but I've never felt it.","danger|threat":"I know cognitively when something is dangerous. I understand risk. I just don't feel fear about it."}
+},
+"Tree Man Syndrome":{
+  symptoms:["Patient presents with massive wart-like growths covering both hands and feet, resembling bark.","Lesions first appeared at age 14. Progressive expansion over 20 years despite multiple treatments.","Standard HPV wart treatments (salicylic acid, cryotherapy, CO2 laser): all ineffective long-term.","Immune testing: selective cell-mediated immune deficit specifically to HPV 5 and HPV 8 strains.","Skin biopsy: HPV 5 DNA in situ hybridization positive. Massive epidermal hyperplasia.","EVER2 (TMC8) gene: homozygous frameshift mutation. Autosomal recessive epidermodysplasia verruciformis."],
+  patientAnswers:{"hands|feet|growth":"It started as warts when I was a teenager. Now they cover my hands and feet completely. I can barely use them.","treatment|tried":"Everything. We've removed them surgically, burned them off, tried every medication. They grow back within months.","infection|HPV":"The doctors say it's a type of HPV, but one that most people's immune systems control without any problem.","family|relative":"Yes. My sibling has a similar but less severe condition.","when|start":"Fourteen years old. Small warts initially. No one was worried.","pain":"They're uncomfortable and limit my function severely. Not painful exactly, but they've ruined my hands."}
+},
+"Persistent Genital Arousal Disorder":{
+  symptoms:["Female patient, 38: constant unwanted physical arousal for 14 months. Not associated with desire.","Arousal not relieved by orgasm. Resolves transiently then returns within minutes.","Sitting worsens symptoms significantly. Standing and movement provide partial relief.","Patient has ceased working and left her relationship. Profound psychosocial disability.","MRI lumbosacral spine: Tarlov cysts at S2–S3. Sacral nerve root compression bilaterally.","Pudendal nerve motor latency: prolonged bilaterally. Pelvic floor: levator ani hypertonia."],
+  patientAnswers:{"arousal|sensation":"It's constant. Not pleasurable — it's intrusive and distressing. It has nothing to do with how I feel emotionally.","orgasm|relieve":"Orgasm helps for minutes. Then it comes back completely. I've tried everything to stop it.","sit|position":"Sitting is much worse. I have to stand or move around. Even wearing tight clothing aggravates it.","desire|want":"No. I have no desire. This has nothing to do with desire. It's a physical sensation entirely disconnected from my mind.","relationship|work":"I had to stop working. My relationship ended. This has taken everything.","when|start":"Fourteen months ago. There was no specific trigger I can identify."}
+},
+"Stendhal Syndrome":{
+  symptoms:["Tourist from Milan, no psychiatric history, found collapsed in the Uffizi Gallery by security staff.","Reports dizziness, tachycardia, and dissociation while standing before Botticelli's 'La Primavera.'","Visual and auditory hallucinations of figures moving within the painting lasted approximately 3 minutes.","No substance use. Temperature and hydration: normal. Blood glucose: normal.","Neurological exam: entirely normal. Psychiatric assessment: no baseline disorder.","Symptoms resolved completely within six hours. Patient deeply distressed but able to give full, coherent history."],
+  patientAnswers:{"painting|art|gallery":"I was in the Uffizi for four hours. So much beauty. When I stopped at the Botticelli it was like… I lost myself.","feel|dizzy":"Everything started spinning. My heart was racing. I felt like I was dissolving into the painting.","hallucination|see":"I saw the figures moving. I know they were painted. I watched them move.","italy|florence":"It's my first time in Florence. I've read about it my whole life. I suppose I wasn't prepared.","history|psychiatric":"Never. No panic attacks, nothing. I've always been emotionally stable.","recover|better":"Yes, I'm fine now. Just embarrassed. And a little shaken."}
+},
+"Koro":{
+  symptoms:["Male patient, 32, presents to ED holding his genitalia and refusing to release them.","States genitalia are retracting into the body and that death will result when retraction is complete.","Patient is from a coastal region of Sulawesi. Three other similar cases presented to the same ED today.","Belief is unshakeable. Anxiety is extreme. Physical exam: genitalia entirely normal.","No history of psychosis, schizophrenia, or delusional disorder.","Symptoms resolve after 6 hours of anxiolytics, reassurance, and physical demonstration of normal anatomy."],
+  patientAnswers:{"feel|retract":"I can feel it shrinking. Going inside. I'm holding it to stop it.","die|death":"When it goes inside completely, I will die. This is known. It has happened to others.","afraid|scared":"Yes. I am terrified. Please help me.","community|others":"Three other men from my village have the same thing today. We are all here.","history|before":"Never before. This started four hours ago.","belief|know":"I know you are telling me I'm wrong. I see the anatomy. But I can feel it happening."}
+},
+"Jerusalem Syndrome":{
+  symptoms:["Tourist, 41, previously healthy, admitted after being found preaching in white hotel bedsheets at the Western Wall.","No prior psychiatric diagnosis. International visitor, devout but not extreme in religious practice at home.","Patient believes they have been personally chosen to announce an imminent divine event.","Onset on day three of visiting Jerusalem — after visiting the Church of the Holy Sepulchre.","Symptoms resolve completely within seven days of removal from Jerusalem and supportive care.","No organic cause identified. No toxicology. No structural lesion. The location was the variable."],
+  patientAnswers:{"feel|mission":"I know how it sounds. But I was chosen. I received a message. I am certain of it.","jerusalem|city":"This city is different from anywhere I've been. Walking here I could feel the weight of everything.","history|before":"No. Never any psychiatric problems. I'm a teacher. I have a family. This has never happened.","religion|faith":"I'm devout, but not extreme. At home I attend services. I don't usually preach.","better|recover":"[After three days] I feel... clearer. I don't understand what happened. I was so certain.","family":"My family is very worried. They've flown out."}
+},
+"Reduplicative Paramnesia":{
+  symptoms:["Patient, 67, recovering from right MCA territory stroke, maintains the hospital is not the real hospital.","Specific belief: 'This is a copy of the real hospital. The real one is somewhere else in the city.'","Patient navigates the ward normally, recognizes staff by face, and complies with treatment.","Confronting the belief with physical evidence: patient accepts the evidence but maintains the delusion.","MRI: right frontal and right parietal cortical infarcts. Prior left parietal lacune on old imaging.","Delusion is encapsulated — does not extend to persons or events, only to this specific location."],
+  patientAnswers:{"hospital|location":"This isn't the real hospital. It's a copy. I'm certain. The real one is across the city somewhere.","recognize|know|staff":"Yes, I know the nurses. I know it looks the same. But it is a copy. I don't know how to explain it.","why|how":"I don't know why or how. I just know. Something feels wrong about this place even though it looks right.","family|visitor":"When my daughter visited I was glad to see her. But I wondered if she had come to the right copy.","stroke|brain":"I had a stroke. I know that. But this feeling about the hospital started after.","confused":"I'm not confused. I'm thinking very clearly. This place is a duplicate."}
+},
+"Uncombable Hair Syndrome":{
+  symptoms:["Child, age 3: hair is silver-blonde, stands away from scalp in all directions. Has been this way since age 18 months.","Multiple attempts with every commercial hair product: no effect. Hair returns to standing position within minutes.","Parents describe the texture as 'spun glass' — shiny, dry, and rigid.","Electron microscopy of hair shaft: triangular cross-section with longitudinal groove instead of round.","Genetic panel: biallelic PADI3 missense mutations. Autosomal recessive.","No systemic involvement. Development, cognition, and health entirely normal."],
+  patientAnswers:{"hair|comb":"[via parents] We can't comb it. No matter what we do — water, conditioner, anything — it just springs back out in every direction.","start|when":"It started around 18 months when the real hair came in. Before that it was normal baby hair.","products|try":"We've tried every product the internet recommends. Oils, serums, specialized brushes. Nothing keeps it down.","health|development":"He's completely healthy. Normal in every way except for the hair.","family|relatives":"Nobody else in either family has this.","painful":"Not painful at all. He doesn't seem bothered by it — we're the ones who notice."}
+},
+"Hemochromatosis":{
+  symptoms:["Fatigue and arthralgias for three years. Attributed to 'getting older' and prior workups unremarkable.","Bronze discoloration of skin, most prominent on sun-exposed areas and pressure points.","LFTs: ALT 68, AST 54. Ferritin: 2,812 ng/mL (normal <300). Transferrin saturation: 72%.","New-onset diabetes in a 47-year-old with no family history of type 2 diabetes.","Holter monitor: frequent PVCs. Cardiac MRI T2*: myocardial iron deposition confirmed.","HFE gene: C282Y homozygous mutation. Hereditary hemochromatosis confirmed."],
+  patientAnswers:{"tired|fatigue":"Yes, deeply tired for three years. Sleep doesn't fix it.","skin|bronze|tan":"People ask if I've been on holiday. I haven't. It's been getting darker gradually over years.","joint|pain|ache":"My knuckles and wrists hurt. The second and third metacarpophalangeal joints especially.","diabetes":"Diagnosed three months ago. No family history. I was surprised.","heart":"I've had some palpitations. My cardiologist found irregular beats.","drink|alcohol":"Social drinking only. My liver tests have been slightly off for a few years."}
+},
+"Lyme Disease":{
+  symptoms:["Patient presents three weeks after a camping trip in the Connecticut woods. Noted a tick but didn't remove it immediately.","Expanding rash at the bite site: circular, 12 cm diameter, central clearing. Erythema migrans morphology.","One week post-rash: flu-like illness — fever 38.6, myalgias, severe headache. Self-resolved.","New rash this week on right thigh, no tick exposure there. Right knee arthritis: warm, effused, painful.","Left facial nerve palsy this week: inability to wrinkle forehead, close eye, or smile on left.","Lyme ELISA: positive. IgG Western blot: 5/10 bands positive. Disseminated Lyme disease."],
+  patientAnswers:{"tick|bite":"I noticed a tick behind my knee three weeks ago, camping. I didn't remove it for maybe 36 hours.","rash|ring":"There was a circular red rash where the tick was. It spread outward like a bull's-eye and then faded.","flu|fever":"About a week after the rash I felt terrible — fever, muscle aches, splitting headache. Lasted five days.","knee|joint":"My right knee is very swollen and painful this week. I can barely bend it.","face|palsy":"This started two days ago. I can't close my left eye properly and my face droops on that side.","outside|travel":"I camp often in Connecticut and Vermont. Wooded trails."}
+},
+"Narcolepsy with Cataplexy":{
+  symptoms:["Patient falls asleep involuntarily — during meals, conversations, and once stopped at a red light.","Sudden muscle weakness triggered exclusively by strong emotions: laughter causes leg buckling and head drop.","Sleep paralysis: fully conscious but unable to move for 1–3 minutes on waking, with visual hallucinations.","Nocturnal sleep: fragmented and unrefreshing despite total sleep time of 8–9 hours.","MSLT: mean sleep onset latency 3.8 minutes. Sleep-onset REM in 4 of 5 naps.","CSF hypocretin-1: 45 pg/mL. Reference range >200 pg/mL. Values <110 diagnostic of narcolepsy type 1."],
+  patientAnswers:{"sleep|fall asleep":"I fall asleep without warning. Mid-sentence sometimes. I've had to stop driving.","laugh|joke|emotion":"When I laugh hard my legs give out. Or my jaw drops. It lasts seconds. I don't lose consciousness.","wake|paralysis":"I wake up and I can't move. Completely paralyzed for maybe a minute. Sometimes I see things that aren't there.","night|sleep at night":"I sleep 8–9 hours but never feel rested. I wake up multiple times.","when|start":"Since my early twenties. It's gotten worse gradually. Took twelve years to get a diagnosis.","dangerous":"I stopped driving. I've fallen in public during a cataplexy episode. It's incredibly disruptive."}
+},
+"Sarcoidosis":{
+  symptoms:["Dry cough and exertional dyspnea for five months. Non-smoker, healthy baseline.","Chest X-ray: bilateral hilar lymphadenopathy — found incidentally on routine imaging.","Skin: indurated violaceous plaques on the nose and upper cheeks — lupus pernio morphology.","Slit-lamp: bilateral anterior uveitis. Unexplained eye inflammation in context of pulmonary findings.","Serum ACE: 142 U/L (normal <40). Calcium: 11.4 mg/dL. Vitamin D 1,25-OH: elevated.","Transbronchial biopsy: non-caseating epithelioid granulomas. AFB and fungal stains: negative."],
+  patientAnswers:{"cough|breathe":"A dry cough that won't go away. I get short of breath walking upstairs — that's new.","skin|nose|rash":"I have these raised, firm purplish patches on my nose and cheeks. They've been there four months.","eyes|vision":"My eyes have been inflamed and red. I saw an ophthalmologist and was told it was uveitis, but no explanation for it.","family|history":"No relevant family history.","fever|weight":"I've lost about 4 kg in five months. Some night sweats, but no significant fever.","medication":"I'm on no regular medications. I thought it might be an allergy."}
 }
 };
 
@@ -1687,6 +2407,48 @@ const WRONG_FALLBACK = [
   "Wrong again. We're running out of time and you're running out of ideas. Think."
 ];
 
+// Rarity tags for weighted selection
+const RARITY = {
+  // common
+  "Guillain-Barré Syndrome":"common","Myasthenia Gravis":"common","Addison's Disease":"common",
+  "Cushing's Syndrome":"common","Pulmonary Embolism":"common","Bacterial Meningitis":"common",
+  "Aortic Dissection":"common","Celiac Disease":"common","Diabetic Ketoacidosis":"common",
+  "Lyme Disease":"common","Sarcoidosis":"common","Narcolepsy with Cataplexy":"common",
+  // uncommon
+  "Porphyria":"uncommon","Wilson's Disease":"uncommon","Stiff Person Syndrome":"uncommon",
+  "Autoimmune Encephalitis":"uncommon","PANDAS":"uncommon","Pseudobulbar Affect":"uncommon",
+  "Congenital Central Hypoventilation Syndrome":"uncommon","Charles Bonnet Syndrome":"uncommon",
+  "Congenital Insensitivity to Pain":"uncommon","Wernicke-Korsakoff Syndrome":"uncommon",
+  "Pheochromocytoma":"uncommon","Acromegaly":"uncommon","Kleine-Levin Syndrome":"uncommon",
+  "Fibrodysplasia Ossificans Progressiva":"uncommon","Hutchinson-Gilford Progeria":"uncommon",
+  // rare/bizarre
+  "Auto-Brewery Syndrome":"rare","Alien Hand Syndrome":"rare","Aquagenic Urticaria":"rare",
+  "Cotard's Delusion":"rare","Exploding Head Syndrome":"rare","Foreign Accent Syndrome":"rare",
+  "Trimethylaminuria":"rare","Jumping Frenchmen of Maine":"rare","Morgellons Disease":"rare",
+  "Alice in Wonderland Syndrome":"rare","Kuru":"rare","Paris Syndrome":"rare",
+  "Hypertrichosis":"rare","Electromagnetic Hypersensitivity":"rare","Capgras Syndrome":"rare",
+  "Argyria":"rare","Fatal Familial Insomnia":"rare","Locked-In Syndrome":"rare",
+  "Hemochromatosis":"uncommon","Lesch-Nyhan Syndrome":"rare","Urbach-Wiethe Disease":"rare",
+  "Persistent Genital Arousal Disorder":"rare",
+  // bizarre
+  "Tree Man Syndrome":"bizarre","Stendhal Syndrome":"bizarre","Koro":"bizarre",
+  "Jerusalem Syndrome":"bizarre","Reduplicative Paramnesia":"bizarre",
+  "Uncombable Hair Syndrome":"bizarre",
+};
+
+function weightedPickDisease() {
+  const w = houseMode
+    ? {common:5, uncommon:15, rare:40, bizarre:40}
+    : {common:40, uncommon:30, rare:20, bizarre:10};
+  const total = PLAYABLE.reduce((s,d) => s+(w[RARITY[d.name]||'uncommon']||10), 0);
+  let r = Math.random()*total;
+  for (const d of PLAYABLE) {
+    r -= (w[RARITY[d.name]||'uncommon']||10);
+    if (r<=0) return d;
+  }
+  return PLAYABLE[PLAYABLE.length-1];
+}
+
 let houseMode = false; // false = Diagnosis Trainer, true = Dr. House's Office
 
 function toggleMode() {
@@ -1810,7 +2572,7 @@ let G = {
 // INIT & RENDER
 // ══════════════════════════════════════════════
 function initGame() {
-  G.disease = PLAYABLE[Math.floor(Math.random()*PLAYABLE.length)];
+  G.disease = weightedPickDisease();
   G.guesses = []; G.symptomsShown = 1; G.gameOver = false; G.won = false;
   const pi = Math.floor(Math.random()*NAMES.length);
   document.getElementById('pName').textContent = NAMES[pi];
