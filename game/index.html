@@ -188,6 +188,38 @@
     /* Results separator in chat */
     .result-sep { display:block; font-size:.6rem; letter-spacing:.2em; color:var(--text-muted); margin:.4rem 0 .2rem; }
 
+    /* Mode toggle */
+    .mode-switcher { display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:.55rem; }
+    .mode-lbl { font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);transition:color .3s;user-select:none; }
+    .mode-lbl.active { color:var(--green); }
+    .tog-track {
+      position:relative;width:44px;height:22px;
+      background:var(--surface2);border:1px solid var(--border);border-radius:11px;
+      cursor:pointer;transition:background .3s,border-color .3s;
+    }
+    .tog-track.on { background:rgba(16,185,129,.15);border-color:var(--green); }
+    .tog-knob {
+      position:absolute;top:3px;left:3px;width:14px;height:14px;
+      background:var(--text-muted);border-radius:7px;transition:.3s;
+    }
+    .tog-track.on .tog-knob { left:25px;background:var(--green); }
+
+    /* Trainer mode chat messages */
+    .chat-msg.trainer {
+      background:rgba(96,165,250,.05);border:1px solid rgba(96,165,250,.18);color:var(--text);
+    }
+    .chat-msg.trainer::before { content:'CONSULTANT\A';color:var(--blue);font-weight:bold;font-size:.62rem;letter-spacing:.15em;white-space:pre; }
+    .chat-msg.patient {
+      background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.14);color:var(--text-dim);
+    }
+    .chat-msg.patient::before { content:'PATIENT\A';color:#93c5fd;font-weight:bold;font-size:.62rem;letter-spacing:.15em;white-space:pre; }
+    /* Trainer wrong-guess note */
+    .trainer-note {
+      background:rgba(96,165,250,.05);border-left:2px solid var(--blue);border-radius:0 5px 5px 0;
+      padding:.5rem .7rem;font-size:.76rem;color:var(--blue);font-style:italic;
+      animation:fadeIn .3s ease;line-height:1.45;flex-shrink:0;
+    }
+
     @media(max-width:960px){
       html,body{height:auto;overflow:auto;}
       .game-container{grid-template-columns:1fr;height:auto;overflow:visible;}
@@ -205,6 +237,11 @@
     <div class="stat">Solved <span id="statW">0</span></div>
     <div class="stat">Failed <span id="statL">0</span></div>
     <div class="stat">Streak <span id="statS">0</span></div>
+  </div>
+  <div class="mode-switcher">
+    <span class="mode-lbl active" id="lblTrainer">DIAGNOSIS TRAINER</span>
+    <div class="tog-track" id="togTrack" onclick="toggleMode()"><div class="tog-knob"></div></div>
+    <span class="mode-lbl" id="lblHouse">DR. HOUSE'S OFFICE</span>
   </div>
 </header>
 
@@ -237,15 +274,15 @@
   </div>
 
   <div class="panel">
-    <div class="panel-title">🩺 Consult Dr. House</div>
+    <div class="panel-title" id="chatPanelTitle">🏥 Clinical Consultant</div>
     <div class="chat-log" id="chatLog">
-      <div class="chat-msg house">Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.</div>
+      <div class="chat-msg trainer">Ready to assist. Ask the patient questions or order diagnostic tests.</div>
     </div>
     <div class="typing" id="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>
     <div class="chat-input-zone">
-      <div class="chat-hint">Order a test or ask about the patient (Enter to send)</div>
-      <textarea id="testInput" placeholder="e.g. 'Run an MRI' or 'Check for prion disease'..."></textarea>
-      <button class="test-btn" onclick="runTest()">RUN TEST ↵</button>
+      <div class="chat-hint" id="chatHint">Ask patient a question or order a test (Enter to send)</div>
+      <textarea id="testInput" placeholder="e.g. 'Where does it hurt?' or 'Order an MRI'..."></textarea>
+      <button class="test-btn" onclick="runTest()">SEND ↵</button>
     </div>
   </div>
 </div>
@@ -437,7 +474,7 @@ const PLAYABLE = [
   houseComments:[
     "Social withdrawal plus hygiene obsession. Something physical is socially isolating them.",
     "Colleagues complain about an odor the patient can't eliminate. That's metabolic, not hygiene.",
-    "Fishy. Persistent. Showers don't help. FMO3 enzyme. Check it."
+    "Fishy odor that doesn't wash off. That's not hygiene — that's enzyme metabolism. Think inherited."
   ],
   winQuote:"An FMO3 gene mutation prevents breakdown of trimethylamine produced during digestion. The compound accumulates and outgasses through sweat, breath, and urine. Smells like fish. Is not fish. No cure — dietary management only.",
   loseQuote:"Fish odor syndrome. FISH. ODOR. Their body was broadcasting the diagnosis through multiple senses simultaneously and you all somehow missed it.",
@@ -799,7 +836,7 @@ const PLAYABLE = [
     "The patient's body cannot excrete copper. It has accumulated in their liver, brain, and eyes for years."
   ],
   houseComments:[
-    "Liver plus psychiatric in a teenager. Autoimmune hepatitis, Wilson's, or something viral. Check the eyes.",
+    "Liver plus psychiatric in a teenager. Overlap of two systems — think metabolic, toxic, or autoimmune.",
     "Neurological joining liver and psych. That narrows it considerably.",
     "Did someone look at the eyes. Someone needs to look at the eyes."
   ],
@@ -874,7 +911,7 @@ const PLAYABLE = [
   houseComments:[
     "Unusual skin coloration after supplement use. The supplement is almost certainly the cause.",
     "Grey-blue. Symmetrical. Not cyanotic — the saturation is wrong for cyanosis. This is something deposited.",
-    "18 months of colloidal silver. What color do they think silver turns skin. It's not a rhetorical question."
+    "18 months of the same supplement, daily. Research the supplement's long-term dermatological profile."
   ],
   winQuote:"Colloidal silver consumption leads to silver deposition in the dermis. UV exposure causes photoreduction of the silver particles, producing a grey-blue discoloration. It does not wash out. It does not fade significantly. The immune benefits: none documented. The color: permanent. The internet: not a doctor.",
   loseQuote:"The patient was TURNING GREY because they ATE SILVER for 18 MONTHS. Because a WEBSITE said it would make them HEALTHIER. And you needed six guesses.",
@@ -969,7 +1006,7 @@ const PLAYABLE = [
   houseComments:[
     "Memory impaired, patient unaware. Anosognosia for memory. That's a specific pattern.",
     "Confident answers that change. Not lying — confabulating. The brain filling gaps with fiction.",
-    "Alcohol history plus eye movement abnormalities plus confabulation. Classic triad. Classic diagnosis."
+    "Alcohol history plus eye movement abnormalities plus confabulation. Three findings. One biochemical root cause."
   ],
   winQuote:"Thiamine deficiency — typically from chronic alcohol use — damages the mammillary bodies and thalamus. The patient cannot form new memories. The brain, unwilling to report gaps, fills them with invented content delivered with complete conviction. The patient is not lying. They genuinely believe what they're telling you. Every time.",
   loseQuote:"The patient was MAKING UP THEIR ENTIRE HISTORY and BELIEVING IT COMPLETELY. The confabulations were detailed, confident, and completely false. That is a named condition. Named after two people. Both names are in the diagnosis.",
@@ -981,6 +1018,318 @@ const PLAYABLE = [
     "eye":            "Ophthalmological exam: Nystagmus and lateral rectus palsy. Classic ocular findings of Wernicke's encephalopathy."
   }
 }];
+
+// ══════════════════════════════════════════════
+// TRAINER MODE DATA (realistic symptoms + patient Q&A)
+// ══════════════════════════════════════════════
+const TRAINER_DATA = {
+"Auto-Brewery Syndrome":{
+  symptoms:["Chief complaint: episodic dizziness and disorientation with no clear precipitant.","Symptoms consistently worsen after high-carbohydrate meals. Patient reports bloating and abdominal distension.","Blood alcohol concentration 0.08% on routine screening. Patient denies any alcohol use; family corroborates.","BAC monitoring over 24h: 0.0% fasting, 0.11% two hours post-carbohydrate meal. No exogenous source identified.","Comprehensive metabolic and hepatic panels normal. Urinalysis: ethanol metabolites detected.","Stool culture: marked Saccharomyces cerevisiae overgrowth. Endogenous ethanol production by intestinal flora confirmed."],
+  patientAnswers:{"drink|alcohol|sober":"I genuinely don't drink — years sober. My family was there, they'll confirm. I don't understand the test.","eat|food|carb|meal|bread|pasta":"It always gets worse after eating, especially pasta or bread. Even fruit sometimes.","feel|dizzy|off|float|tipsy":"Kind of floaty and off-balance. Like being tipsy, but I haven't had anything.","when|long|start|began":"About six months ago. Comes and goes, usually worst after meals.","family|genetic|relative":"Nobody else in my family has had anything like this.","job|work|occupation":"I'm in finance. I've been making mistakes at work and I can't explain them."}
+},
+"Alien Hand Syndrome":{
+  symptoms:["Patient reports involuntary purposeful movements of the left hand occurring without conscious will.","Hand performs goal-directed actions — grasping objects, undoing buttons — without initiation by patient.","History: corpus callosotomy for refractory epilepsy performed 6 weeks prior.","Neurological exam: intermanual conflict present; left hand actively interferes with right-hand tasks.","MRI: surgical disruption of corpus callosum splenium confirmed. No new lesions.","Dissociation between voluntary motor intent and left-limb action consistent with callosal alien hand phenomenon."],
+  patientAnswers:{"hand|left arm|left hand":"It's my left hand. It does things on its own — grabs things, undoes my shirt buttons — without me deciding to.","control|stop|restrain":"I have to grab it physically with my right hand. Sometimes it pulls back.","feel|sensation|numb":"I can feel everything it does. It's not numb. It just doesn't listen to me.","surgery|brain|epilepsy|operation":"I had brain surgery about six weeks ago for epilepsy. They cut something to stop the seizures. It worked, but now this.","hurt|pain":"No pain. Just frightening and embarrassing.","when|start|begin":"Started right after the surgery."}
+},
+"Aquagenic Urticaria":{
+  symptoms:["Patient presents with urticaria appearing after water contact, irrespective of temperature.","Hives reproducible within 15-30 minutes of contact with tap water, pool water, rainwater, and sweat.","Histamine-mediated mechanism suspected. Serum IgE: elevated. Aquagenic challenge test: positive at 12 minutes.","Skin biopsy during reaction: mast cell degranulation with perivascular infiltrate. Not pressure urticaria.","Reaction occurs with distilled water. Temperature is not the trigger — water itself is.","Aquagenic urticaria confirmed. Daily activities substantially impaired. Bathing requires antihistamine premedication."],
+  patientAnswers:{"shower|water|rain|bathe":"Every time I touch water my skin breaks out in hives — shower, rain, even sweat. Any water.","hurt|burn|itch":"It burns and itches terribly. The hives last about an hour.","temperature|hot|cold":"Doesn't matter if it's hot or cold. It's the water itself.","allergy|cause":"I thought it was something in the tap water, but distilled water does it too.","medication|antihistamine":"Antihistamines help a little if I take them beforehand. Not completely.","when|long|start":"Started about a year and a half ago. Out of nowhere.","family|history":"My mother had mild hives sometimes. Nothing like mine."}
+},
+"Cotard's Delusion":{
+  symptoms:["Patient presents with nihilistic delusions: states they are dead and their organs have decomposed.","Delusion is fixed, systematized, and not responsive to logical rebuttal. Affect is flat.","Patient has refused food and water for 48 hours, stating 'dead things don't need to eat.'","MRI: hypometabolism in prefrontal and parietal cortex on PET correlate. Structural MRI unremarkable.","Psychiatric assessment: full Cotard syndrome — denial of existence, nihilistic delusions, depressive features.","Patient maintains the delusion when confronted with evidence of their vital signs. Politely disagrees."],
+  patientAnswers:{"feel|alive|dead":"I don't feel anything. I'm dead. I know that sounds strange to you.","eat|food|hungry":"Dead things don't eat. There's no point.","hurt|pain":"Dead things don't feel pain. I feel nothing.","sleep|tired":"I don't sleep anymore. Dead things don't sleep.","when|long|start":"I've been this way for a few months. I woke up one morning and I knew.","family|relatives":"They don't accept it. They think I'm still alive, but I know."}
+},
+"Exploding Head Syndrome":{
+  symptoms:["Patient reports episodes of loud explosive noises at sleep onset not heard by bed partner.","Described as 'gunshot,' 'explosion,' or 'electrical surge.' Associated with brief perceived flash in some episodes.","No headache, no pain during or after episodes. Patient wakes in panic but is physically unharmed.","Frequency: 3-4 episodes per week, exclusively at sleep onset. No daytime episodes.","Neurological exam normal. EEG: no epileptiform activity. Brief auditory cortex activation at sleep-wake transition.","Polysomnogram: episodes correlate with hypnagogic state. No seizure activity. Benign phenomenon."],
+  patientAnswers:{"sound|noise|hear|explosion|bang":"It's like a gunshot going off inside my head. Or an explosion. It's terrifying.","pain|hurt|headache":"No pain at all. That's what confuses me. Just the sound, then I'm wide awake.","when|onset|sleep|falling asleep":"Always exactly when I'm falling asleep. Never during the day.","partner|spouse|bed":"My partner sleeps right through it. They hear nothing.","long|start|began":"About eight months. It's getting more frequent.","family|relatives":"My father mentioned something similar once, years ago."}
+},
+"Foreign Accent Syndrome":{
+  symptoms:["Patient presents with altered speech prosody following a neurological event.","Speech is fluent, grammatically intact, and semantically appropriate, but with a markedly altered accent.","Family and patient report accent onset was sudden, correlating with a TIA 6 weeks prior.","Accent is Norwegian in character. Patient is from Ohio; no Scandinavian connections.","MRI: small infarct in left supplementary motor area correlating with prosodic motor control region.","Speech-language evaluation: consistent with Foreign Accent Syndrome secondary to left SMA lesion."],
+  patientAnswers:{"accent|speak|voice|sound":"I know how it sounds. I'm from Ohio. I've never been to Norway. But that's apparently what I sound like now.","when|start":"Right after my mini-stroke, six weeks ago. I woke up and everyone said I sounded different.","feel":"Strange. I can hear myself and it doesn't sound like me, but I can't change it.","hurt|pain":"No pain. Just very disorienting.","family|relatives":"They find it distressing. My kids don't quite know how to handle it.","understand":"People understand me perfectly. They just ask where I'm from."}
+},
+"Trimethylaminuria":{
+  symptoms:["Patient presents with persistent body malodor described by others as 'fishy' despite rigorous hygiene.","Significant social and occupational isolation. Patient has changed jobs twice in two years.","Urine TMA elevated on random sample. TMAO:TMA ratio markedly reduced.","FMO3 enzyme activity: significantly reduced. TMA accumulates due to impaired hepatic N-oxidation.","FMO3 biallelic mutations identified on genetic panel.","Primary trimethylaminuria confirmed. Dietary restriction of choline and TMAO precursors initiated."],
+  patientAnswers:{"smell|odor|fish":"I shower twice a day. It doesn't help. People think I don't bathe, but I'm obsessive about hygiene.","social|friends|relationship":"I've stopped going out. I work from home now. People make comments.","food|eat|diet":"Fish makes it worse. Eggs too. Anything with choline or carnitine.","when|long|start":"My whole life, but it got much worse in my twenties.","family|relative":"My mother has a mild version. My uncle too. We thought it was just how we were.","hurt|pain":"Not physical pain. But this has genuinely ruined my life."}
+},
+"Porphyria":{
+  symptoms:["Patient presents with episodic severe abdominal pain, nausea, and vomiting without surgical cause.","Urine sample turned dark reddish-brown after exposure to sunlight. Patient reports intermittent 'dark urine.'","Neuropsychiatric symptoms: anxiety, confusion, and peripheral neuropathy developing alongside abdominal crises.","Trigger identified: oral contraceptive pill initiated two weeks before first acute episode.","Urine porphobilinogen markedly elevated. ALA elevated. Consistent with acute porphyric crisis.","HMBS gene mutation confirmed. Acute intermittent porphyria established."],
+  patientAnswers:{"pain|stomach|abdomen":"My stomach. Terrible cramps. They come on suddenly. I've been to the ER twice in a month.","urine|pee|dark":"It's dark — almost reddish. I was terrified I was bleeding internally.","pill|contraceptive|birth control":"Got much worse after I started the contraceptive pill two weeks ago.","nervous|anxiety|numb":"My hands and feet go numb sometimes. And I've been anxious, more than ever before.","family|mother|aunt":"My aunt has these stomach attacks too. They've never found out what's wrong with her.","trigger|cause":"The pill started this episode, but I've had mild attacks before."}
+},
+"Jumping Frenchmen of Maine":{
+  symptoms:["Patient presents with an exaggerated startle response dramatically disproportionate to the stimulus.","Startle includes involuntary vocalization, bilateral arm extension, and dropping objects.","Echolalia and echopraxia documented: patient involuntarily repeats words and mimics sudden movements.","Onset in childhood. Father had identical symptoms; never formally diagnosed.","Neurological exam: cognition, strength, and reflexes all normal. Startle circuit alone is pathological.","Startle testing: full-body jerk with vocalization and forced compliance to sudden commands. Hyperekplexia confirmed."],
+  patientAnswers:{"jump|startle|scare":"If someone drops something I'll yell and my arms fly up. Completely involuntary.","control":"I can't control it at all. I've tried. It just happens.","repeat|echo|copy":"Sometimes I'll repeat what someone says out loud. I don't mean to. And if someone suddenly moves, I copy them.","obey|command":"If someone shouts 'clap' suddenly, I clap whether I want to or not.","when|long|always":"My whole life. My father was the same way.","family|father|dad":"My father, yes. And I've heard of other families in the region with the same thing.","embarrass|shame":"People think it's funny. It's humiliating."}
+},
+"Stiff Person Syndrome":{
+  symptoms:["Patient presents with progressive muscle rigidity affecting the trunk and proximal limbs.","Rigidity is continuous, worsens with emotional stress, and is punctuated by sudden painful spasms.","Patient has fallen multiple times; cannot break falls due to trunk immobility.","Anti-GAD65 antibodies: markedly elevated (>2000 IU/mL).","EMG: continuous motor unit activity in axial muscles at rest. Persists with attempted relaxation.","Autoimmune disruption of GABAergic inhibitory interneurons. Stiff Person Syndrome confirmed."],
+  patientAnswers:{"stiff|rigid|tight|back":"My back and stomach muscles are always contracted. Like being wrapped in concrete.","spasm|cramp":"The spasms come on suddenly — triggered by a loud noise or being startled. Incredibly painful.","fall|balance":"I've fallen many times. I can't catch myself because everything seizes up at once.","stress|emotion|scared":"Stress makes it much worse. Even getting startled triggers a spasm.","diabetes|type 1":"Yes, I've had Type 1 diabetes for fifteen years.","long|start|began":"Started gradually about three years ago. Gets progressively worse."}
+},
+"Fibrodysplasia Ossificans Progressiva":{
+  symptoms:["Patient presents with progressive loss of mobility following minor soft-tissue trauma.","Imaging reveals heterotopic ossification at sites of previous injury. New bone forming in muscle planes.","Historical finding: bilateral hallux valgus (great toe malformation) present since birth, now confirmed.","CT: sheets of ectopic bone bridging muscle groups at shoulders and upper trunk.","ACVR1 R206H mutation confirmed on genetic testing.","Fibrodysplasia Ossificans Progressiva confirmed. Connective tissue converting to bone. Irreversible."],
+  patientAnswers:{"hard|bone|lump":"There are hard masses where I had bruises before. My shoulder locked up after I fell and never recovered.","pain|hurt":"The flares are extremely painful. Then it stiffens permanently.","toes|feet":"My big toes have always been crooked inward. Since birth, they told my parents.","when|long|how":"Since childhood. Gets progressively worse after each injury, even minor ones.","move|mobility":"My right shoulder is nearly frozen. My neck is getting limited.","biopsy|surgery":"A biopsy on my back made it much, much worse. I was told never to allow surgery again.","family|genetic":"No one else in my family. My parents don't have it. It was spontaneous."}
+},
+"Morgellons Disease":{
+  symptoms:["Patient presents with sensations of crawling and biting under the skin along with skin lesions.","Multiple excoriations from self-extraction attempts. Patient presents fiber specimens in a sealed container.","Psychiatric evaluation: no thought disorder; reality testing intact in other domains; moderate anxiety.","Lab analysis of presented fibers: cotton, nylon, and polyester consistent with textile fibers.","Dermatological exam: excoriations consistent with chronic picking. No parasitic infestation identified.","Functional somatic disorder with delusional infestation features. Neuropsychiatric referral recommended."],
+  patientAnswers:{"fiber|thread|string":"I have fibers coming out of my skin. I've collected samples. I can show you — they're real.","itch|crawl|bug|bite":"It feels like things crawling and biting under my skin. Constantly.","pick|scratch":"I have to remove them. I know how it looks, but they're real and I have to get them out.","doctor|believe":"Other doctors said it was in my head. It isn't. I'm not delusional.","when|long|start":"About two years ago. Started after a camping trip, possibly a tick bite.","hurt|pain":"The sensations are unbearable. And yes, I've injured myself trying to remove them.","family|others":"No. Just me."}
+},
+"Alice in Wonderland Syndrome":{
+  symptoms:["Patient presents with episodic perceptual distortions affecting body schema and environmental scale.","Reports objects appearing larger (macropsia), smaller (micropsia), or at abnormal distances.","Own body parts perceived as disproportionate during episodes. Insight preserved throughout.","Episodes last 5-20 minutes. No loss of consciousness. Patient fully aware these are distortions.","History of migraines since age 12. Episodes frequently accompanied by or preceded by headache.","EEG: no epileptiform activity. Neuroimaging normal. Migraine-associated perceptual aura confirmed."],
+  patientAnswers:{"see|look|big|small|huge|tiny":"Things look wrong — my hand will suddenly look enormous, or a door will look tiny and very far away.","body|size|limb":"My own arms or hands sometimes look huge or impossibly small. It passes.","scared|frighten":"At first, very. Now I know it passes. I recognize it when it starts.","head|migraine|headache":"I usually get a headache before or after. It's connected somehow, I think.","when|long|how":"Since I was about twelve, when my migraines started. Episodes last around ten to twenty minutes.","family|mother":"My mother gets migraines. I don't know if she has the visual thing."}
+},
+"Kuru":{
+  symptoms:["Patient presents with progressive cerebellar ataxia: tremor, dysmetria, and gait instability.","Dementia progressing over months. Pathological laughter present; episodes disproportionate to affect.","Patient is 58 years old, Fore tribe origin, Eastern Highlands of Papua New Guinea.","MRI: cerebellar and cortical atrophy. PET: widespread hypometabolism.","CSF: elevated 14-3-3 protein. RT-QuIC: positive for prion seeding activity.","Transmissible spongiform encephalopathy consistent with kuru. Incubation period 10-50 years. No treatment."],
+  patientAnswers:{"shake|tremor|balance":"My hands shake badly now. I fall when I try to walk. My legs don't do what I want.","laugh":"People say I laugh at wrong times. I can't always control it.","where|from|origin":"I grew up in the Eastern Highlands of Papua New Guinea, Fore territory.","long|how long|start":"Worsening for about a year. Before that I was well for a very long time.","mind|memory|think":"My thinking. My memory. It is going.","family|village|community":"Many people in my village had this, years ago. My grandmother. It was known.","funeral|ritual|ceremony":"We had our traditions. For the dead. It was the way."}
+},
+"Paris Syndrome":{
+  symptoms:["Patient presents with acute psychosis, depersonalization, and persecutory delusions after recent travel.","Auditory hallucinations and derealization. Patient believes they are under surveillance.","Vital signs: tachycardia, diaphoresis. Severely agitated. Patient is a Japanese tourist.","Language barrier and cultural isolation compounding distress. Recent profound disappointment regarding Paris.","Psychiatric evaluation: acute psychotic break precipitated by cultural shock and fantasy-reality discordance.","Resolved following repatriation to Japan and short-course antipsychotics with support."],
+  patientAnswers:{"paris|france|city":"It was nothing like I imagined. I had dreamed of it for years. I was completely crushed.","watch|follow|spy":"They are watching me. The people on the street. The staff. They know I'm here.","feel|unreal":"I feel like I'm watching myself from outside. Nothing feels real.","sleep":"I haven't slept in three days. I'm afraid to close my eyes.","home|japan":"I want to go home. I need to go home immediately.","language|understand|french":"I don't speak French at all. I couldn't communicate with anyone. I was completely alone."}
+},
+"Autoimmune Encephalitis":{
+  symptoms:["Patient presents with rapidly progressive behavioral changes, new-onset psychosis, and seizures.","Acute onset psychiatric symptoms: paranoia, auditory hallucinations, disorganized thinking.","Autonomic instability: labile heart rate and blood pressure, episodic hyperthermia.","MRI: T2/FLAIR signal abnormality in bilateral medial temporal lobes.","CSF: lymphocytic pleocytosis. Anti-NMDA receptor antibodies positive in serum and CSF.","Ovarian teratoma identified on pelvic imaging. Tumor resection and immunotherapy initiated."],
+  patientAnswers:{"behavior|act|strange":"I've been told I was acting strangely. I don't remember much of the last few weeks.","seizure|fit":"My family says I've had seizures. I don't remember them happening.","memory|remember":"Large parts of the last month are gone. I don't know what happened.","feel|confused":"When I'm myself, I feel like I'm underwater. Very foggy.","ovary|gynecology|cyst":"They found something on my ovary. I just found out.","sleep|insomnia":"My family says I barely sleep. I don't have a memory of it."}
+},
+"Hypertrichosis":{
+  symptoms:["Patient presents with generalized excessive hair growth present since early childhood.","Terminal hair distributed across face including periorbital and forehead regions. Not androgen-sensitive distribution.","Hormone panel: testosterone, DHEA, and androstenedione all within normal reference ranges.","Pedigree review: condition documented in grandfather and two maternal uncles.","Genetic testing: deletion at Xq27.1 consistent with X-linked generalized hypertrichosis.","No systemic comorbidities. Diagnosis: congenital generalized hypertrichosis, X-linked."],
+  patientAnswers:{"hair|grow":"I've had it my whole life. It grows on my face, my forehead, everywhere. I've always looked this way.","family|grandfather|uncle":"My grandfather had it. Two of my uncles. It runs in the family — the men more than the women.","treatment|remove|laser":"I've been shaving since I was eight. Laser hair removal helps temporarily. It grows back.","hormone":"They've checked. Everything is normal. The doctors said it's genetic, not hormonal.","discrimination|stare|bully":"People stare. Children can be cruel. I've dealt with this my whole life."}
+},
+"Hutchinson-Gilford Progeria":{
+  symptoms:["Child age 7 presents with failure to thrive, alopecia, prominent scalp veins, and sclerodermatous skin.","Severe growth retardation. Appearance consistent with premature aging.","Cardiovascular: atherosclerosis on imaging. Carotid intima-media thickness markedly elevated for age.","Facial features: beaked nose, micrognathia, absent eyebrows, high-pitched voice, aged appearance.","LMNA de novo point mutation (c.1824C>T, p.G608G) confirmed.","Hutchinson-Gilford Progeria Syndrome. Mean life expectancy 13 years. Cause of death: cardiovascular disease."],
+  patientAnswers:{"feel|hurt":"I get tired easily when I play. My joints hurt sometimes.","school":"I go to school. The other kids are a lot taller than me.","heart":"The doctors say my heart has to be watched carefully. I have appointments a lot.","play|run":"I can't always keep up with other kids. I get tired.","family|mom|dad":"My mom and dad don't have it. The doctors said it just happened when I was made.","bald|hair":"I don't have much hair. I've never had much."}
+},
+"Electromagnetic Hypersensitivity":{
+  symptoms:["Patient presents with headaches, fatigue, and cutaneous tingling attributed to EMF exposure.","Symptoms reportedly resolve in rural settings without wireless technology. Patient has removed all electronics from home.","Double-blind sham-controlled EMF challenge: patient unable to detect actual versus sham exposure above chance level.","Psychiatric evaluation: significant health anxiety and somatic symptom disorder features identified.","No physiological mechanism identified for EMF sensitivity at non-thermal intensities.","Diagnosis: functional somatic syndrome. Symptoms are genuine; EMF etiology is not supported."],
+  patientAnswers:{"wifi|emf|signal|wireless":"The WiFi signals cause headaches and tingling. When I'm away from it, I feel better.","symptom|feel":"Tingling in my face, headaches, fatigue. It started when we got a smart meter installed.","remove|foil|shield":"I removed all wireless devices from my home. Lined the bedroom with foil.","better|country|rural":"I feel better in the countryside, away from cell towers. Much better.","job|work":"I had to stop working — the office had WiFi everywhere and I couldn't function.","test|doctor":"No doctor has found a physical cause. They don't believe me, but the symptoms are real."}
+},
+"Capgras Syndrome":{
+  symptoms:["Patient presents with fixed belief that close family members have been replaced by identical imposters.","Patient correctly identifies faces visually but denies genuine identity. Recognition intact; emotional resonance absent.","History of right frontoparietal traumatic brain injury 3 months prior.","MRI: right frontoparietal damage with disconnection between fusiform face area and limbic-affective areas.","Psychiatric evaluation: Capgras delusion in isolation. No other psychotic features. No insight into improbability.","Mechanism: disrupted familiarity-affective linkage post-TBI. Face recognized; emotional match absent → impostership concluded."],
+  patientAnswers:{"wife|husband|family|spouse":"That person claims to be my wife. She looks exactly like her. But she's not. Something is wrong.","feel":"I feel fine. It's the people around me who are different.","recognize|know":"I know what my wife looks like. I can describe her perfectly. This isn't her.","accident|injury|brain|crash":"I was in a car accident three months ago. Head injury. I was in hospital.","scared":"Yes — about the imposters. The real ones are somewhere else and nobody will help me find them.","memory":"Some gaps since the accident. But I know the difference between my wife and an imposter."}
+},
+"Kleine-Levin Syndrome":{
+  symptoms:["Patient presents with recurrent episodes of hypersomnia lasting 1-3 weeks, occurring 3-4 times per year.","During episodes: sleeping 16-20 hours per day, hyperphagia, and hypersexual behavior.","Between episodes: completely normal neurological and cognitive function, no residual symptoms.","Episodes have occurred since age 15. Patient is now 21. MRI between episodes: normal.","SPECT during episode: global hypoperfusion, predominantly thalamic and hypothalamic.","Kleine-Levin Syndrome confirmed. No reliably effective treatment. Episodes typically decrease in frequency with age."],
+  patientAnswers:{"sleep|tired|sleepy":"During an episode I sleep 18-20 hours a day. I can barely stay awake.","eat|food|hungry":"I eat constantly during episodes. I can't stop. Things I normally wouldn't touch.","between|normal":"Between episodes I'm completely normal. It's like nothing happened. That's the strangest part.","school|work|miss":"I've missed so much. The episodes come out of nowhere. I can't plan around them.","long|how long|frequency":"Since I was fifteen. Three or four episodes a year. Each one lasts about two weeks.","feel during|episode":"Like being half-asleep even when I'm technically awake. In a thick fog.","family|genetic":"No one else in my family has had this."}
+},
+"Wilson's Disease":{
+  symptoms:["Adolescent presents with abnormal liver function tests found on routine screening.","Psychiatric symptoms developing over 6 months: irritability, emotional lability, personality change.","Neurological findings: resting tremor, dysarthria, deteriorating fine motor coordination.","Slit-lamp examination: Kayser-Fleischer rings visible at corneal periphery bilaterally.","Serum ceruloplasmin: 12 mg/dL (reference 20-40 mg/dL). 24-hour urine copper: 450 μg (reference <100 μg).","ATP7B biallelic mutation confirmed. Copper accumulation in liver, brain, and cornea."],
+  patientAnswers:{"eyes|cornea|ring":"My doctor mentioned something about my eyes during the exam. I didn't see anything myself.","shake|tremor":"My hands shake. Getting worse over the last six months. Writing is difficult now.","mood|personality|anger":"I've been irritable. Angry at things that didn't used to bother me. My parents say I've changed.","liver|hepatic":"I had a liver blood test that came back abnormal. That's what started all of this.","when|long":"The liver test was about a year ago. The shaking started about six months ago.","family|parents":"My parents both had to be tested after my diagnosis. They're both carriers, apparently."}
+},
+"Congenital Central Hypoventilation Syndrome":{
+  symptoms:["Neonate presents after apneic episode during sleep monitored at home. Oxygen saturation dropped to 62%.","Respiratory rate and saturation normal while awake. Apnea occurs exclusively during sleep.","Polysomnogram: central apneas throughout all sleep stages, absent respiratory effort, no arousal response.","ABG during sleep: pH 7.19, pCO2 72 mmHg, pO2 52 mmHg. Hypercapnic ventilatory response absent.","PHOX2B heterozygous polyalanine repeat expansion confirmed (20/26 genotype).","Congenital Central Hypoventilation Syndrome. Nocturnal mechanical ventilation required indefinitely."],
+  patientAnswers:{"breathe|breath|stop":"They stop breathing completely when they sleep. No response to low oxygen at all.","awake|day":"Completely normal while awake. Running, eating, talking. Only sleeping is the problem.","monitor":"We have a pulse oximeter and monitor on them every night. We're terrified to sleep ourselves.","when|notice":"We noticed at about three weeks old. They turned blue during the night.","ventilator|machine":"The hospital put them on a ventilator at night. We had to learn to manage it at home.","cause|why":"Genetic, the doctors said. A mutation that was there from conception."}
+},
+"Charles Bonnet Syndrome":{
+  symptoms:["Elderly patient with documented macular degeneration presents with complex visual hallucinations.","Hallucinations: detailed, colorful, fully formed images of people, animals, and geometric patterns.","Patient fully aware the visions are not real; describes them as 'like watching a silent television.'","Hallucinations occur in visually impaired areas of visual field. No auditory component.","No psychiatric history. No hallucinogenic medications. Cognition intact on MMSE.","Ophthalmological: visual acuity 20/400 bilaterally. Charles Bonnet Syndrome secondary to severe visual loss."],
+  patientAnswers:{"see|vision|hallucination":"I see things — people, mostly. Very vivid, very detailed. But I know they aren't there.","scared|fear":"Not anymore. At first I was terrified. Now I watch them like a silent film.","hear|sound":"I don't hear anything unusual. Just the visions. No voices.","mind|memory|think":"My mind is quite clear, my son says. This is the only unusual thing.","eyes|sight|blind":"My macular degeneration is quite advanced. I've been losing central vision for years.","medication|drugs":"Just my eye drops. Nothing else that could cause this.","family|tell":"I haven't told my family. I was afraid they'd think I was losing my mind."}
+},
+"Argyria":{
+  symptoms:["Patient presents with diffuse grey-blue skin discoloration noticed over 12 months.","Discoloration is symmetric, more pronounced in sun-exposed areas, not pressure-blanching (not cyanosis).","History: daily ingestion of colloidal silver supplement for 20 months for 'immune support.'","Serum silver: 38 μg/L (reference <1 μg/L).","Skin biopsy: silver granules confirmed in dermis by polarized microscopy and electron dispersive spectroscopy.","Argyria confirmed. Dermal silver deposition is permanent. No medically effective treatment."],
+  patientAnswers:{"skin|grey|blue|color":"I noticed it about six months ago — a grayish-blue tinge. It's gotten more noticeable.","supplement|silver|take":"I was taking a daily supplement. A website said it was good for immunity and healing.","permanent":"The doctor told me it won't go away. It's permanent. I'm devastated.","sun|exposed":"It's darker on my face and hands — the parts that get the most sun.","why|cause":"The supplement. That's what I've been taking every day for almost two years.","family":"No, just me. I was the only one in my household taking it."}
+},
+"Congenital Insensitivity to Pain":{
+  symptoms:["Patient presents with extensive dental damage, multiple healed fractures found incidentally on full skeletal survey.","Pain history: patient reports never experiencing pain. Denies any painful sensation throughout their entire life.","Injury review: bite injuries to tongue and cheeks in childhood; corneal scarring from unnoticed abrasions.","Pain testing: no response to pinprick, heat, cold, pressure, or any other painful stimulus at any intensity.","Sweat response intact; temperature sensation preserved. (Distinguishes from HSAN type IV CIPA.)","SCN9A biallelic loss-of-function mutation confirmed. Nav1.7 channel absent. CIP established."],
+  patientAnswers:{"hurt|pain|feel":"I've never felt pain. I know people don't believe it, but I genuinely never have, not once.","injuries|broken|fracture":"I've broken bones. Found out from X-rays. I didn't know it happened.","teeth|mouth":"I bit my tongue badly when I was little. I didn't know I was doing damage. I had to have dental surgery.","hot|cold|temperature":"I can feel temperature — hot and cold. Just not the pain from it.","dangerous|life":"People think it sounds like a gift. It isn't. I've had near-fatal injuries I never noticed.","family|cousin":"My parents were first cousins. My brother has a milder version. It's recessive."}
+},
+"Pseudobulbar Affect":{
+  symptoms:["Patient presents with uncontrollable laughing and crying episodes disproportionate to emotional state.","Episodes are involuntary, sudden, and inconsistent with underlying mood. Patient internally feels calm during attacks.","History of amyotrophic lateral sclerosis, diagnosed 2 years prior.","Patient describes episodes as distressing and socially devastating.","Neurological exam: brisk jaw jerk, exaggerated gag reflex. Pseudobulbar signs present.","PBA secondary to ALS confirmed. Corticobulbar tract degeneration releasing subcortical emotional circuitry."],
+  patientAnswers:{"laugh|cry|emotional":"I'll start laughing at completely wrong times — at a funeral, during serious news. Or sobbing at a commercial.","feel|inside":"Inside I might feel calm or even nothing at all. My face and body just won't cooperate.","embarrass|awkward|social":"Extremely embarrassing. People think I'm mocking them or having a breakdown.","als|motor":"I have ALS. Diagnosed two years ago. The laughing and crying started about a year after that.","long|start":"The emotional episodes started about a year ago.","control|stop":"None. It comes on in seconds. I can't slow it down."}
+},
+"PANDAS":{
+  symptoms:["10-year-old presents with abrupt onset OCD symptoms and motor tics over 48 hours.","No prior psychiatric history. Symptom onset correlates with confirmed streptococcal pharyngitis 16 days prior.","Throat culture: Group A Streptococcus. Anti-streptolysin O titer: 890 IU/mL. Anti-DNase B elevated.","MRI: basal ganglia enlargement on T2 imaging. Neuroinflammation in caudate and putamen.","Anti-basal ganglia antibodies: positive. Antibodies cross-reactive with streptococcal M protein.","PANDAS confirmed. Penicillin and IVIG initiated."],
+  patientAnswers:{"obsess|check|ocd":"I can't stop checking the door. Twenty times before I can sleep. It started two weeks ago, all of a sudden.","strep|throat|sick":"I had strep throat three weeks ago. It went away, then this started.","tic|blink|twitch":"I blink a lot now. And my shoulder does this thing. I can't stop it.","when|sudden|start":"Very sudden. Normal two weeks ago, then the strep, then two weeks later — this.","scared":"Yes. It feels like someone changed my brain while I was sick.","family":"No one in my family has had OCD before."}
+},
+"Wernicke-Korsakoff Syndrome":{
+  symptoms:["Patient presents with the classic triad: confusion, ataxia, and ophthalmoplegia.","Profound anterograde amnesia. Patient unable to form new memories. Retains remote memory.","Confabulation: detailed, internally consistent, but entirely fabricated accounts of recent events. Patient believes them.","History of severe chronic alcohol use disorder with nutritional neglect.","MRI: T2/FLAIR hyperintensity in mammillary bodies, periaqueductal gray, and dorsomedial thalami.","Thiamine level: 15 nmol/L (reference >70 nmol/L). IV thiamine initiated emergently."],
+  patientAnswers:{"memory|remember":"What? I was just at the store. Or was that yesterday? I'm honestly not sure.","drink|alcohol":"I have a few drinks. Sometimes more. It helps with the nerves.","yesterday|today|recently":"[Fabricates:] I went to the park this morning, met a friend for coffee. We talked for hours.","eyes|vision|blurry":"They're a little blurry sometimes. And I fall — my balance isn't great.","eat|food":"I don't eat much. Drinking tends to fill you up.","walk|balance|fall":"I shuffle a bit. I've had a few falls lately."}
+}
+};
+
+// ══════════════════════════════════════════════
+// DISEASE LIST — Non-playable (recognized as valid guesses, never the answer)
+// ══════════════════════════════════════════════
+const KNOWN_NAMES = [
+  // Common/primary care
+  "Diabetes Type 1","Diabetes Type 2","Hypertension","Asthma","COPD","Influenza","COVID-19","Anxiety Disorder",
+  "Major Depressive Disorder","Heart Attack","Myocardial Infarction","Pneumonia","Stroke","Alzheimer's Disease",
+  "Schizophrenia","Bipolar Disorder","Multiple Sclerosis","Parkinson's Disease","Lupus","Rheumatoid Arthritis",
+  "Fibromyalgia","Epilepsy","Celiac Disease","Crohn's Disease","Ulcerative Colitis","Irritable Bowel Syndrome",
+  "GERD","Peptic Ulcer Disease","Endometriosis","PCOS","Hypothyroidism","Hyperthyroidism","Anemia","Gout",
+  "Migraine","OCD","PTSD","ADHD","Autism Spectrum Disorder","HIV/AIDS","Tuberculosis","Malaria","Dengue Fever",
+  "Typhoid Fever","Hepatitis A","Hepatitis B","Hepatitis C","Lyme Disease","Meningitis","Sepsis",
+  "Atrial Fibrillation","Heart Failure","Kidney Failure","Liver Cirrhosis","Osteoporosis","Osteoarthritis",
+  "Scoliosis","Carpal Tunnel Syndrome","Gallstones","Kidney Stones","Urinary Tract Infection","Appendicitis",
+  "Diverticulitis","Pancreatitis","Pneumothorax","Pulmonary Embolism","Deep Vein Thrombosis","Marfan Syndrome",
+  "Ehlers-Danlos Syndrome","Narcolepsy","Sleep Apnea","Restless Leg Syndrome","Tourette Syndrome","Psoriasis",
+  "Eczema","Vitiligo","Alopecia Areata","Rosacea","Melanoma","Leukemia","Lymphoma","Breast Cancer",
+  "Colon Cancer","Lung Cancer","Prostate Cancer","Sarcoidosis","Amyloidosis","Hemophilia","Sickle Cell Disease",
+  "Thalassemia","Polycythemia Vera","Rheumatic Fever","Delusional Disorder","Conversion Disorder",
+  "Somatic Symptom Disorder","Munchausen Syndrome","Trigeminal Neuralgia","Bell's Palsy",
+  "Guillain-Barré Syndrome","Myasthenia Gravis","ALS","Huntington's Disease","Cerebral Palsy","Spina Bifida",
+  "Down Syndrome","Turner Syndrome","Klinefelter Syndrome","Phenylketonuria","Gaucher Disease",
+  "Niemann-Pick Disease","Tay-Sachs Disease","Fabry Disease","Pompe Disease","Cystic Fibrosis",
+  "Achondroplasia","Neurofibromatosis","Tuberous Sclerosis","Von Hippel-Lindau Disease",
+  // Rheumatology & immunology
+  "Ankylosing Spondylitis","Psoriatic Arthritis","Reactive Arthritis","Systemic Sclerosis","Scleroderma",
+  "Sjögren's Syndrome","Mixed Connective Tissue Disease","Antiphospholipid Syndrome","Vasculitis",
+  "Granulomatosis with Polyangiitis","Giant Cell Arteritis","Polymyalgia Rheumatica","Polymyositis",
+  "Dermatomyositis","Inclusion Body Myositis","Behcet's Disease","Familial Mediterranean Fever",
+  "Takayasu Arteritis","IgA Vasculitis","Palindromic Rheumatism","Still's Disease","Juvenile Idiopathic Arthritis",
+  "Pseudogout","Undifferentiated Connective Tissue Disease","Common Variable Immunodeficiency",
+  "Selective IgA Deficiency","X-Linked Agammaglobulinemia","Chronic Granulomatous Disease","Wiskott-Aldrich Syndrome",
+  "Hereditary Angioedema","IgG4-Related Disease","SAPHO Syndrome","Drug-Induced Lupus",
+  // Neurology
+  "Amyotrophic Lateral Sclerosis","Lewy Body Dementia","Frontotemporal Dementia","Progressive Supranuclear Palsy",
+  "Multiple System Atrophy","Corticobasal Syndrome","Primary Lateral Sclerosis","Spinal Muscular Atrophy",
+  "Spinocerebellar Ataxia","Friedreich's Ataxia","Ataxia-Telangiectasia","Charcot-Marie-Tooth Disease",
+  "Hereditary Spastic Paraplegia","Kennedy Disease","Myotonic Dystrophy","Duchenne Muscular Dystrophy",
+  "Facioscapulohumeral Muscular Dystrophy","Lambert-Eaton Myasthenic Syndrome","Neuromyelitis Optica",
+  "Transverse Myelitis","Optic Neuritis","Acute Disseminated Encephalomyelitis","Rasmussen Encephalitis",
+  "Anti-NMDA Receptor Encephalitis","CADASIL","Susac Syndrome","Creutzfeldt-Jakob Disease",
+  "Fatal Familial Insomnia","Trigeminal Neuralgia","Cluster Headache","Chronic Migraine",
+  "Idiopathic Intracranial Hypertension","Normal Pressure Hydrocephalus","Syringomyelia","Chiari Malformation",
+  "Epilepsy","Dravet Syndrome","Lennox-Gastaut Syndrome","Sturge-Weber Syndrome","Moyamoya Disease",
+  "Cerebral Venous Sinus Thrombosis","Subarachnoid Hemorrhage","Cauda Equina Syndrome","Peripheral Neuropathy",
+  "Complex Regional Pain Syndrome","Postural Orthostatic Tachycardia Syndrome","Dysautonomia",
+  "Familial Dysautonomia","Functional Neurological Disorder","Transient Global Amnesia",
+  "Subacute Sclerosing Panencephalitis","Progressive Multifocal Leukoencephalopathy",
+  // Psychiatry
+  "Generalized Anxiety Disorder","Social Anxiety Disorder","Panic Disorder","Agoraphobia",
+  "Specific Phobia","Obsessive-Compulsive Disorder","Body Dysmorphic Disorder","Hoarding Disorder",
+  "Trichotillomania","Anorexia Nervosa","Bulimia Nervosa","Binge Eating Disorder",
+  "Post-Traumatic Stress Disorder","Dissociative Identity Disorder","Depersonalization Disorder",
+  "Seasonal Affective Disorder","Cyclothymic Disorder","Schizoaffective Disorder","Brief Psychotic Disorder",
+  "Delusional Parasitosis","Folie à Deux","Ganser Syndrome",
+  // Endocrinology & metabolic
+  "Acromegaly","Addison's Disease","Cushing's Syndrome","Cushing's Disease","Conn's Syndrome",
+  "Primary Aldosteronism","Pheochromocytoma","Hyperparathyroidism","Hypoparathyroidism","Hypopituitarism",
+  "Diabetes Insipidus","SIADH","Graves' Disease","Hashimoto's Thyroiditis","Thyroid Cancer",
+  "Multiple Endocrine Neoplasia","Carcinoid Syndrome","Zollinger-Ellison Syndrome","Hemochromatosis",
+  "Galactosemia","Phenylketonuria","Maple Syrup Urine Disease","Homocystinuria","Alkaptonuria",
+  "Glycogen Storage Disease","Glycogen Storage Disease Type I","Fabry Disease","Gaucher Disease",
+  "Niemann-Pick Disease","Tay-Sachs Disease","Pompe Disease","Wolman Disease","Mucopolysaccharidosis",
+  "Morquio Syndrome","Sanfilippo Syndrome","Hurler Syndrome","Hunter Syndrome","Scheie Syndrome",
+  "MCAD Deficiency","Hypophosphatasia","Fructose Intolerance","Hereditary Fructose Intolerance",
+  "Hyperammonemia","Familial Hypercholesterolemia","Dyslipidemia",
+  // Cardiology
+  "Atrial Septal Defect","Ventricular Septal Defect","Aortic Stenosis","Aortic Regurgitation",
+  "Mitral Valve Prolapse","Mitral Stenosis","Hypertrophic Cardiomyopathy","Dilated Cardiomyopathy",
+  "Arrhythmogenic Cardiomyopathy","Restrictive Cardiomyopathy","Takotsubo Cardiomyopathy",
+  "Pericarditis","Myocarditis","Myopericarditis","Giant Cell Myocarditis","Infective Endocarditis",
+  "Aortic Aneurysm","Aortic Dissection","Coarctation of the Aorta","Wolff-Parkinson-White Syndrome",
+  "Long QT Syndrome","Brugada Syndrome","Sick Sinus Syndrome","Thromboangiitis Obliterans",
+  "Peripheral Artery Disease","Pulmonary Arterial Hypertension","Cor Pulmonale",
+  "Spontaneous Coronary Artery Dissection","Malignant Hyperthermia",
+  // Pulmonology
+  "Idiopathic Pulmonary Fibrosis","Sarcoidosis","Hypersensitivity Pneumonitis","Eosinophilic Pneumonia",
+  "Cryptogenic Organizing Pneumonia","Bronchiectasis","Primary Ciliary Dyskinesia","Alpha-1 Antitrypsin Deficiency",
+  "Pleurisy","Pleural Effusion","Mesothelioma","Small Cell Lung Cancer","Non-Small Cell Lung Cancer",
+  "Pulmonary Hypertension","Chronic Thromboembolic Pulmonary Hypertension","High-Altitude Pulmonary Edema",
+  // Gastroenterology
+  "Autoimmune Hepatitis","Primary Biliary Cholangitis","Primary Sclerosing Cholangitis",
+  "Hepatocellular Carcinoma","Cholangiocarcinoma","Non-Alcoholic Fatty Liver Disease","Achalasia",
+  "Eosinophilic Esophagitis","Mallory-Weiss Syndrome","Zollinger-Ellison Syndrome","Whipple's Disease",
+  "Microscopic Colitis","Ischemic Colitis","Hepatic Encephalopathy","Portal Hypertension","Hepatitis D",
+  "Hepatitis E","Cyclic Vomiting Syndrome","Dumping Syndrome","Short Bowel Syndrome",
+  // Nephrology
+  "IgA Nephropathy","Focal Segmental Glomerulosclerosis","Membranous Nephropathy","Glomerulonephritis",
+  "Nephrotic Syndrome","Hemolytic Uremic Syndrome","Thrombotic Thrombocytopenic Purpura",
+  "Alport Syndrome","Polycystic Kidney Disease","Chronic Kidney Disease","Gitelman Syndrome",
+  "Bartter Syndrome","Renal Cell Carcinoma","Goodpasture Syndrome","Anti-GBM Disease",
+  // Hematology/oncology
+  "Aplastic Anemia","Iron Deficiency Anemia","Anemia of Chronic Disease","Hemolytic Anemia",
+  "Hereditary Spherocytosis","Immune Thrombocytopenic Purpura","Essential Thrombocythemia","Polycythemia Vera",
+  "Myelodysplastic Syndrome","Myeloproliferative Neoplasm","Acute Lymphoblastic Leukemia",
+  "Acute Myeloid Leukemia","Chronic Lymphocytic Leukemia","Chronic Myeloid Leukemia","Hairy Cell Leukemia",
+  "Hodgkin Lymphoma","Non-Hodgkin Lymphoma","Follicular Lymphoma","Diffuse Large B-Cell Lymphoma",
+  "Burkitt Lymphoma","Waldenstrom Macroglobulinemia","Multiple Myeloma","POEMS Syndrome",
+  "Castleman Disease","Langerhans Cell Histiocytosis","Hemophagocytic Lymphohistiocytosis",
+  "Mast Cell Activation Syndrome","Systemic Mastocytosis","Mycosis Fungoides","Cutaneous T-Cell Lymphoma",
+  "Ovarian Cancer","Cervical Cancer","Endometrial Cancer","Testicular Cancer","Bladder Cancer",
+  "Pancreatic Cancer","Stomach Cancer","Rectal Cancer","Colorectal Cancer","Glioblastoma Multiforme",
+  "Medulloblastoma","Meningioma","Pituitary Adenoma","Neuroendocrine Tumor","Wilms' Tumor",
+  "Neuroblastoma","Synovial Sarcoma","Kaposi Sarcoma","Osteosarcoma","Ewing Sarcoma","Li-Fraumeni Syndrome",
+  // Infectious diseases
+  "Chagas Disease","Leishmaniasis","Toxoplasmosis","Malaria","Onchocerciasis","Filariasis","Schistosomiasis",
+  "Echinococcosis","Brucellosis","Leptospirosis","Bartonellosis","Listeriosis","Legionellosis","Plague",
+  "Bubonic Plague","Cholera","Diphtheria","Pertussis","Tetanus","Typhus","Measles","Rubella","Varicella",
+  "Herpes Zoster","Mumps","Rabies","Ebola Virus Disease","Marburg Virus Disease","Hantavirus Pulmonary Syndrome",
+  "West Nile Virus","Zika Virus Disease","Chikungunya","MERS-CoV","Yellow Fever","Rocky Mountain Spotted Fever",
+  "Colorado Tick Fever","Babesiosis","Histoplasmosis","Coccidioidomycosis","Aspergillosis","Cryptococcosis",
+  "Mucormycosis","Sporotrichosis","Clostridioides Difficile Infection","Neurosyphilis",
+  "Subacute Sclerosing Panencephalitis","Progressive Multifocal Leukoencephalopathy",
+  "Toxoplasmosis","Leprosy","Tuberculosis","Trichomoniasis","Gonorrhea","Scabies","Cutaneous Larva Migrans",
+  // Dermatology
+  "Acne Vulgaris","Hidradenitis Suppurativa","Pemphigus Vulgaris","Pemphigoid","Mucous Membrane Pemphigoid",
+  "Stevens-Johnson Syndrome","Toxic Epidermal Necrolysis","Erythema Multiforme","Erythema Nodosum",
+  "Linear IgA Disease","Pityriasis Rosea","Tinea Versicolor","Ichthyosis","Harlequin Ichthyosis",
+  "Netherton Syndrome","Acanthosis Nigricans","Lipoid Proteinosis","Cutaneous Larva Migrans","Erythromelalgia",
+  // Rare genetic & multi-system
+  "Sudden Unexpected Nocturnal Death Syndrome","Sudden Unexplained Death in Epilepsy","Sudden Infant Death Syndrome",
+  "Adrenoleukodystrophy","Alagille Syndrome","Alexander Disease","Andermann Syndrome","Angelman Syndrome",
+  "Apert Syndrome","Batten Disease","Blue Rubber Bleb Nevus Syndrome","CADASIL","Canavan Disease",
+  "Chédiak-Higashi Syndrome","Chromosome 22q11.2 Deletion Syndrome","DiGeorge Syndrome","Coffin-Lowry Syndrome",
+  "Cowden Syndrome","CREST Syndrome","Dandy-Walker Syndrome","De Lange Syndrome","Dercum's Disease",
+  "Diastrophic Dysplasia","Erdheim-Chester Disease","Familial Adenomatous Polyposis","Fanconi Anemia",
+  "Fuchs Corneal Dystrophy","Gardner Syndrome","Gitelman Syndrome","Gorlin Syndrome",
+  "Hallervorden-Spatz Syndrome","Hay-Wells Syndrome","Hereditary Hemorrhagic Telangiectasia",
+  "Homocystinuria","Hypophosphatasia","Isaacs Syndrome","Joubert Syndrome","Kabuki Syndrome",
+  "Kawasaki Disease","Kearns-Sayre Syndrome","Klippel-Feil Syndrome","Klippel-Trenaunay Syndrome",
+  "Kostmann Syndrome","Leber Congenital Amaurosis","Lesch-Nyhan Syndrome","Lissencephaly",
+  "McCune-Albright Syndrome","Menkes Disease","Miller Fisher Syndrome","Mitochondrial Myopathy",
+  "Moebius Syndrome","Noonan Syndrome","Norrie Disease","Osteogenesis Imperfecta","Pallister-Hall Syndrome",
+  "Pearson Syndrome","Pelizaeus-Merzbacher Disease","Peutz-Jeghers Syndrome","Pierre Robin Sequence",
+  "Pitt-Hopkins Syndrome","Poland Syndrome","Pontocerebellar Hypoplasia","Prader-Willi Syndrome",
+  "Proteus Syndrome","Pseudohypoparathyroidism","Rett Syndrome","Rothmund-Thomson Syndrome",
+  "Russell-Silver Syndrome","Schwartz-Jampel Syndrome","Septo-Optic Dysplasia","SHORT Syndrome",
+  "Shwachman-Diamond Syndrome","Smith-Lemli-Opitz Syndrome","Smith-Magenis Syndrome","Sotos Syndrome",
+  "Stickler Syndrome","Sweet Syndrome","Sydenham Chorea","Treacher Collins Syndrome",
+  "VACTERL Association","Vici Syndrome","Waardenburg Syndrome","Walker-Warburg Syndrome",
+  "Weaver Syndrome","Williams Syndrome","Wolf-Hirschhorn Syndrome","X-Linked Lymphoproliferative Disease",
+  "Yellow Nail Syndrome","Zellweger Spectrum Disorder","Wolfram Syndrome","Bloom Syndrome",
+  "Congenital Disorder of Glycosylation","Congenital Adrenal Hyperplasia","Congenital Muscular Dystrophy",
+  "Androgen Insensitivity Syndrome","Factor V Leiden Thrombophilia","Von Willebrand Disease","Acquired Hemophilia",
+  "Fetal Alcohol Syndrome","Fibrous Dysplasia","Fragile X Syndrome","Tuberous Sclerosis","Neurofibromatosis",
+  "MELAS Syndrome","Myalgic Encephalomyelitis","Long COVID","Chronic Fatigue Syndrome",
+  "Latent Autoimmune Diabetes in Adults","Posterior Cortical Atrophy","Chorea-Acanthocytosis",
+  "Neuroacanthocytosis","Paraneoplastic Syndrome","Superior Mesenteric Artery Syndrome",
+  "Spontaneous Intracranial Hypotension","Orthostatic Hypotension","Reflex Sympathetic Dystrophy",
+  "Decompression Sickness","Rhabdomyolysis","Serotonin Syndrome","Neuroleptic Malignant Syndrome",
+  "Malignant Hyperthermia","Carbon Monoxide Poisoning","Lead Poisoning","Mercury Poisoning",
+  "Arsenic Poisoning","Pellagra","Scurvy","Rickets","Beri-Beri","Wernicke's Encephalopathy",
+  "West Syndrome","Werdnig-Hoffmann Disease","Spinal Cord Injury","Synovial Sarcoma","Ependymoma",
+  "Colloid Cyst","Pineal Gland Tumor","Hypothalamic Hamartoma","Fibrous Dysplasia","Paget's Disease",
+  "Avascular Necrosis","Osteomyelitis","Bone Cancer","Compartment Syndrome","Dupuytren's Contracture",
+  "Trigger Finger","De Quervain's Tenosynovitis","Achalasia","Zenker's Diverticulum",
+  "Mast Cell Activation Syndrome","Hypereosinophilic Syndrome","Idiopathic Hypereosinophilia",
+  "Eosinophilic Granulomatosis with Polyangiitis","Granuloma Annulare","Keratoconus","Uveitis",
+  "Orbital Cellulitis","Corneal Ulcer","Retinitis Pigmentosa","Macular Degeneration","Leber Congenital Amaurosis",
+  "Glaucoma","Ménière's Disease","Tinnitus","Vestibular Neuritis","Benign Paroxysmal Positional Vertigo",
+  "Superior Canal Dehiscence Syndrome","Interstitial Cystitis","Bladder Pain Syndrome","Pelvic Inflammatory Disease",
+  "Endometriosis","Premature Ovarian Insufficiency","Asherman's Syndrome","Varicocele","Peyronie's Disease",
+  "Retroperitoneal Fibrosis","Lymphedema","Lymphangioma","Primary Immunodeficiency","Severe Combined Immunodeficiency",
+  "Hypersomnia","Idiopathic Hypersomnia","Sleep Paralysis","REM Sleep Behavior Disorder","Exploding Head Syndrome"
+];
+
+// Special House quips for specific wrong guesses
+const KNOWN_QUIPS = {
+  "Diabetes Type 1":    "Type 1 diabetes. For this patient. I've seen longer diagnostic leaps. They were all wrong too.",
+  "Diabetes Type 2":    "Metabolic syndrome. While this patient presents with what you just read. Sure.",
+  "Hypertension":       "High blood pressure. The diagnosis that fits everything and explains nothing.",
+  "Asthma":             "Asthma. Look at the symptoms again. Then tell me where you got asthma.",
+  "COPD":               "COPD. The respiratory system is not the problem here. Look elsewhere.",
+  "Influenza":          "Influenza. You think this is the flu. Please re-read everything.",
+  "COVID-19":           "COVID-19. It is not COVID-19. Also, the year is not 2020.",
+  "Anxiety Disorder":   "Anxiety. You've decided the extraordinary is anxiety. At least it's fast to write.",
+  "Major Depressive Disorder": "Depression. Creative. Wrong.",
+  "Heart Attack":       "Myocardial infarction. Is the patient clutching their chest? Look at the chart. Come back.",
+  "Pneumonia":          "Pneumonia. Because whatever is happening here is definitely a lung infection. Obviously.",
+  "Stroke":             "Stroke. Acute onset, yes. Otherwise the presentation doesn't match. Try again.",
+  "Alzheimer's Disease":"Alzheimer's. Not impossible. Also not what this patient has.",
+  "Schizophrenia":      "Schizophrenia. The psychiatric presentation is real. The diagnosis is wrong.",
+  "Bipolar Disorder":   "Bipolar. Not the right diagnosis. The affect is not the primary pathology.",
+  "Multiple Sclerosis": "MS. Demyelinating, possibly. But the presentation doesn't fit. Narrow further.",
+  "Parkinson's Disease":"Parkinson's. The tremors are noted. The rest of the picture doesn't match.",
+  "Lupus":              "Lupus. It's never lupus.",
+  "Fibromyalgia":       "Fibromyalgia. The pain is real. The diagnosis is a placeholder. Keep looking.",
+  "Epilepsy":           "Epilepsy. The neurological component is real. Not the right diagnosis.",
+};
 
 // Non-playable diseases (recognized as guesses but never the answer)
 const KNOWN = [
@@ -1105,9 +1454,16 @@ const KNOWN = [
 ];
 
 // Merged lookup for autocomplete and guess validation
+const _knownFromArray = KNOWN_NAMES
+  .filter(n => !PLAYABLE.some(d => d.name === n))
+  .map(n => ({name:n, playable:false, wrongQuip: KNOWN_QUIPS[n] || null}));
+const _knownFromObj = KNOWN
+  .filter(k => !PLAYABLE.some(d => d.name === k.n) && !KNOWN_NAMES.includes(k.n))
+  .map(k => ({name:k.n, playable:false, wrongQuip:k.q}));
 const ALL_DISEASES = [
   ...PLAYABLE.map(d => ({name:d.name, playable:true, wrongQuip:null})),
-  ...KNOWN.map(d => ({name:d.n, playable:false, wrongQuip:d.q}))
+  ..._knownFromArray,
+  ..._knownFromObj
 ];
 
 // ══════════════════════════════════════════════
@@ -1331,6 +1687,117 @@ const WRONG_FALLBACK = [
   "Wrong again. We're running out of time and you're running out of ideas. Think."
 ];
 
+let houseMode = false; // false = Diagnosis Trainer, true = Dr. House's Office
+
+function toggleMode() {
+  houseMode = !houseMode;
+  document.getElementById('togTrack').classList.toggle('on', houseMode);
+  document.getElementById('lblTrainer').classList.toggle('active', !houseMode);
+  document.getElementById('lblHouse').classList.toggle('active', houseMode);
+  document.getElementById('chatPanelTitle').textContent = houseMode ? '🩺 Consult Dr. House' : '🏥 Clinical Consultant';
+  document.getElementById('chatHint').textContent = houseMode
+    ? 'Order a test or ask about the patient (Enter to send)'
+    : 'Ask the patient a question or order a test (Enter to send)';
+  document.getElementById('testInput').placeholder = houseMode
+    ? "e.g. 'Run an MRI' or 'Check for prion disease'..."
+    : "e.g. 'Where does it hurt?' or 'Order a blood test'...";
+  const log = document.getElementById('chatLog');
+  log.innerHTML = '';
+  if (houseMode) {
+    addHouseMsg("Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.", false);
+  } else {
+    addChatMsg("Ready to assist. Ask the patient questions or order diagnostic tests.", 'trainer');
+  }
+}
+
+const TRAINER_WRONG = [
+  "Incorrect diagnosis. Review the clinical findings and revise your differential.",
+  "Not consistent with the full presentation. Consider which findings this diagnosis cannot explain.",
+  "Identify the single most discriminating finding and reason from there.",
+  "Incorrect. What is the pathophysiology that would need to account for all findings simultaneously?",
+  "Not this time. The symptom constellation points to a specific category — narrow further.",
+  "One attempt remaining. Synthesize all clinical data before committing."
+];
+
+const PATIENT_KW = {
+  pain:    ["hurt","pain","ache","sore","discomfort","tender"],
+  onset:   ["when","how long","start","began","duration","onset","since"],
+  eat:     ["eat","food","diet","meal","drink","appetite","carb","alcohol","beverage"],
+  sleep:   ["sleep","rest","tired","fatigue","insomnia","wake","night"],
+  stress:  ["stress","anxiety","nervous","upset","emotion","trigger"],
+  family:  ["family","parent","relative","genetic","hereditary","sibling","history"],
+  work:    ["work","job","occupation","school","profession"],
+  travel:  ["travel","visit","country","abroad","trip","been to"],
+  meds:    ["medication","medicine","drug","pill","supplement","prescri"],
+  better:  ["better","improve","help","relieve","ease","reduce"],
+  worse:   ["worse","worsen","aggravate","cause","brings on","make it"],
+};
+
+function getPatientAnswer(low) {
+  const td = TRAINER_DATA[G.disease.name];
+  if (!td || !td.patientAnswers) return null;
+  for (const [keys, answer] of Object.entries(td.patientAnswers)) {
+    for (const key of keys.split('|')) {
+      if (low.includes(key.trim())) return answer;
+    }
+  }
+  for (const [cat, kws] of Object.entries(PATIENT_KW)) {
+    for (const kw of kws) {
+      if (low.includes(kw)) {
+        const td2 = TRAINER_DATA[G.disease.name];
+        if (td2 && td2.patientAnswers) {
+          for (const [keys, answer] of Object.entries(td2.patientAnswers)) {
+            if (keys.split('|').some(k => k.trim() === cat || kw.includes(k.trim()))) return answer;
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+
+const TRAINER_PATIENT_GENERIC = [
+  "I'm not sure how to explain that. Could you ask me something more specific?",
+  "Could you rephrase that? Maybe ask about where it hurts, or when it started?",
+  "I don't quite follow the question. What exactly would you like to know about my symptoms?",
+  "I'm just trying to describe what I'm experiencing. What specific aspect are you asking about?"
+];
+
+const TRAINER_NO_RESULT = [
+  "No results on file for that query. Order a specific named test to receive results.",
+  "Clarify what you're looking for. A specific test name will return documented results.",
+  "That query didn't match a test or a patient question I can answer. Try rephrasing.",
+  "Continue building your differential. Order a specific test or ask the patient directly."
+];
+
+function buildTrainerResponse(txt) {
+  const low = txt.toLowerCase();
+  const isQuestion = /^(what|where|when|how|do you|have you|did you|are you|can you|does|why|tell me|describe|explain|is there|any|could you)/i.test(txt.trim()) || txt.includes('?');
+
+  if (isQuestion) {
+    const ans = getPatientAnswer(low);
+    if (ans) return { text: `Patient: "${ans}"`, isPraise: false };
+    return { text: `Patient: "${TRAINER_PATIENT_GENERIC[Math.floor(Math.random()*TRAINER_PATIENT_GENERIC.length)]}"`, isPraise: false };
+  }
+
+  const ans = getPatientAnswer(low);
+  if (ans) return { text: `Patient: "${ans}"`, isPraise: false };
+
+  const result = getTestResult(low);
+  if (result) return { text: `─── Results ───\n${result}`, isPraise: false };
+
+  return { text: TRAINER_NO_RESULT[Math.floor(Math.random()*TRAINER_NO_RESULT.length)], isPraise: false };
+}
+
+function addChatMsg(msg, cls) {
+  const log = document.getElementById('chatLog');
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + cls;
+  el.textContent = msg;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
 let G = {
   disease: null, guesses: [], symptomsShown: 1,
   gameOver: false, won: false,
@@ -1352,8 +1819,13 @@ function initGame() {
   document.getElementById('guessInput').disabled = false;
   document.getElementById('submitBtn').disabled  = false;
   document.getElementById('testInput').value   = '';
-  document.getElementById('chatLog').innerHTML =
-    '<div class="chat-msg house">Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.</div>';
+  const _log = document.getElementById('chatLog');
+  _log.innerHTML = '';
+  if (houseMode) {
+    addChatMsg("Interesting case. Marginally. What test are you thinking? Aim higher than your instincts.", 'house');
+  } else {
+    addChatMsg("Ready to assist. Ask the patient questions or order diagnostic tests.", 'trainer');
+  }
   document.getElementById('overlay').classList.remove('on');
   renderAll();
 }
@@ -1367,10 +1839,12 @@ function renderAll() {
 function renderSymptoms() {
   const list = document.getElementById('symptomsList');
   list.innerHTML = '';
+  const td = TRAINER_DATA[G.disease.name];
+  const symArr = (!houseMode && td && td.symptoms) ? td.symptoms : G.disease.symptoms;
   for (let i = 0; i < G.symptomsShown; i++) {
     const el = document.createElement('div');
     el.className = 'symptom-card' + (i===G.symptomsShown-1 && G.symptomsShown>1?' fresh':'');
-    el.innerHTML = `<div class="obs-label">Observation ${i+1}</div>${G.disease.symptoms[i]}`;
+    el.innerHTML = `<div class="obs-label">Observation ${i+1}</div>${symArr[i] || G.disease.symptoms[i]}`;
     list.appendChild(el);
     if (i===G.symptomsShown-1) setTimeout(()=>el.classList.remove('fresh'),1800);
   }
@@ -1387,8 +1861,8 @@ function renderAttempts() {
     log.appendChild(row);
     if (!g.correct && g.comment) {
       const s = document.createElement('div');
-      s.className = 'house-snark';
-      s.textContent = `"${g.comment}"`;
+      s.className = g.commentClass || 'house-snark';
+      s.textContent = g.commentClass === 'trainer-note' ? g.comment : `"${g.comment}"`;
       log.appendChild(s);
     }
   });
@@ -1431,26 +1905,37 @@ function submitGuess() {
 
   const match = ALL_DISEASES.find(d => d.name.toLowerCase()===raw.toLowerCase());
   if (!match) {
-    addHouseMsg(`"${raw}" doesn't appear in any medical reference I respect. Spell it correctly or try a real disease.`, false);
+    if (houseMode) {
+      addHouseMsg(`"${raw}" doesn't appear in any medical reference I respect. Spell it correctly or try a real disease.`, false);
+    } else {
+      addChatMsg(`"${raw}" is not recognized. Check the spelling or try a different diagnosis.`, 'trainer');
+    }
     shake(inp); return;
   }
   if (G.guesses.find(g => g.text.toLowerCase()===raw.toLowerCase())) {
-    addHouseMsg("You already guessed that. The patient still doesn't have it the second time either.", false);
+    if (houseMode) {
+      addHouseMsg("You already guessed that. The patient still doesn't have it the second time either.", false);
+    } else {
+      addChatMsg("You've already submitted that diagnosis. Try a different one.", 'trainer');
+    }
     return;
   }
 
   const correct = match.name === G.disease.name;
   const idx = G.guesses.length;
-  let comment;
+  let comment, commentClass = 'house-snark';
   if (!correct) {
-    if (!match.playable && match.wrongQuip) {
+    if (!houseMode) {
+      comment = TRAINER_WRONG[Math.min(idx, TRAINER_WRONG.length-1)];
+      commentClass = 'trainer-note';
+    } else if (!match.playable && match.wrongQuip) {
       comment = match.wrongQuip;
     } else {
       comment = G.disease.houseComments?.[idx] ?? WRONG_FALLBACK[Math.min(idx, WRONG_FALLBACK.length-1)];
     }
   }
 
-  G.guesses.push({text:match.name, correct, comment: correct?null:comment});
+  G.guesses.push({text:match.name, correct, comment: correct?null:comment, commentClass: correct?null:commentClass});
   inp.value = '';
   document.getElementById('acDrop').classList.remove('open');
 
@@ -1496,8 +1981,14 @@ function runTest() {
   t.classList.add('on');
   setTimeout(() => {
     t.classList.remove('on');
-    const {text, isPraise} = buildHouseResponse(txt);
-    addHouseMsg(text, isPraise);
+    if (houseMode) {
+      const {text, isPraise} = buildHouseResponse(txt);
+      addHouseMsg(text, isPraise);
+    } else {
+      const {text, isPraise} = buildTrainerResponse(txt);
+      const isPatient = text.startsWith('Patient:');
+      addChatMsg(text, isPatient ? 'patient' : 'trainer');
+    }
   }, 700+Math.random()*700);
 }
 
@@ -1556,11 +2047,7 @@ function addUserMsg(msg) {
 }
 
 function addHouseMsg(msg, praise=false) {
-  const log = document.getElementById('chatLog');
-  const el = document.createElement('div');
-  el.className = 'chat-msg house'+(praise?' praise':'');
-  el.textContent = msg;
-  log.appendChild(el); log.scrollTop = log.scrollHeight;
+  addChatMsg(msg, 'house'+(praise?' praise':''));
 }
 
 // ══════════════════════════════════════════════
