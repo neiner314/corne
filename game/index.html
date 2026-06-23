@@ -189,18 +189,19 @@
     .result-sep { display:block; font-size:.6rem; letter-spacing:.2em; color:var(--text-muted); margin:.4rem 0 .2rem; }
 
     /* Mode toggle */
-    .mode-switcher { display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:.55rem; }
-    .mode-lbl { font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);transition:color .3s;user-select:none; }
-    .mode-lbl.active { color:var(--green); }
+    .mode-switcher { display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:.5rem; }
+    .mode-switcher-inner { display:inline-flex;align-items:center;gap:.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.35rem 1.1rem; }
+    .mode-lbl { font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);transition:color .3s;user-select:none; }
+    .mode-lbl.active { color:var(--green);font-weight:bold; }
     .tog-track {
       position:relative;width:44px;height:22px;
-      background:var(--surface2);border:1px solid var(--border);border-radius:11px;
+      background:var(--surface);border:1px solid var(--border);border-radius:11px;
       cursor:pointer;transition:background .3s,border-color .3s;
     }
     .tog-track.on { background:rgba(16,185,129,.15);border-color:var(--green); }
     .tog-knob {
       position:absolute;top:3px;left:3px;width:14px;height:14px;
-      background:var(--text-muted);border-radius:7px;transition:.3s;
+      background:var(--text-dim);border-radius:7px;transition:.3s;
     }
     .tog-track.on .tog-knob { left:25px;background:var(--green); }
 
@@ -240,9 +241,11 @@
     <div class="stat">Streak <span id="statS">0</span></div>
   </div>
   <div class="mode-switcher">
-    <span class="mode-lbl active" id="lblTrainer">DIAGNOSIS TRAINER</span>
-    <div class="tog-track" id="togTrack" onclick="toggleMode()"><div class="tog-knob"></div></div>
-    <span class="mode-lbl" id="lblHouse">DR. HOUSE'S OFFICE</span>
+    <div class="mode-switcher-inner">
+      <span class="mode-lbl active" id="lblTrainer">DIAGNOSIS TRAINER</span>
+      <div class="tog-track" id="togTrack" onclick="toggleMode()"><div class="tog-knob"></div></div>
+      <span class="mode-lbl" id="lblHouse">DR. HOUSE'S OFFICE</span>
+    </div>
   </div>
 </header>
 
