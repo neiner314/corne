@@ -4824,33 +4824,54 @@ const ALL_DISEASES = [
 // ══════════════════════════════════════════════
 
 const MUNDANE_KW = [
-  'blood test','blood work','bloodwork','cbc','complete blood count','blood panel',
-  'mri','magnetic resonance',
-  'ct scan','cat scan','computed tomography',
-  'x-ray','xray','x ray','chest x',
-  'urine test','urinalysis','urine analysis',
-  'ecg','ekg','electrocardiogram',
-  'echocardiogram',
-  'ultrasound','sonogram',
+  // Basic blood
+  'blood test','blood work','bloodwork','cbc','complete blood count','blood panel','full blood count',
+  'metabolic panel','bmp','cmp','basic metabolic','comprehensive metabolic',
+  'liver function','liver panel','lfts','hepatic panel',
+  'kidney function','renal panel','creatinine','bun',
+  'thyroid panel','tsh','thyroid test','thyroid function',
+  'cholesterol','lipid panel','lipids','triglycerides',
+  'glucose','blood sugar','hba1c','a1c','glycated hemoglobin',
+  'iron level','ferritin','iron studies','transferrin','tibc',
+  'vitamin d','vitamin b12','b12','folate','vitamin levels',
+  'troponin','cardiac enzyme','cardiac markers','cardiac troponin',
+  'd-dimer','ddimer','d dimer',
+  'bnp','nt-probnp','brain natriuretic peptide',
+  'esr','sed rate','crp','c-reactive protein','inflammation marker','erythrocyte sedimentation',
+  'psa','prostate specific antigen','prostate test',
+  'pregnancy test','hcg','beta hcg','beta-hcg',
+  // Imaging
+  'x-ray','xray','x ray','chest x-ray','chest x ray','cxr','chest x',
+  'ct scan','cat scan','computed tomography','ct chest','ct abdomen','ct head','ct pelvis',
+  'mri','magnetic resonance','mri brain','mri spine','mri abdomen',
+  'ultrasound','sonogram','abdominal ultrasound','pelvic ultrasound','renal ultrasound',
+  'echocardiogram','echo','cardiac echo',
+  // Cardiac
+  'ecg','ekg','electrocardiogram','12-lead','twelve lead','12 lead',
+  'holter','ambulatory ecg','ambulatory ekg','24-hour ecg','24 hour ecg','24hr ecg',
+  // Urine/stool
+  'urine test','urinalysis','urine analysis','urine sample','urine check',
+  'stool sample','stool test','fecal test','feces test','poo test','stool',
+  // Swab/culture
+  'blood culture','blood cultures','cultures','culture',
+  'urine culture','urine mc&s',
+  'sputum test','sputum culture','sputum sample',
+  'throat swab','throat culture','throat test',
+  'nasal swab','nose swab',
+  // Other basics
+  'temperature','fever check','vital signs','vitals',
+  'blood pressure','bp check','bp','blood pressure check',
+  'pulse','heart rate','pulse rate','heart rate check',
+  'oxygen level','pulse ox','spo2','o2 sat','oxygen saturation',
+  'weight','bmi','height weight',
+  'physical exam','physical examination','full physical','general exam',
+  'allergy test','allergy panel','allergy screen',
+  'sleep study','polysomnogram','sleep test','overnight study',
+  'lung function','spirometry','pfts','pulmonary function test','peak flow',
+  'colonoscopy','lower endoscopy','colon scope',
+  'hearing test','audiometry','audiogram','hearing screen',
+  'vision test','visual acuity','eye chart',
   'biopsy',
-  'temperature','fever check',
-  'blood pressure','bp check',
-  'pulse','heart rate',
-  'oxygen level','pulse ox','spo2',
-  'cholesterol','lipid panel',
-  'glucose','blood sugar',
-  'colonoscopy',
-  'allergy test','allergy panel',
-  'physical exam','physical examination',
-  'thyroid panel','tsh',
-  'liver function','liver panel',
-  'kidney function','renal panel',
-  'stool sample','stool test',
-  'pregnancy test',
-  'vitamin d','vitamin b12',
-  'iron level','ferritin',
-  'sleep study','polysomnogram',
-  'lung function','spirometry'
 ];
 
 const MUNDANE_Q = [
@@ -4917,28 +4938,74 @@ const PRAISE_Q = [
 ];
 
 const MEDIUM_KW = [
-  'genetic','gene panel','dna','mutation','sequencing',
-  'autoimmune','immune panel','immunology',
-  'lumbar puncture','spinal tap','csf',
-  'toxicology','tox screen','poison screen',
-  'hormone panel','cortisol','adrenal',
-  'neurological exam','cranial nerves','cerebellar',
-  'eeg','brain wave','brain activity',
-  'nerve conduction','ncs','emg',
-  'enzyme assay','enzyme panel',
-  'travel history','travel history',
-  'psych eval','psychiatric evaluation',
-  'rare disease','rare condition',
-  'metabolic disorder',
-  'skin culture','skin swab',
-  'heavy metal screen',
-  'infectious disease consult',
-  'neurology consult',
-  'spect','pet scan',
-  'slit lamp','slit-lamp',
-  'ceruloplasmin','copper level',
-  'anti-gad','anti gad',
-  'rt-quic','14-3-3'
+  // Genetic/molecular
+  'genetic','gene panel','dna','mutation','sequencing','genetic screen','whole exome','whole genome','karyotype',
+  // Autoimmune/immunology
+  'autoimmune','immune panel','immunology','ana','antinuclear','anti-nuclear','anti-dna','anti-ds-dna',
+  'anca','anti-neutrophil','pr3','mpo antibody','complement','c3 level','c4 level','immunoglobulin',
+  // Neuro procedures
+  'lumbar puncture','spinal tap','csf','cerebrospinal',
+  'eeg','brain wave','brain activity','electroencephalogram','seizure monitoring',
+  'nerve conduction','ncs','emg','electromyography','nerve test','motor nerve',
+  'neurological exam','cranial nerves','cerebellar exam','neurology exam',
+  // Advanced imaging
+  'pet scan','pet-ct','pet ct','nuclear medicine','nuclear scan','bone scan','spect',
+  'mra','mr angiography','ct angiography','cta','cardiac catheterization','coronary angiography',
+  'angiogram','angiography','carotid ultrasound','carotid doppler','peripheral angiography',
+  'capsule endoscopy','pill camera','wireless capsule',
+  // Upper GI
+  'gastroscopy','upper endoscopy','egd','ogd','upper gi endoscopy','oesophagogastroduodenoscopy',
+  'upper gi','stomach scope','esophagoscopy','esophagus scope','stomach camera',
+  'ercp','endoscopic retrograde',
+  // Procedures
+  'bronchoscopy','bronchoalveolar','bal','bronchial biopsy','lung biopsy',
+  'liver biopsy','hepatic biopsy',
+  'kidney biopsy','renal biopsy',
+  'muscle biopsy','muscle tissue',
+  'bone marrow','bone marrow biopsy','bone marrow aspiration','marrow',
+  'lymph node biopsy','lymph node',
+  'nerve biopsy',
+  'paracentesis','ascitic tap','ascites fluid','peritoneal fluid',
+  'thoracentesis','pleural tap','pleural aspiration','pleural fluid','chest drain',
+  'pericardiocentesis','pericardial tap','pericardial fluid',
+  'tilt table','tilt test','head-up tilt','orthostatic test',
+  'dexa','bone density','bone densitometry','dxa',
+  // Specialty labs
+  'toxicology','tox screen','poison screen','heavy metal screen','heavy metals','arsenic','lead level',
+  'hormone panel','cortisol','adrenal function','acth','dexamethasone','suppression test',
+  'aldosterone','renin','renin-aldosterone','aldosterone renin ratio','arr',
+  'catecholamines','metanephrines','vma','chromogranin','pheochromocytoma panel',
+  'growth hormone','igf-1','igf1','gh level','growth hormone stimulation',
+  'parathyroid','pth','parathyroid hormone',
+  'testosterone','estrogen','sex hormone','lh','fsh','sex hormones','hormone',
+  'prolactin','prolactin level',
+  'pcr','polymerase chain reaction','pcr test',
+  'h pylori','helicobacter','helicobacter pylori','rapid urease test','breath urea test',
+  'ammonia','ammonia level','blood ammonia',
+  'lactate','lactic acid','lactate level',
+  'coagulation','coag panel','inr','pt test','ptt','aptt','clotting time','clotting screen',
+  'ceruloplasmin','copper level','serum copper',
+  'anti-gad','anti gad','anti-nmda','nmda antibody','anti-nmdar',
+  'rt-quic','14-3-3','14-3-3 protein',
+  'psych eval','psychiatric evaluation','psychiatric assessment','mental health eval','mental assessment',
+  'travel history','travel record','exposure history',
+  'skin culture','skin swab','skin scraping',
+  'enzyme assay','enzyme panel','lysosomal enzyme','enzyme activity',
+  'infectious disease consult','id consult','infectious disease',
+  'neurology consult','specialist referral','specialist consult',
+  'metabolic disorder','inborn error','metabolic screen','metabolic workup',
+  'slit lamp','slit-lamp','ophthalmology exam','fundoscopy','fundus exam',
+  'visual field','perimetry','visual evoked','vep','visual evoked potential',
+  'brainstem evoked','bera','auditory brainstem','abr',
+  'mantoux','tuberculin','tb test','quantiferon','igra','tb gold',
+  'sweat test','sweat chloride','pilocarpine iontophoresis',
+  'porphyrin','porphobilinogen','watson-schwartz',
+  'prion','rt-quic','14-3-3 protein',
+  'silver level','serum silver',
+  'emf test','electromagnetic test','wifi test','radiation test',
+  'startle test','startle protocol','startle response test',
+  'aquagenic test','water challenge','water test',
+  'fish test','fish smell test','tma test','trimethylamine test',
 ];
 
 const MEDIUM_Q = [
@@ -4959,64 +5026,194 @@ const DEFAULT_Q = [
   _=>`I've seen worse test orders. This isn't among the best. Order it anyway.`
 ];
 
-// Standard test field keyword groups
+// Standard test field keyword groups — checked in order, first match wins
 const FIELD_KEYS = {
-  blood:     ['blood test','blood work','bloodwork','cbc','complete blood','metabolic panel','bmp','cmp','blood panel'],
-  urine:     ['urine','urinalysis','urine test','urine analysis'],
-  mri:       ['mri','magnetic resonance'],
-  ct:        ['ct scan','cat scan','computed tomography'],
-  xray:      ['x-ray','xray','x ray','chest x'],
-  ecg:       ['ecg','ekg','electrocardiogram'],
-  ultrasound:['ultrasound','sonogram'],
-  eeg:       ['eeg','brain wave','brain activity'],
-  csf:       ['lumbar puncture','spinal tap','csf','cerebrospinal'],
-  genetic:   ['genetic test','dna test','gene panel','gene test','sequencing','genetic screen'],
-  psych:     ['psychiatric eval','psych eval','psychiatric assessment','mental health eval','mental eval'],
-  skin:      ['skin biopsy','skin test','skin culture','skin swab','dermatology biopsy'],
-  hormone:   ['hormone panel','hormone test','cortisol test','thyroid panel','tsh test'],
-  toxicology:['toxicology','tox screen','poison screen','heavy metal screen'],
-  emg:       ['emg','nerve conduction','ncs','electromyography'],
-  sleep:     ['sleep study','polysomnogram','sleep test','overnight study'],
-  echo:      ['echocardiogram','cardiac echo'],
-  nerve:     ['nerve conduction','ncs','nerve test'],
-  autoimmune:['autoimmune panel','immune panel','immunology panel'],
-  eye:       ['eye exam','ophthalmology','slit lamp','slit-lamp','visual acuity'],
-  liver:     ['liver biopsy','liver test','hepatic'],
-  oxygen:    ['oxygen','pulse ox','spo2','o2 sat'],
-  pain:      ['pain test','pain threshold','pain response'],
-  travel:    ['travel history','travel record','travel log'],
-  allergy:   ['allergy test','allergy panel'],
-  breath:    ['breathalyzer','breath alcohol','breath test'],
-  fish:      ['fish test','fish smell test','tma test','trimethylamine test'],
-  stool:     ['stool','fecal','bowel culture'],
-  water:     ['water test','water challenge','aquagenic test'],
-  porphyrin: ['porphyrin','porphobilinogen','watson-schwartz'],
-  prion:     ['prion','rt-quic','14-3-3 protein'],
-  startle:   ['startle test','startle protocol','startle response test'],
-  copper:    ['copper level','ceruloplasmin'],
-  silver:    ['silver level','serum silver'],
-  emf:       ['emf test','electromagnetic test','wifi test','radiation test'],
+  // Highly specific/unique — must come first
+  breathalyzer:['breathalyzer','breath alcohol'],
+  water:    ['water test','water challenge','aquagenic test'],
+  fish:     ['fish test','fish smell test','tma test','trimethylamine test'],
+  porphyrin:['porphyrin','porphobilinogen','watson-schwartz'],
+  prion:    ['prion','rt-quic','14-3-3 protein'],
+  startle:  ['startle test','startle protocol','startle response test'],
+  silver:   ['silver level','serum silver'],
+  emf:      ['emf test','electromagnetic test','wifi test','radiation test'],
+  copper:   ['copper level','ceruloplasmin'],
+  // Procedures
+  csf:      ['lumbar puncture','spinal tap','cerebrospinal fluid','csf analysis','csf test'],
+  bronch:   ['bronchoscopy','bronchoalveolar lavage','bal','bronchial biopsy','lung biopsy'],
+  paracentesis:['paracentesis','ascitic tap','ascites fluid','peritoneal fluid'],
+  thoracentesis:['thoracentesis','pleural tap','pleural aspiration','pleural fluid','chest drain pleural'],
+  pericardio:['pericardiocentesis','pericardial tap','pericardial fluid'],
+  capsule:  ['capsule endoscopy','pill camera','wireless capsule'],
+  ercp:     ['ercp','endoscopic retrograde cholangiopancreatography'],
+  endoscopy:['gastroscopy','upper endoscopy','egd','ogd','upper gi endoscopy','oesophagogastroduodenoscopy','stomach scope','esophagoscopy','upper gi','stomach camera'],
+  colonoscopy:['colonoscopy','lower endoscopy','colon scope','colon camera','colonoscope'],
+  tilt:     ['tilt table','tilt test','head-up tilt','orthostatic test'],
+  // Imaging
+  mri:      ['mri','magnetic resonance'],
+  ct:       ['ct scan','cat scan','computed tomography','ct chest','ct abdomen','ct head','ct pelvis'],
+  pet:      ['pet scan','pet-ct','pet ct','nuclear medicine scan','nuclear scan','nuclear imaging'],
+  angiography:['angiography','angiogram','coronary angiography','cardiac catheterization','cta','ct angiography','mra','mr angiography','carotid angiography','peripheral angiography'],
+  xray:     ['x-ray','xray','x ray','chest x-ray','chest x ray','cxr','chest x','plain film'],
+  ultrasound:['ultrasound','sonogram','abdominal ultrasound','pelvic ultrasound','renal ultrasound'],
+  echo:     ['echocardiogram','cardiac echo','echo','transthoracic echo','transoesophageal echo','tee','tte'],
+  carotid:  ['carotid ultrasound','carotid doppler','carotid scan'],
+  bone:     ['bone scan','nuclear bone','bone scintigraphy'],
+  dexa:     ['dexa','bone density','bone densitometry','dxa','dual energy'],
+  // Cardiac tests
+  ecg:      ['ecg','ekg','electrocardiogram','12-lead','twelve lead','12 lead'],
+  holter:   ['holter','ambulatory ecg','ambulatory ekg','24-hour ecg','24 hour ecg','24hr ecg','24 hour heart monitor'],
+  // Electrophysiology
+  eeg:      ['eeg','brain wave','brain activity','electroencephalogram','seizure monitoring'],
+  emg:      ['emg','nerve conduction','ncs','electromyography','nerve conduction study'],
+  visual_ep:['visual evoked','vep','visual evoked potential','perimetry','visual field'],
+  auditory_ep:['brainstem evoked','bera','auditory brainstem response','abr'],
+  // Blood — specific markers first, then general panels
+  troponin: ['troponin','cardiac enzyme','cardiac markers','ck-mb','ckmb','heart enzyme'],
+  ddimer:   ['d-dimer','ddimer','d dimer'],
+  bnp:      ['bnp','nt-probnp','brain natriuretic','cardiac biomarker','natriuretic'],
+  coagulation:['coagulation','coag panel','inr','prothrombin time','ptt','aptt','clotting time','clotting screen','coag screen'],
+  inflammation:['esr','sed rate','erythrocyte sedimentation','c-reactive protein','crp','inflammation markers'],
+  ana:      ['ana','antinuclear antibody','anti-nuclear','anti-dna','anti-ds-dna','anca','anti-neutrophil','pr3','mpo antibody'],
+  complement:['complement','c3 level','c4 level','ch50','complement levels'],
+  autoimmune:['autoimmune panel','immune panel','immunology panel','autoimmune screen'],
+  catecholamines:['catecholamines','metanephrines','vma','chromogranin','urinary catecholamines'],
+  aldosterone:['aldosterone','renin','renin-aldosterone','aldosterone renin ratio','arr'],
+  igf1:     ['growth hormone','igf-1','igf1','gh level','growth hormone stimulation'],
+  cortisol: ['cortisol','acth stimulation','dexamethasone suppression','adrenal function','synacthen'],
+  parathyroid:['parathyroid hormone','pth','parathyroid'],
+  sexhormone:['testosterone','estrogen','oestrogen','sex hormone','lh','fsh','dhea','androgens'],
+  prolactin:['prolactin','prolactin level'],
+  thyroid:  ['tsh','thyroid','t3','t4','free t4','free t3','thyroid function','thyroid panel'],
+  vitamin:  ['vitamin b12','b12','folate','vitamin d','thiamine','vitamin b1','vitamin panel','b vitamins'],
+  iron:     ['ferritin','iron level','iron studies','transferrin','tibc','serum iron'],
+  hba1c:    ['hba1c','a1c','glycated hemoglobin','hemoglobin a1c','glycosylated'],
+  glucose:  ['glucose test','blood sugar','fasting glucose','oral glucose','ogtt'],
+  ammonia:  ['ammonia','blood ammonia','ammonia level'],
+  lactate:  ['lactate','lactic acid','lactate level'],
+  psa:      ['psa','prostate specific antigen','prostate test'],
+  genetic:  ['genetic test','dna test','gene panel','gene test','sequencing','genetic screen','whole exome','karyotype','chromosomal','cftr'],
+  // Microbiology
+  culture:  ['blood culture','cultures','culture'],
+  pcr:      ['pcr','polymerase chain reaction','pcr test','viral pcr','pcr panel'],
+  hpylori:  ['h pylori','helicobacter','helicobacter pylori','rapid urease','breath urea'],
+  mantoux:  ['mantoux','tuberculin','tb test','quantiferon','igra','tb gold','latent tb'],
+  stool:    ['stool','fecal','bowel culture','ova and parasites','stool ova','faecal'],
+  // Specialty / non-blood
+  psych:    ['psychiatric eval','psych eval','psychiatric assessment','mental health eval','mental eval'],
+  sleep:    ['sleep study','polysomnogram','sleep test','overnight study','polysomnography'],
+  skin:     ['skin biopsy','skin test','skin culture','skin swab','dermatology biopsy','skin scraping'],
+  eye:      ['eye exam','ophthalmology','slit lamp','slit-lamp','fundoscopy','fundus exam','slit lamp exam'],
+  hearing:  ['audiometry','audiogram','hearing test','audiology','pure tone audiometry','hearing screen'],
+  allergy:  ['allergy test','allergy panel','allergy screen','skin prick test','patch test'],
+  sweat:    ['sweat test','sweat chloride','pilocarpine'],
+  liver:    ['liver biopsy','hepatic biopsy'],
+  kidney:   ['kidney biopsy','renal biopsy'],
+  muscle:   ['muscle biopsy','muscle tissue biopsy'],
+  marrow:   ['bone marrow biopsy','bone marrow aspiration','bone marrow','marrow biopsy'],
+  toxicology:['toxicology','tox screen','poison screen','heavy metal screen','heavy metals','arsenic test','lead level'],
+  oxygen:   ['oxygen','pulse ox','spo2','o2 sat','oxygen saturation'],
+  pain:     ['pain test','pain threshold','pain response','pain evaluation'],
+  travel:   ['travel history','travel record','travel log','exposure history'],
+  // General blood — last resort (most likely to over-match if earlier)
+  urine:    ['urinalysis','urine test','urine analysis','urine sample','urine mc&s','ua '],
+  blood:    ['blood test','blood work','bloodwork','cbc','complete blood count','metabolic panel','bmp','cmp','blood panel','full blood count','blood panel','comprehensive metabolic'],
+  breath:   ['breath test','breath analysis'],
+  hormone:  ['hormone panel','hormone test','hormone levels','hormones'],
 };
 
 // Generic fallback results when disease doesn't have a specific result for a field
 const GENERIC = {
-  blood:     "CBC: Normal. Metabolic panel: Normal. Nothing diagnostic here.",
-  urine:     "Urinalysis: Within normal limits.",
-  mri:       "No structural abnormalities identified.",
-  ct:        "No acute findings.",
-  xray:      "No acute cardiopulmonary findings.",
-  ecg:       "Normal sinus rhythm.",
-  ultrasound:"No abnormalities identified on imaging.",
-  eeg:       "No epileptiform activity. Normal background rhythm.",
-  csf:       "Cell count, protein, glucose within normal limits.",
-  genetic:   "No pathogenic variants on standard panel. Consider expanded testing.",
-  psych:     "No primary psychiatric disorder identified. Further observation recommended.",
-  skin:      "No diagnostic findings on standard dermatological evaluation.",
-  hormone:   "Hormone levels within normal reference ranges.",
-  toxicology:"No toxic substances identified on standard screen.",
-  emg:       "Normal nerve conduction and muscle response.",
-  sleep:     "Normal sleep architecture. No significant events.",
-  echo:      "Normal cardiac structure and function.",
+  // Blood / labs
+  blood:       "CBC: WBC 7.1 × 10⁹/L, Hgb 13.9 g/dL, Plt 218 × 10⁹/L. Comprehensive metabolic panel: Na 139, K 4.0, Cr 0.9 mg/dL, glucose 96 mg/dL. No acute abnormality.",
+  urine:       "Urinalysis: clear, yellow, pH 6.0, SG 1.018. No protein, glucose, blood, nitrites, or leukocyte esterase. Within normal limits.",
+  troponin:    "Troponin I: 0.01 ng/mL (normal). Repeat at 6h: 0.01 ng/mL. No delta rise. No myocardial injury pattern.",
+  ddimer:      "D-dimer: 0.30 mg/L FEU (normal). Does not reach threshold for further thromboembolism workup at this level.",
+  bnp:         "BNP: 22 pg/mL (normal). NT-proBNP: 68 pg/mL (normal). No cardiac volume or pressure overload signal.",
+  inflammation:"CRP: 2.3 mg/L (normal <10). ESR: 12 mm/hr (normal). No systemic inflammatory response detected.",
+  ana:         "ANA: Negative by indirect immunofluorescence at 1:40. No ANCA pattern. Anti-dsDNA: negative. No autoimmune connective tissue disease pattern.",
+  complement:  "Complement: C3 1.18 g/L, C4 0.26 g/L, CH50 normal. No complement consumption. Does not support active immune complex disease.",
+  autoimmune:  "Autoimmune screen: ANA negative, ANCA negative, anti-CCP negative, RF negative, anti-dsDNA negative. No autoimmune antibody pattern identified.",
+  catecholamines:"24h urinary catecholamines/metanephrines: all within normal limits. Plasma metanephrines: normal. No phaeochromocytoma biochemical signature.",
+  aldosterone: "Aldosterone: 8 ng/dL. Renin: 1.6 ng/mL/hr. Aldosterone-to-renin ratio: 5 (normal <30). No primary hyperaldosteronism pattern.",
+  igf1:        "IGF-1: 182 ng/mL (age-appropriate). Basal GH: 0.4 ng/mL. No evidence of GH excess or deficiency.",
+  cortisol:    "Cortisol (8am): 17 μg/dL (normal 7–25). 24h urinary free cortisol: normal. Low-dose dexamethasone suppression: normal suppression. HPA axis intact.",
+  parathyroid: "PTH: 42 pg/mL (normal 15–65). Corrected calcium: 9.4 mg/dL. Phosphate: 3.6 mg/dL. No parathyroid disorder.",
+  sexhormone:  "Sex hormones: testosterone (total/free), estradiol, LH, FSH — all within age/sex-appropriate reference ranges.",
+  prolactin:   "Prolactin: 12 ng/mL (normal). No hyperprolactinaemia.",
+  thyroid:     "TSH: 2.1 mIU/L (normal 0.4–4.0). Free T4: 1.1 ng/dL (normal). Free T3: 3.0 pg/mL (normal). Euthyroid.",
+  vitamin:     "Vitamin B12: 340 pg/mL (normal). Folate: 8.1 ng/mL (normal). Vitamin D (25-OH): 33 ng/mL (sufficient). Thiamine: normal. No deficiency.",
+  iron:        "Iron: serum iron 84 μg/dL, ferritin 48 ng/mL, TIBC 308 μg/dL, transferrin saturation 27%. All within normal limits.",
+  hba1c:       "HbA1c: 5.3% (normal <5.7%). No evidence of diabetes mellitus or prediabetes.",
+  glucose:     "Fasting glucose: 92 mg/dL (normal). OGTT: normal at 2h. No glycaemic abnormality.",
+  ammonia:     "Plasma ammonia: 26 μmol/L (normal). No hyperammonaemia. Hepatic synthetic function appears intact.",
+  lactate:     "Lactate: 1.0 mmol/L (normal <2). No evidence of tissue hypoperfusion, shock, or mitochondrial dysfunction.",
+  psa:         "PSA: 1.1 ng/mL (normal for age). Free/total PSA ratio within normal range. No further urological workup indicated.",
+  coagulation: "Coagulation: PT 11.1s, INR 1.0, APTT 27s, fibrinogen 3.1 g/L. Normal clotting function. No coagulopathy.",
+  genetic:     "Targeted gene panel: no pathogenic or likely-pathogenic variants identified. Consider expanded sequencing or alternative diagnosis.",
+  toxicology:  "Toxicology screen (urine + serum): negative for common drugs of abuse, tricyclics, barbiturates. Heavy metal screen: within normal limits.",
+  culture:     "Blood cultures ×2: no growth at 48h. Urine culture: no significant growth. No bacteraemia or urinary infection.",
+  pcr:         "PCR panel (respiratory / gastrointestinal / viral): no pathogen detected on standard panel. Consider expanded or atypical pathogen testing.",
+  hpylori:     "H. pylori stool antigen: negative. Urea breath test: negative. No active H. pylori infection.",
+  mantoux:     "Tuberculin skin test (Mantoux): 0mm induration at 72h. QuantiFERON-TB Gold: negative. No latent or active tuberculosis.",
+  stool:       "Stool MC&S: no pathogens isolated. Ova, cysts, parasites: not detected. Faecal calprotectin: 48 μg/g (normal <50). No significant bowel pathology.",
+  // Imaging
+  mri:         "MRI: no acute structural abnormality. Normal signal intensity throughout. No mass, oedema, or enhancement. Review specific area if concern persists.",
+  ct:          "CT: no acute findings. No haemorrhage, mass, obstruction, or pneumothorax. Compare with previous imaging if available.",
+  xray:        "Chest X-ray: cardiac silhouette normal. No consolidation, effusion, or pneumothorax. Bony structures intact. Mediastinum normal width.",
+  ultrasound:  "Ultrasound: no abnormality identified. Normal parenchymal echogenicity. No free fluid, mass, or ductal dilatation.",
+  echo:        "Transthoracic echocardiogram: LV function normal (EF 60–65%). Valves: no stenosis or significant regurgitation. No pericardial effusion. Wall motion normal.",
+  pet:         "PET-CT: no region of abnormal FDG uptake. No hypermetabolic mass, lymphadenopathy, or inflammatory foci beyond background.",
+  angiography: "Angiography: no significant stenosis, occlusion, or vascular malformation. Flow patterns normal throughout. No arteriovenous shunting.",
+  carotid:     "Carotid Doppler: no significant stenosis (PSV normal bilaterally). Intima-media thickness within normal range. No plaque.",
+  bone:        "Bone scan/DEXA: no abnormal uptake or osteoblastic activity. Bone mineral density within normal range (T-score > −1.0).",
+  dexa:        "DEXA: T-score: lumbar spine −0.7, femoral neck −0.4. Normal bone mineral density. No osteoporosis or osteopaenia.",
+  // Cardiac
+  ecg:         "ECG: normal sinus rhythm at 72 bpm. PR 160ms, QRS 88ms, QTc 410ms. No ST or T-wave changes. No conduction abnormality.",
+  holter:      "24-hour Holter: predominantly normal sinus rhythm. Rare isolated PACs (2/24h). No runs of SVT, VT, or significant pauses. No arrhythmia of clinical concern.",
+  // Electrophysiology
+  eeg:         "EEG: normal background alpha rhythm (10 Hz). No interictal epileptiform discharges. No slowing or focal abnormality. Normal sleep elements captured.",
+  emg:         "EMG/NCS: normal motor and sensory conduction velocities bilaterally. No denervation, fasciculation, or myopathic changes. Normal neuromuscular junction function.",
+  visual_ep:   "Visual evoked potentials: P100 latency 101ms bilaterally (normal <115ms). Full visual fields on confrontation. No optic pathway abnormality.",
+  auditory_ep: "Auditory brainstem responses: waves I–V present bilaterally with normal latencies and morphology. No sensorineural hearing loss.",
+  // Procedures
+  csf:         "CSF: opening pressure 14 cmH₂O. Appearance: clear, colourless. WBC 2/mm³ (normal), protein 36 mg/dL (normal), glucose 68 mg/dL (serum ratio normal). No organisms. Culture pending.",
+  endoscopy:   "Upper GI endoscopy: oesophagus, stomach, and proximal duodenum macroscopically normal. No erosion, ulceration, polyp, or mass. Biopsy taken — results pending.",
+  colonoscopy: "Colonoscopy: colonic mucosa normal throughout. No polyps, inflammation, or mass. Terminal ileum intubated and appears normal. Adequate bowel preparation.",
+  bronch:      "Bronchoscopy: airways patent to subsegmental level bilaterally. Normal mucosal appearance. BAL differential: 85% macrophages, 10% lymphocytes, 5% neutrophils (normal). No organisms.",
+  paracentesis:"Paracentesis: ascitic fluid — straw-coloured. SAAG 0.8 g/dL. Total protein 3.0 g/dL. Cell count: 80 WBC/mm³ (< threshold for SBP). Gram stain: negative. Culture: pending.",
+  thoracentesis:"Pleural fluid: straw-coloured. pH 7.40. Protein 28 g/L, LDH 140 U/L. Light's criteria: exudate/transudate borderline. No malignant cells. Gram stain negative. Culture: pending.",
+  pericardio:  "Pericardial fluid: minimal straw-coloured fluid obtained. No haemorrhage or malignant cells. Protein elevated. Culture and sensitivity: pending.",
+  capsule:     "Capsule endoscopy: no bleeding source, mass, or significant mucosal abnormality identified throughout small bowel transit. Normal villous pattern.",
+  ercp:        "ERCP: common bile duct and pancreatic duct appear patent and normal calibre. No filling defects, strictures, or dilatation. No stones identified.",
+  tilt:        "Head-up tilt table test: haemodynamic response normal. No symptomatic hypotension, reflex bradycardia, or vasovagal syncope provoked. POTS criteria not met.",
+  // Specialty
+  psych:       "Psychiatric evaluation: no primary psychotic, affective, or personality disorder identified on structured interview. Cognitive screening normal. No imminent risk.",
+  sleep:       "Polysomnogram: sleep efficiency 88%. Normal sleep architecture. No obstructive events (AHI <5). No significant oxygen desaturation. Normal REM latency.",
+  skin:        "Skin biopsy (H&E): no specific diagnostic pattern. Normal epidermal and dermal architecture. No inflammatory infiltrate, vasculitis, or malignancy. PAS stain: negative.",
+  eye:         "Ophthalmology: visual acuity 6/6 bilaterally. Anterior segment: normal. Fundoscopy: cup:disc ratio 0.3, no haemorrhages or exudates. IOP normal. No slit-lamp abnormality.",
+  hearing:     "Pure tone audiometry: hearing thresholds within normal limits (< 25 dB HL) at all frequencies bilaterally. No conductive or sensorineural hearing loss. Tympanometry: type A.",
+  allergy:     "Allergy panel: skin prick testing negative to standard environmental and food allergens. Specific IgE: below detection threshold. Standard allergens do not explain presentation.",
+  sweat:       "Sweat chloride (pilocarpine iontophoresis): 24 mEq/L (normal < 40). Does not support cystic fibrosis or CFTR-related disorder.",
+  liver:       "Liver biopsy: normal hepatic architecture. No significant fibrosis (Metavir F0), steatosis, or inflammatory infiltrate. No cholestatic or ischaemic pattern.",
+  kidney:      "Renal biopsy: normal glomerular architecture. No immune deposits on immunofluorescence. No significant tubular injury or interstitial fibrosis.",
+  muscle:      "Muscle biopsy (H&E, ATPase, SDH): normal fibre-type distribution and size. No ragged-red fibres, vacuoles, or inflammatory infiltrate. Dystrophin staining intact.",
+  marrow:      "Bone marrow biopsy: normo-cellular marrow for age. Normal tri-lineage haematopoiesis. No dysplasia, infiltration, or excess blasts. Iron stores adequate.",
+  // Unique tests
+  breathalyzer:"Breath alcohol: 0.00%. No alcohol detected.",
+  water:       "Aquagenic challenge test: application of room-temperature water to forearm for 5 minutes — no urticarial response. Does not support aquagenic urticaria.",
+  fish:        "Urinary TMA assay: trimethylamine levels within normal limits. FMO3 enzyme activity normal. No trimethylaminuria.",
+  porphyrin:   "Urinary porphyrins and porphobilinogen (Watson–Schwartz): within normal limits. No porphyria pattern.",
+  prion:       "RT-QuIC assay: negative. CSF 14-3-3 protein: not detected. No prion seeding activity.",
+  startle:     "Standardised startle protocol (sudden noise/touch): normal habituating startle response. No exaggerated or non-habituating startle. No echolalia or echopraxia.",
+  silver:      "Serum silver: not detected above background. No argyria-range tissue exposure.",
+  emf:         "EMF challenge (double-blind): patient unable to detect active versus sham EMF exposure above chance level. Symptoms not correlated with measured field intensity.",
+  copper:      "Serum ceruloplasmin: 28 mg/dL (normal 20–40). Serum copper: 100 μg/dL (normal 70–140). 24h urine copper: 28 μg/day (normal < 40). No copper dysregulation.",
+  oxygen:      "Pulse oximetry: SpO₂ 98% on room air. ABG: pH 7.41, PaO₂ 98 mmHg, PaCO₂ 40 mmHg. Normal gas exchange.",
+  pain:        "Pain assessment: patient reports 4/10 VAS on examination. No allodynia or hyperalgesia beyond distribution of primary complaint. Quantitative sensory testing: within normal limits.",
+  travel:      "Travel/exposure history: no recent international travel, animal contact, or known sick contacts. Standard occupational and recreational history unremarkable.",
+  breath:      "Breath analysis: no pathological volatile organic compounds at current sensitivity. Non-diagnostic.",
+  hormone:     "General hormone screen: thyroid, adrenal, gonadal, and pituitary axes all within normal limits. No endocrine abnormality on this panel.",
 };
 
 const PENDING = [
@@ -5134,16 +5331,21 @@ const RARITY = {
 };
 
 function weightedPickDisease() {
-  const w = houseMode
-    ? {common:5, uncommon:15, rare:40, bizarre:40}
-    : {common:40, uncommon:30, rare:20, bizarre:10};
-  const total = PLAYABLE.reduce((s,d) => s+(w[RARITY[d.name]||'uncommon']||10), 0);
+  const houseRar = new Set(['rare','bizarre']);
+  const trainRar = new Set(['common','uncommon']);
+  const eligible = PLAYABLE.filter(d => {
+    const r = RARITY[d.name];
+    return houseMode ? houseRar.has(r) : (trainRar.has(r) || !r);
+  });
+  const pool = eligible.length >= 3 ? eligible : PLAYABLE;
+  const w = houseMode ? {rare:50,bizarre:50} : {common:60,uncommon:40};
+  const total = pool.reduce((s,d)=>s+(w[RARITY[d.name]]||30),0);
   let r = Math.random()*total;
-  for (const d of PLAYABLE) {
-    r -= (w[RARITY[d.name]||'uncommon']||10);
+  for (const d of pool) {
+    r -= (w[RARITY[d.name]]||30);
     if (r<=0) return d;
   }
-  return PLAYABLE[PLAYABLE.length-1];
+  return pool[pool.length-1];
 }
 
 let houseMode = false; // false = Diagnosis Trainer, true = Dr. House's Office
@@ -5223,15 +5425,28 @@ const TRAINER_PATIENT_GENERIC = [
 ];
 
 const TRAINER_NO_RESULT = [
-  "No results on file for that query. Order a specific named test to receive results.",
-  "Clarify what you're looking for. A specific test name will return documented results.",
-  "That query didn't match a test or a patient question I can answer. Try rephrasing.",
-  "Continue building your differential. Order a specific test or ask the patient directly."
+  "Request not recognised. Try asking the patient a question, or order a named test (e.g. 'order a CT head', 'run bloods', 'upper endoscopy').",
+  "I can't match that to a specific test or patient question. Try a direct test name or ask the patient something specific.",
+  "Nothing matched. Try ordering a specific investigation or asking the patient about their symptoms.",
+  "Not sure what you mean by that. Ask the patient a question or name a specific test to run."
 ];
+
+const TEST_ORDER_RX = /^(order|run|request|do|perform|take|get|send|check|measure|test|arrange|book|schedule|carry out|carry-out|obtain|draw|collect|initiate|start)\b/i;
 
 function buildTrainerResponse(txt) {
   const low = txt.toLowerCase();
-  const isQuestion = /^(what|where|when|how|do you|have you|did you|are you|can you|does|why|tell me|describe|explain|is there|any|could you)/i.test(txt.trim()) || txt.includes('?');
+  const stripped = low.replace(/^(order|run|request|do|perform|take|get|send|check|measure|test|arrange|book|a |an |the )+/,'').trim();
+
+  // Always try test first if it looks like an order
+  const isOrderVerb = TEST_ORDER_RX.test(txt.trim());
+  if (isOrderVerb) {
+    const result = getTestResult(low) || getTestResult(stripped);
+    if (result) return { text: `─── Results ───\n${result}`, isPraise: false };
+    // If no match, treat as unrecognised test
+    return { text: TRAINER_NO_RESULT[Math.floor(Math.random()*TRAINER_NO_RESULT.length)], isPraise: false };
+  }
+
+  const isQuestion = /^(what|where|when|how|do you|have you|did you|are you|can you|does|why|tell me|describe|explain|is there|any|could you|i'd like to ask)/i.test(txt.trim()) || txt.includes('?');
 
   if (isQuestion) {
     const ans = getPatientAnswer(low);
@@ -5239,10 +5454,11 @@ function buildTrainerResponse(txt) {
     return { text: `Patient: "${TRAINER_PATIENT_GENERIC[Math.floor(Math.random()*TRAINER_PATIENT_GENERIC.length)]}"`, isPraise: false };
   }
 
+  // Try patient answer first, then test result, then generic test attempt
   const ans = getPatientAnswer(low);
   if (ans) return { text: `Patient: "${ans}"`, isPraise: false };
 
-  const result = getTestResult(low);
+  const result = getTestResult(low) || getTestResult(stripped);
   if (result) return { text: `─── Results ───\n${result}`, isPraise: false };
 
   return { text: TRAINER_NO_RESULT[Math.floor(Math.random()*TRAINER_NO_RESULT.length)], isPraise: false };
